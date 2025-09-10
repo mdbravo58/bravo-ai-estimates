@@ -91,7 +91,7 @@ const LandingPage = () => {
             <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
               <FileText className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="font-heading font-bold text-xl">Bravo Book Buddy</span>
+            <span className="font-heading font-bold text-xl">Bravo Service Suite</span>
           </div>
           <Link to="/auth">
             <Button variant="hero" size="lg">
@@ -215,7 +215,7 @@ const LandingPage = () => {
             Ready to Transform Your Business?
           </h2>
           <p className="text-xl mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
-            Join thousands of professionals who are already using Bravo Book Buddy to grow their business.
+            Join thousands of professionals who are already using Bravo Service Suite to grow their business.
           </p>
           <Link to="/auth">
             <Button variant="secondary" size="lg" className="text-lg px-8">
@@ -233,9 +233,9 @@ const LandingPage = () => {
             <div className="h-6 w-6 bg-gradient-primary rounded flex items-center justify-center">
               <FileText className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-heading font-bold">Bravo Book Buddy</span>
+            <span className="font-heading font-bold">Bravo Service Suite</span>
           </div>
-          <p>&copy; 2024 Bravo Book Buddy. All rights reserved.</p>
+          <p>&copy; 2024 Bravo Service Suite. All rights reserved.</p>
         </div>
       </footer>
     </div>
