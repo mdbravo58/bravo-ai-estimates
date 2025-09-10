@@ -3,13 +3,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/hooks/useAuth";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import Index from "./pages/Index";
-import EstimateBuilder from "./pages/EstimateBuilder";
-import CustomerPortal from "./pages/CustomerPortal";
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
+import { AuthenticatedRoute } from "@/components/auth/AuthenticatedRoute";
+import { AppRouter } from "./components/routing/AppRouter";
 
 const queryClient = new QueryClient();
 
@@ -20,28 +17,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/estimates/new" 
-              element={
-                <ProtectedRoute>
-                  <EstimateBuilder />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="/portal/:estimateId" element={<CustomerPortal />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AppRouter />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
