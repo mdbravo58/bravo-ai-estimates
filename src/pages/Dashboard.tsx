@@ -10,10 +10,14 @@ import {
   Plus,
   DollarSign,
   Clock,
-  CheckCircle
+  CheckCircle,
+  Briefcase,
+  Smartphone
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
   const stats = [
     {
       title: "Total Estimates",
@@ -81,10 +85,20 @@ const Index = () => {
               Welcome back! Here's what's happening with your estimates.
             </p>
           </div>
-          <Button variant="hero" size="lg">
-            <Plus className="h-4 w-4" />
-            New Estimate
-          </Button>
+          <div className="flex gap-3">
+            <Button variant="hero" size="lg" onClick={() => navigate("/estimates/new")}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Estimate
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => navigate("/jobs")}>
+              <Briefcase className="h-4 w-4 mr-2" />
+              Job Costing
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => navigate("/mobile")}>
+              <Smartphone className="h-4 w-4 mr-2" />
+              Mobile
+            </Button>
+          </div>
         </div>
 
         {/* Stats Grid */}
@@ -178,6 +192,10 @@ const Index = () => {
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
+                <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/jobs")}>
+                  <Briefcase className="h-4 w-4" />
+                  Job Costing
+                </Button>
                 <Button variant="outline" className="w-full justify-start">
                   <Calculator className="h-4 w-4" />
                   Price Calculator

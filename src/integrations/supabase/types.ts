@@ -225,6 +225,286 @@ export type Database = {
           },
         ]
       }
+      connections: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          organization_id: string
+          provider: string
+          refresh_token: string | null
+          scope: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          organization_id: string
+          provider: string
+          refresh_token?: string | null
+          scope?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          organization_id?: string
+          provider?: string
+          refresh_token?: string | null
+          scope?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cost_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          name: string
+          organization_id: string
+          type: Database["public"]["Enums"]["cost_code_type"]
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+          organization_id: string
+          type: Database["public"]["Enums"]["cost_code_type"]
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          type?: Database["public"]["Enums"]["cost_code_type"]
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string | null
+          ghl_contact_id: string | null
+          id: string
+          name: string
+          organization_id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          ghl_contact_id?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          ghl_contact_id?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      fact_expense: {
+        Row: {
+          amount_cents: number
+          category: string | null
+          created_at: string
+          currency: string | null
+          id: number
+          occurred_at: string
+          organization_id: string
+          source: string
+        }
+        Insert: {
+          amount_cents: number
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: number
+          occurred_at: string
+          organization_id: string
+          source: string
+        }
+        Update: {
+          amount_cents?: number
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: number
+          occurred_at?: string
+          organization_id?: string
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fact_expense_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fact_funnel: {
+        Row: {
+          created_at: string
+          customers: number | null
+          date: string
+          id: number
+          leads: number | null
+          opps: number | null
+          organization_id: string
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          customers?: number | null
+          date: string
+          id?: number
+          leads?: number | null
+          opps?: number | null
+          organization_id: string
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          customers?: number | null
+          date?: string
+          id?: number
+          leads?: number | null
+          opps?: number | null
+          organization_id?: string
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fact_funnel_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fact_jobs: {
+        Row: {
+          avg_job_minutes: number | null
+          created_at: string
+          date: string
+          id: number
+          jobs_booked: number | null
+          jobs_completed: number | null
+          organization_id: string
+          revenue_cents: number | null
+          tech_id: string | null
+        }
+        Insert: {
+          avg_job_minutes?: number | null
+          created_at?: string
+          date: string
+          id?: number
+          jobs_booked?: number | null
+          jobs_completed?: number | null
+          organization_id: string
+          revenue_cents?: number | null
+          tech_id?: string | null
+        }
+        Update: {
+          avg_job_minutes?: number | null
+          created_at?: string
+          date?: string
+          id?: number
+          jobs_booked?: number | null
+          jobs_completed?: number | null
+          organization_id?: string
+          revenue_cents?: number | null
+          tech_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fact_jobs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fact_revenue: {
+        Row: {
+          amount_cents: number
+          channel: string | null
+          created_at: string
+          currency: string | null
+          id: number
+          occurred_at: string
+          organization_id: string
+          source: string
+        }
+        Insert: {
+          amount_cents: number
+          channel?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: number
+          occurred_at: string
+          organization_id: string
+          source: string
+        }
+        Update: {
+          amount_cents?: number
+          channel?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: number
+          occurred_at?: string
+          organization_id?: string
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fact_revenue_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       instructors: {
         Row: {
           active: boolean
@@ -308,6 +588,352 @@ export type Database = {
           },
         ]
       }
+      invoices: {
+        Row: {
+          amount: number
+          approved: boolean | null
+          created_at: string
+          id: string
+          invoice_date: string
+          invoice_number: string | null
+          job_id: string
+          method: Database["public"]["Enums"]["invoice_method"]
+          qb_invoice_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          approved?: boolean | null
+          created_at?: string
+          id?: string
+          invoice_date: string
+          invoice_number?: string | null
+          job_id: string
+          method: Database["public"]["Enums"]["invoice_method"]
+          qb_invoice_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          approved?: boolean | null
+          created_at?: string
+          id?: string
+          invoice_date?: string
+          invoice_number?: string | null
+          job_id?: string
+          method?: Database["public"]["Enums"]["invoice_method"]
+          qb_invoice_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      items: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          sku: string | null
+          unit_cost: number | null
+          unit_of_measure: string | null
+          unit_price: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          sku?: string | null
+          unit_cost?: number | null
+          unit_of_measure?: string | null
+          unit_price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          sku?: string | null
+          unit_cost?: number | null
+          unit_of_measure?: string | null
+          unit_price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      job_budgets: {
+        Row: {
+          cost_code_id: string
+          created_at: string
+          id: string
+          job_id: string
+          qty_budget: number | null
+          unit_cost_budget: number | null
+          unit_price_budget: number | null
+          updated_at: string
+        }
+        Insert: {
+          cost_code_id: string
+          created_at?: string
+          id?: string
+          job_id: string
+          qty_budget?: number | null
+          unit_cost_budget?: number | null
+          unit_price_budget?: number | null
+          updated_at?: string
+        }
+        Update: {
+          cost_code_id?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          qty_budget?: number | null
+          unit_cost_budget?: number | null
+          unit_price_budget?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_budgets_cost_code_id_fkey"
+            columns: ["cost_code_id"]
+            isOneToOne: false
+            referencedRelation: "cost_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_budgets_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jobs: {
+        Row: {
+          address: string | null
+          code: string
+          created_at: string
+          customer_id: string
+          description: string | null
+          end_date: string | null
+          id: string
+          name: string
+          notes: string | null
+          organization_id: string
+          project_manager_id: string | null
+          start_date: string | null
+          status: Database["public"]["Enums"]["job_status"]
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          code: string
+          created_at?: string
+          customer_id: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          organization_id: string
+          project_manager_id?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          code?: string
+          created_at?: string
+          customer_id?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          project_manager_id?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kpi_snapshots: {
+        Row: {
+          computed_at: string
+          created_at: string
+          id: number
+          organization_id: string
+          payload: Json
+          scope: string
+        }
+        Insert: {
+          computed_at?: string
+          created_at?: string
+          id?: number
+          organization_id: string
+          payload?: Json
+          scope: string
+        }
+        Update: {
+          computed_at?: string
+          created_at?: string
+          id?: number
+          organization_id?: string
+          payload?: Json
+          scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kpi_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kpi_targets: {
+        Row: {
+          created_at: string
+          id: number
+          metric: string
+          month: string
+          organization_id: string
+          target_value: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          metric: string
+          month: string
+          organization_id: string
+          target_value: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          metric?: string
+          month?: string
+          organization_id?: string
+          target_value?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kpi_targets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      material_lines: {
+        Row: {
+          approved: boolean | null
+          cost_code_id: string
+          created_at: string
+          description: string
+          id: string
+          item_id: string | null
+          job_id: string
+          qty: number
+          receipt_url: string | null
+          unit_cost: number
+          unit_price: number
+          updated_at: string
+          vendor_id: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          cost_code_id: string
+          created_at?: string
+          description: string
+          id?: string
+          item_id?: string | null
+          job_id: string
+          qty?: number
+          receipt_url?: string | null
+          unit_cost?: number
+          unit_price?: number
+          updated_at?: string
+          vendor_id?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          cost_code_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          item_id?: string | null
+          job_id?: string
+          qty?: number
+          receipt_url?: string | null
+          unit_cost?: number
+          unit_price?: number
+          updated_at?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "material_lines_cost_code_id_fkey"
+            columns: ["cost_code_id"]
+            isOneToOne: false
+            referencedRelation: "cost_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_lines_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_lines_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_lines_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           created_at: string
@@ -380,6 +1006,66 @@ export type Database = {
           total_amount?: number
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          external_ref: string | null
+          id: string
+          name: string
+          plan: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          external_ref?: string | null
+          id?: string
+          name: string
+          plan?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          external_ref?: string | null
+          id?: string
+          name?: string
+          plan?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      overhead_rules: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          method: Database["public"]["Enums"]["overhead_method"]
+          name: string
+          organization_id: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          method: Database["public"]["Enums"]["overhead_method"]
+          name: string
+          organization_id: string
+          updated_at?: string
+          value: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          method?: Database["public"]["Enums"]["overhead_method"]
+          name?: string
+          organization_id?: string
+          updated_at?: string
+          value?: number
         }
         Relationships: []
       }
@@ -460,6 +1146,41 @@ export type Database = {
         }
         Relationships: []
       }
+      staging_events: {
+        Row: {
+          id: number
+          organization_id: string
+          payload: Json
+          provider: string
+          received_at: string
+          source_id: string | null
+        }
+        Insert: {
+          id?: number
+          organization_id: string
+          payload?: Json
+          provider: string
+          received_at?: string
+          source_id?: string | null
+        }
+        Update: {
+          id?: number
+          organization_id?: string
+          payload?: Json
+          provider?: string
+          received_at?: string
+          source_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staging_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       students: {
         Row: {
           active: boolean
@@ -511,6 +1232,267 @@ export type Database = {
         }
         Relationships: []
       }
+      subcontracts: {
+        Row: {
+          amount: number
+          approved: boolean | null
+          cost_code_id: string
+          created_at: string
+          description: string
+          id: string
+          job_id: string
+          po_number: string | null
+          status: string | null
+          updated_at: string
+          vendor_id: string
+        }
+        Insert: {
+          amount: number
+          approved?: boolean | null
+          cost_code_id: string
+          created_at?: string
+          description: string
+          id?: string
+          job_id: string
+          po_number?: string | null
+          status?: string | null
+          updated_at?: string
+          vendor_id: string
+        }
+        Update: {
+          amount?: number
+          approved?: boolean | null
+          cost_code_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          job_id?: string
+          po_number?: string | null
+          status?: string | null
+          updated_at?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subcontracts_cost_code_id_fkey"
+            columns: ["cost_code_id"]
+            isOneToOne: false
+            referencedRelation: "cost_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subcontracts_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subcontracts_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      time_entries: {
+        Row: {
+          approved: boolean | null
+          burden_rate: number | null
+          cost_code_id: string
+          created_at: string
+          end_time: string | null
+          hours: number | null
+          id: string
+          job_id: string
+          notes: string | null
+          source: Database["public"]["Enums"]["time_entry_source"]
+          start_time: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          approved?: boolean | null
+          burden_rate?: number | null
+          cost_code_id: string
+          created_at?: string
+          end_time?: string | null
+          hours?: number | null
+          id?: string
+          job_id: string
+          notes?: string | null
+          source?: Database["public"]["Enums"]["time_entry_source"]
+          start_time: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          approved?: boolean | null
+          burden_rate?: number | null
+          cost_code_id?: string
+          created_at?: string
+          end_time?: string | null
+          hours?: number | null
+          id?: string
+          job_id?: string
+          notes?: string | null
+          source?: Database["public"]["Enums"]["time_entry_source"]
+          start_time?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "time_entries_cost_code_id_fkey"
+            columns: ["cost_code_id"]
+            isOneToOne: false
+            referencedRelation: "cost_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "time_entries_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          auth_user_id: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          organization_id: string
+          role: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          auth_user_id?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          organization_id: string
+          role: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          auth_user_id?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          organization_id?: string
+          role?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_bills: {
+        Row: {
+          amount: number
+          approved: boolean | null
+          attachment_url: string | null
+          bill_date: string
+          bill_number: string | null
+          created_at: string
+          id: string
+          job_id: string
+          updated_at: string
+          vendor_id: string
+        }
+        Insert: {
+          amount: number
+          approved?: boolean | null
+          attachment_url?: string | null
+          bill_date: string
+          bill_number?: string | null
+          created_at?: string
+          id?: string
+          job_id: string
+          updated_at?: string
+          vendor_id: string
+        }
+        Update: {
+          amount?: number
+          approved?: boolean | null
+          attachment_url?: string | null
+          bill_date?: string
+          bill_number?: string | null
+          created_at?: string
+          id?: string
+          job_id?: string
+          updated_at?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_bills_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_bills_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendors: {
+        Row: {
+          active: boolean
+          address: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          organization_id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -519,7 +1501,27 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      cost_code_type:
+        | "labor"
+        | "material"
+        | "subcontract"
+        | "equipment"
+        | "fee"
+        | "overhead"
+      integration_provider: "ghl" | "quickbooks" | "xero"
+      invoice_method: "fixed" | "t_and_m" | "progress" | "milestone"
+      job_status:
+        | "estimate"
+        | "scheduled"
+        | "in_progress"
+        | "hold"
+        | "complete"
+        | "invoiced"
+      overhead_method:
+        | "percent_of_labor"
+        | "percent_of_direct_cost"
+        | "flat_per_hour"
+      time_entry_source: "mobile" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -646,6 +1648,31 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      cost_code_type: [
+        "labor",
+        "material",
+        "subcontract",
+        "equipment",
+        "fee",
+        "overhead",
+      ],
+      integration_provider: ["ghl", "quickbooks", "xero"],
+      invoice_method: ["fixed", "t_and_m", "progress", "milestone"],
+      job_status: [
+        "estimate",
+        "scheduled",
+        "in_progress",
+        "hold",
+        "complete",
+        "invoiced",
+      ],
+      overhead_method: [
+        "percent_of_labor",
+        "percent_of_direct_cost",
+        "flat_per_hour",
+      ],
+      time_entry_source: ["mobile", "admin"],
+    },
   },
 } as const

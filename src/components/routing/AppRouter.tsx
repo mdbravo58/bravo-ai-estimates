@@ -5,6 +5,8 @@ import LandingPage from "@/pages/LandingPage";
 import Dashboard from "@/pages/Dashboard";
 import EstimateBuilder from "@/pages/EstimateBuilder";
 import CustomerPortal from "@/pages/CustomerPortal";
+import Jobs from "@/pages/Jobs";
+import TechMobile from "@/pages/TechMobile";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -40,6 +42,22 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <EstimateBuilder />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/jobs" 
+        element={
+          <ProtectedRoute>
+            <Jobs />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/mobile" 
+        element={
+          <ProtectedRoute>
+            <TechMobile />
           </ProtectedRoute>
         } 
       />
