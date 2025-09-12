@@ -405,6 +405,20 @@ const GHLIntegration = () => {
                             </pre>
                           </details>
                         )}
+
+                        {Array.isArray(connectionTest.accessibleLocations) && (
+                          <details className="mt-2">
+                            <summary className="cursor-pointer">Accessible Locations</summary>
+                            <ul className="text-xs mt-1 p-2 bg-gray-100 rounded overflow-auto space-y-1">
+                              {connectionTest.accessibleLocations.map((loc: any, idx: number) => (
+                                <li key={idx}>
+                                  <code>{loc.id || loc.locationId}</code>
+                                  {loc.name ? ` — ${loc.name}` : ''}
+                                </li>
+                              ))}
+                            </ul>
+                          </details>
+                        )}
                       </>
                     )}
                   </div>

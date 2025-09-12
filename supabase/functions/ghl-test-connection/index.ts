@@ -117,7 +117,8 @@ serve(async (req) => {
         troubleshooting: ghlResponse.status === 401 
           ? "Invalid API key or insufficient permissions. Make sure you're using the API key from the correct GHL subaccount."
           : "Check your Location ID and API key configuration.",
-        usingTempKey: !!tempApiKey
+        usingTempKey: !!tempApiKey,
+        accessibleLocations
       }), {
         status: 200, // Return 200 so the frontend can handle the error
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
