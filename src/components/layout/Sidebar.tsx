@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link, useLocation } from "react-router-dom";
 import {
   FileText,
   Users,
@@ -68,9 +69,12 @@ export function Sidebar({ className }: SidebarProps) {
                 "w-full justify-start gap-3 px-3 py-2 text-left font-normal",
                 collapsed && "justify-center px-0"
               )}
+              asChild
             >
-              <Icon className="h-5 w-5 shrink-0" />
-              {!collapsed && <span>{item.name}</span>}
+              <Link to={item.href} aria-label={item.name}>
+                <Icon className="h-5 w-5 shrink-0" />
+                {!collapsed && <span>{item.name}</span>}
+              </Link>
             </Button>
           );
         })}
