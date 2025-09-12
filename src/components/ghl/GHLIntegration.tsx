@@ -249,6 +249,16 @@ const GHLIntegration = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-4">
+            <h4 className="font-medium text-yellow-800 mb-2">🔑 Can't Find API Settings in GHL?</h4>
+            <div className="text-sm text-yellow-700 space-y-2">
+              <p><strong>1. Contact GHL Support:</strong> Ask them to enable API access for your account</p>
+              <p><strong>2. Check Account Type:</strong> You might need an Agency-level account for API access</p>
+              <p><strong>3. Try Sub-Account:</strong> API keys are often generated at sub-account level</p>
+              <p><strong>4. Alternative:</strong> For now, you can test the interface without real API keys</p>
+            </div>
+          </div>
+          
           <p className="text-muted-foreground mb-4">
             Connect your service business with GoHighLevel's powerful marketing automation, 
             lead management, and communication tools.
@@ -256,25 +266,25 @@ const GHLIntegration = () => {
           
           <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div className="space-y-2">
-              <Label htmlFor="locationId">GHL Location ID</Label>
+              <Label htmlFor="locationId">GHL Location ID (Optional for Demo)</Label>
               <Input
                 id="locationId"
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
-                placeholder="Enter your GHL Location ID"
+                placeholder="Enter your GHL Location ID or leave blank for demo"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tempApiKey">Temp API Key (for testing)</Label>
+              <Label htmlFor="tempApiKey">Temp API Key (Optional for Demo)</Label>
               <Input
                 id="tempApiKey"
                 type="password"
                 value={tempApiKey}
                 onChange={(e) => setTempApiKey(e.target.value)}
-                placeholder="Paste your GHL API key here to test"
+                placeholder="Paste your GHL API key here or leave blank for demo"
               />
               <p className="text-xs text-muted-foreground">
-                This bypasses Supabase secrets for direct testing
+                Leave empty to test the interface without real API calls
               </p>
             </div>
           </div>
