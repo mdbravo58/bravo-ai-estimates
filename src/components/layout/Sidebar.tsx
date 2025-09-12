@@ -12,6 +12,7 @@ import {
   BarChart3,
   ChevronLeft,
   Home,
+  HelpCircle,
 } from "lucide-react";
 
 const navigation = [
@@ -23,6 +24,7 @@ const navigation = [
   { name: "Reports", icon: BarChart3, href: "/reports" },
   { name: "Billing", icon: CreditCard, href: "/billing" },
   { name: "Settings", icon: Settings, href: "/settings" },
+  { name: "Guide", icon: HelpCircle, href: "/guide" },
 ];
 
 interface SidebarProps {

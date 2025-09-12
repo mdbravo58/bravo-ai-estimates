@@ -17,6 +17,7 @@ import Reports from "@/pages/Reports";
 import Billing from "@/pages/Billing";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
+import Guide from "@/pages/Guide";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -127,6 +128,14 @@ export const AppRouter = () => {
         } 
       />
       <Route path="/portal/:estimateId" element={<CustomerPortal />} />
+      <Route 
+        path="/guide" 
+        element={
+          <ProtectedRoute>
+            <Guide />
+          </ProtectedRoute>
+        } 
+      />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
