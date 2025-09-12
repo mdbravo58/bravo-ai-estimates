@@ -20,6 +20,7 @@ import NotFound from "@/pages/NotFound";
 import Guide from "@/pages/Guide";
 import StepByStepGuides from "@/pages/StepByStepGuides";
 import AI from "@/pages/AI";
+import GHL from "@/pages/GHL";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -151,6 +152,14 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <AI />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/ghl" 
+        element={
+          <ProtectedRoute>
+            <GHL />
           </ProtectedRoute>
         } 
       />

@@ -14,6 +14,7 @@ import {
   Home,
   HelpCircle,
   Brain,
+  Zap,
 } from "lucide-react";
 
 const navigation = [
@@ -26,6 +27,7 @@ const navigation = [
   { name: "Billing", icon: CreditCard, href: "/billing" },
   { name: "Settings", icon: Settings, href: "/settings" },
   { name: "AI Assistant", icon: Brain, href: "/ai" },
+  { name: "GoHighLevel", icon: Zap, href: "/ghl" },
   { name: "Guide", icon: HelpCircle, href: "/guide" },
 ];
 
