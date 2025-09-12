@@ -419,6 +419,21 @@ const GHLIntegration = () => {
                             </ul>
                           </details>
                         )}
+
+                        {Array.isArray(connectionTest.hostResults) && (
+                          <details className="mt-2">
+                            <summary className="cursor-pointer">API Host Results</summary>
+                            <ul className="text-xs mt-1 p-2 bg-gray-100 rounded overflow-auto space-y-1">
+                              {connectionTest.hostResults.map((r: any, idx: number) => (
+                                <li key={idx}>
+                                  <div>Host: <code>{r.host}</code></div>
+                                  <div>Status: {r.status} {r.statusText}</div>
+                                  {r.body?.message && <div>Message: {r.body.message}</div>}
+                                </li>
+                              ))}
+                            </ul>
+                          </details>
+                        )}
                       </>
                     )}
                   </div>
