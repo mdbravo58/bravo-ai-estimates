@@ -36,7 +36,7 @@ serve(async (req) => {
     }
 
     // Use temporary API key if provided, otherwise use environment key
-    const apiKeyToUse = tempApiKey || ghlApiKey;
+    const apiKeyToUse = (tempApiKey || ghlApiKey || '').trim();
     
     console.log('Testing GHL connection for location:', locationId);
     console.log('Using temp API key:', tempApiKey ? 'YES (direct)' : 'NO (from env)');
@@ -45,7 +45,7 @@ serve(async (req) => {
     const decoded = decodeJwtPayload(apiKeyToUse);
     const now = Math.floor(Date.now() / 1000);
     const isExpired = decoded?.exp ? decoded.exp < now : false;
-    console.log('JWT decoded (partial):', decoded ? { exp: decoded.exp, iss: decoded.iss, sub: decoded.sub } : 'unparseable');
+    console.log('JWT decoded (partial):', decoded ? { exp: decoded.exp, iss: decoded.iss, sub: decoded.sub, aud: decoded.aud } : 'unparseable');
     if (isExpired) {
       return new Response(JSON.stringify({
         success: false,
@@ -58,6 +58,23 @@ serve(async (req) => {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    // First, discover which locations this key can access
+    let accessibleLocations: any[] = [];
+    try {
+      const locRes = await fetch(`https://services.leadconnectorhq.com/locations/search?limit=50`, {
+        headers: {
+          'Authorization': `Bearer ${apiKeyToUse}`,
+          'Version': '2021-07-28',
+          'Accept': 'application/json',
+        },
+      });
+      const locText = await locRes.text();
+      try { accessibleLocations = JSON.parse(locText)?.locations || []; } catch { /* ignore */ }
+      console.log('Accessible locations count:', accessibleLocations.length);
+    } catch (e) {
+      console.log('Locations discovery failed (ignored):', e);
     }
 
     // Test the GHL API connection using the newer Search Contacts API
