@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    const { locationId } = await req.json();
+    const { locationId, tempApiKey } = await req.json();
     
     if (!locationId) {
       return new Response(JSON.stringify({ error: 'locationId is required' }), {
@@ -23,13 +23,17 @@ serve(async (req) => {
       });
     }
 
+    // Use temporary API key if provided, otherwise use environment key
+    const apiKeyToUse = tempApiKey || ghlApiKey;
+    
     console.log('Testing GHL connection for location:', locationId);
-    console.log('Using GHL API key (first 10 chars):', ghlApiKey?.substring(0, 10) + '...');
+    console.log('Using temp API key:', tempApiKey ? 'YES (direct)' : 'NO (from env)');
+    console.log('API key (first 10 chars):', apiKeyToUse?.substring(0, 10) + '...');
 
     // Test the GHL API connection using the newer Search Contacts API
     const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/search?locationId=${locationId}&limit=1`, {
       headers: {
-        'Authorization': `Bearer ${ghlApiKey}`,
+        'Authorization': `Bearer ${apiKeyToUse}`,
         'Version': '2021-07-28',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -64,8 +68,9 @@ serve(async (req) => {
         error: errorMessage,
         details: details,
         troubleshooting: ghlResponse.status === 401 
-          ? "Invalid API key or insufficient permissions. Check that the API key is from the correct subaccount and has Contacts permissions."
-          : "Check your Location ID and API key configuration."
+          ? "Invalid API key or insufficient permissions. Make sure you're using the API key from the correct GHL subaccount."
+          : "Check your Location ID and API key configuration.",
+        usingTempKey: !!tempApiKey
       }), {
         status: 200, // Return 200 so the frontend can handle the error
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -85,7 +90,8 @@ serve(async (req) => {
       status: ghlResponse.status,
       message: "Connection successful!",
       contactsFound: responseData?.contacts?.length || 0,
-      details: responseData
+      details: responseData,
+      usingTempKey: !!tempApiKey
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

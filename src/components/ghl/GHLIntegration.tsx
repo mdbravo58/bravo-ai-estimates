@@ -22,6 +22,7 @@ const GHLIntegration = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isTestingConnection, setIsTestingConnection] = useState(false);
   const [locationId, setLocationId] = useState('');
+  const [tempApiKey, setTempApiKey] = useState('');
   const [pipelineId, setPipelineId] = useState('');
   const [workflowId, setWorkflowId] = useState('');
   const [syncStats, setSyncStats] = useState<any>(null);
@@ -45,7 +46,7 @@ const GHLIntegration = () => {
       console.log('Testing GHL connection...');
       
       const { data: testResult, error: testError } = await supabase.functions.invoke('ghl-test-connection', {
-        body: { locationId }
+        body: { locationId, tempApiKey }
       });
       
       console.log('Test connection response:', { testResult, testError });
@@ -237,7 +238,7 @@ const GHLIntegration = () => {
             lead management, and communication tools.
           </p>
           
-          <div className="grid gap-4 md:grid-cols-3 mb-6">
+          <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div className="space-y-2">
               <Label htmlFor="locationId">GHL Location ID</Label>
               <Input
@@ -247,6 +248,22 @@ const GHLIntegration = () => {
                 placeholder="Enter your GHL Location ID"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="tempApiKey">Temp API Key (for testing)</Label>
+              <Input
+                id="tempApiKey"
+                type="password"
+                value={tempApiKey}
+                onChange={(e) => setTempApiKey(e.target.value)}
+                placeholder="Paste your GHL API key here to test"
+              />
+              <p className="text-xs text-muted-foreground">
+                This bypasses Supabase secrets for direct testing
+              </p>
+            </div>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div className="space-y-2">
               <Label htmlFor="pipelineId">Pipeline ID</Label>
               <Input
