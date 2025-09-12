@@ -14,7 +14,9 @@ import {
   Settings, 
   Smartphone,
   ClipboardList,
-  TrendingUp
+  TrendingUp,
+  Bot,
+  Brain
 } from "lucide-react";
 
 const GuidePage = () => {
@@ -29,7 +31,7 @@ const GuidePage = () => {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-9">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="estimates">Estimates</TabsTrigger>
@@ -37,6 +39,7 @@ const GuidePage = () => {
             <TabsTrigger value="customers">Customers</TabsTrigger>
             <TabsTrigger value="pricing">Pricing</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
+            <TabsTrigger value="ai">AI Training</TabsTrigger>
             <TabsTrigger value="mobile">Mobile</TabsTrigger>
           </TabsList>
 
@@ -63,6 +66,10 @@ const GuidePage = () => {
                       <li>• Customer relationship management</li>
                       <li>• Pricing tools and calculators</li>
                       <li>• Financial reporting and analytics</li>
+                      <li>• AI-powered customer service</li>
+                      <li>• AI estimate generation</li>
+                      <li>• Voice assistant capabilities</li>
+                      <li>• AI analytics and insights</li>
                       <li>• Mobile field technician app</li>
                       <li>• Billing and payment processing</li>
                       <li>• Team collaboration tools</li>
@@ -384,6 +391,80 @@ const GuidePage = () => {
                         <li>• Share reports with stakeholders</li>
                       </ul>
                     </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="ai" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="h-5 w-5" />
+                  AI Training & Features
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p>Learn how to leverage AI-powered features to enhance your business operations and customer service.</p>
+                
+                <div className="space-y-3">
+                  <div>
+                    <h4 className="font-semibold flex items-center gap-2">
+                      <Bot className="h-4 w-4" />
+                      AI Customer Service Chat
+                    </h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• 24/7 automated customer support</li>
+                      <li>• Instant responses to common inquiries</li>
+                      <li>• Smart routing to human agents when needed</li>
+                      <li>• Multi-language support capabilities</li>
+                      <li>• Integration with your knowledge base</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">AI Estimate Generator</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Upload photos for automatic analysis</li>
+                      <li>• AI-powered damage assessment</li>
+                      <li>• Intelligent material and labor calculations</li>
+                      <li>• Historical data-driven pricing</li>
+                      <li>• Quick turnaround for competitive advantage</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">Voice Assistant</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Process customer calls automatically</li>
+                      <li>• Schedule appointments via voice commands</li>
+                      <li>• Extract key information from conversations</li>
+                      <li>• Generate call summaries and action items</li>
+                      <li>• Integration with CRM and scheduling systems</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">AI Analytics Dashboard</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Predictive business insights</li>
+                      <li>• Performance trend analysis</li>
+                      <li>• Customer behavior patterns</li>
+                      <li>• Revenue forecasting</li>
+                      <li>• Optimization recommendations</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">Getting Started with AI</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Enable AI features in your settings</li>
+                      <li>• Configure your knowledge base</li>
+                      <li>• Train the system with your business data</li>
+                      <li>• Test AI responses before going live</li>
+                      <li>• Monitor performance and refine settings</li>
+                    </ul>
                   </div>
                 </div>
               </CardContent>
