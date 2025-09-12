@@ -319,13 +319,15 @@ const GHLIntegration = () => {
           
           <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div className="space-y-2">
-              <Label htmlFor="pipelineId">Pipeline ID</Label>
+              <Label htmlFor="tempApiKey">GHL API Key (Access Token)</Label>
               <Input
-                id="pipelineId"
-                value={pipelineId}
-                onChange={(e) => setPipelineId(e.target.value)}
-                placeholder="Enter your Pipeline ID"
+                id="tempApiKey"
+                type="password"
+                value={tempApiKey}
+                onChange={(e) => setTempApiKey(e.target.value)}
+                placeholder="Paste your GHL Access Token (JWT)"
               />
+              <p className="text-xs text-muted-foreground">Use the sub-account Access Token from GHL → Settings → Integrations → Access Tokens.</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="workflowId">Workflow ID</Label>
