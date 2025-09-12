@@ -27,6 +27,7 @@ const GHLIntegration = () => {
   const [workflowId, setWorkflowId] = useState('');
   const [syncStats, setSyncStats] = useState<any>(null);
   const [connectionTest, setConnectionTest] = useState<any>(null);
+  const [organizationId, setOrganizationId] = useState<string>('');
   const { toast } = useToast();
 
   const handleTestConnection = async () => {
@@ -249,13 +250,12 @@ const GHLIntegration = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-4">
-            <h4 className="font-medium text-yellow-800 mb-2">🔑 Can't Find API Settings in GHL?</h4>
-            <div className="text-sm text-yellow-700 space-y-2">
-              <p><strong>1. Contact GHL Support:</strong> Ask them to enable API access for your account</p>
-              <p><strong>2. Check Account Type:</strong> You might need an Agency-level account for API access</p>
-              <p><strong>3. Try Sub-Account:</strong> API keys are often generated at sub-account level</p>
-              <p><strong>4. Alternative:</strong> For now, you can test the interface without real API keys</p>
+          <div className="bg-green-50 border border-green-200 p-4 rounded-lg mb-4">
+            <h4 className="font-medium text-green-800 mb-2">✅ GHL API Connected</h4>
+            <div className="text-sm text-green-700 space-y-2">
+              <p><strong>Webhook URL:</strong> https://kgwruguzjidernenftyb.supabase.co/functions/v1/ghl-webhook</p>
+              <p><strong>Organization ID:</strong> {organizationId || 'Loading...'}</p>
+              <p>Configure this webhook in your GHL account to sync contacts automatically.</p>
             </div>
           </div>
           
@@ -266,26 +266,24 @@ const GHLIntegration = () => {
           
           <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div className="space-y-2">
-              <Label htmlFor="locationId">GHL Location ID (Optional for Demo)</Label>
+              <Label htmlFor="locationId">GHL Location ID</Label>
               <Input
                 id="locationId"
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
-                placeholder="Enter your GHL Location ID or leave blank for demo"
+                placeholder="Enter your GHL Location ID"
+                required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tempApiKey">Temp API Key (Optional for Demo)</Label>
+              <Label htmlFor="pipelineId">Pipeline ID</Label>
               <Input
-                id="tempApiKey"
-                type="password"
-                value={tempApiKey}
-                onChange={(e) => setTempApiKey(e.target.value)}
-                placeholder="Paste your GHL API key here or leave blank for demo"
+                id="pipelineId"
+                value={pipelineId}
+                onChange={(e) => setPipelineId(e.target.value)}
+                placeholder="Enter your GHL Pipeline ID"
+                required
               />
-              <p className="text-xs text-muted-foreground">
-                Leave empty to test the interface without real API calls
-              </p>
             </div>
           </div>
           
