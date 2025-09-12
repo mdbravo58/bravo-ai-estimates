@@ -120,6 +120,11 @@ const GHLIntegration = () => {
 
       if (error) throw new Error(`Sync failed: ${error.message}`);
 
+      if (data && data.success === false) {
+        const statusInfo = data.status ? ` (HTTP ${data.status})` : '';
+        throw new Error(`${data.error || 'Sync failed'}${statusInfo}`);
+      }
+
       setSyncStats(data);
       toast({
         title: "Sync Completed",

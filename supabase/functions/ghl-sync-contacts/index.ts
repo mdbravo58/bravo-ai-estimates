@@ -59,12 +59,21 @@ serve(async (req) => {
     if (!ghlResponse.ok) {
       const status = ghlResponse.status;
       const raw = await ghlResponse.text();
-      const details = raw?.slice(0, 500);
+      const details = raw?.slice(0, 1000);
       const msg = (status === 401 || status === 403)
         ? 'Invalid GHL API key or insufficient permissions'
         : `GHL API error: ${status} ${ghlResponse.statusText}`;
-      return new Response(JSON.stringify({ error: msg, details }), {
+      // Return 200 so the frontend can display detailed error info
+      return new Response(JSON.stringify({ 
+        success: false,
         status,
+        error: msg,
+        details,
+        troubleshooting: (status === 401 || status === 403)
+          ? 'Use the subaccount API key that owns this Location ID and update the GHL_API_KEY secret, then retry Test Connection.'
+          : 'Double-check the Location ID and try again.'
+      }), {
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
