@@ -60,31 +60,54 @@ serve(async (req) => {
       });
     }
 
-    // First, discover which locations this key can access
+    // Discover accessible locations across possible hosts
     let accessibleLocations: any[] = [];
-    try {
-      const locRes = await fetch(`https://services.leadconnectorhq.com/locations/search?limit=50`, {
-        headers: {
-          'Authorization': `Bearer ${apiKeyToUse}`,
-          'Version': '2021-07-28',
-          'Accept': 'application/json',
-        },
-      });
-      const locText = await locRes.text();
-      try { 
-        const locData = JSON.parse(locText);
-        accessibleLocations = locData?.locations || []; 
-      } catch { /* ignore */ }
-      console.log('Accessible locations count:', accessibleLocations.length);
-    } catch (e) {
-      console.log('Locations discovery failed (ignored):', e);
+    const hostsSet = new Set<string>([
+      'https://services.leadconnectorhq.com',
+      'https://api.msgsndr.com',
+    ]);
+
+    // Try to infer regional host from JWT `iss`
+    if (decoded?.iss && typeof decoded.iss === 'string') {
+      try {
+        const issUrl = new URL(decoded.iss);
+        const base = `${issUrl.protocol}//${issUrl.hostname}`.replace(/\/$/, '');
+        hostsSet.add(base);
+        // Derive companion host (api <-> services)
+        if (issUrl.hostname.startsWith('api.')) {
+          hostsSet.add(`${issUrl.protocol}//services.${issUrl.hostname.slice(4)}`);
+        } else if (issUrl.hostname.startsWith('services.')) {
+          hostsSet.add(`${issUrl.protocol}//api.${issUrl.hostname.slice(9)}`);
+        }
+      } catch (_) {
+        // ignore
+      }
     }
 
-    // Try both possible API hosts (region-specific)
-    const hosts = [
-      'https://services.leadconnectorhq.com',
-      'https://api.msgsndr.com'
-    ];
+    const hosts = Array.from(hostsSet);
+
+    // Best-effort location discovery (first host that responds)
+    for (const host of hosts) {
+      try {
+        const locRes = await fetch(`${host}/locations/search?limit=50`, {
+          headers: {
+            'Authorization': `Bearer ${apiKeyToUse}`,
+            'Version': '2021-07-28',
+            'Accept': 'application/json',
+          },
+        });
+        const locText = await locRes.text();
+        try {
+          const locData = JSON.parse(locText);
+          if (Array.isArray(locData?.locations)) {
+            accessibleLocations = locData.locations;
+            break;
+          }
+        } catch { /* ignore parse */ }
+      } catch (_) {
+        // try next host
+      }
+    }
 
     const results: any[] = [];
 
