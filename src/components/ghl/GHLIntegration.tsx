@@ -270,6 +270,16 @@ const GHLIntegration = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
+            <h4 className="font-medium text-blue-800 mb-2">📍 How to Find Your GHL Location ID</h4>
+            <div className="text-sm text-blue-700 space-y-2">
+              <p><strong>1.</strong> Log into your GoHighLevel account</p>
+              <p><strong>2.</strong> Go to Settings → Company → My Info</p>
+              <p><strong>3.</strong> Look for "Location ID" or check the URL: gohighlevel.com/v2/location/<span className="font-mono bg-blue-100 px-1 rounded">YOUR_LOCATION_ID</span></p>
+              <p><strong>4.</strong> Copy the Location ID and paste it below</p>
+            </div>
+          </div>
+
           <div className="bg-green-50 border border-green-200 p-4 rounded-lg mb-4">
             <h4 className="font-medium text-green-800 mb-2">✅ GHL API Connected</h4>
             <div className="text-sm text-green-700 space-y-2">
