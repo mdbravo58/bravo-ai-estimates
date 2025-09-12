@@ -113,7 +113,8 @@ const GHLIntegration = () => {
       const { data, error } = await supabase.functions.invoke('ghl-sync-contacts', {
         body: {
           organizationId,
-          locationId: locationId
+          locationId: locationId,
+          tempApiKey
         }
       });
       

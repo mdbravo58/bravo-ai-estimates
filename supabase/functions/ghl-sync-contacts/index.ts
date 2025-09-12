@@ -33,7 +33,7 @@ serve(async (req) => {
   }
 
   try {
-    const { organizationId, locationId } = await req.json();
+    const { organizationId, locationId, tempApiKey } = await req.json();
     
     if (!organizationId || !locationId) {
       return new Response(JSON.stringify({ error: 'organizationId and locationId are required' }), {
