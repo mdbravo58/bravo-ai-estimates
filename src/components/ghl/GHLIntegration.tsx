@@ -37,7 +37,7 @@ const GHLIntegration = () => {
         const { data: orgData, error } = await supabase
           .from('organizations')
           .select('id')
-          .single();
+          .maybeSingle();
         
         if (orgData && !error) {
           setOrganizationId(orgData.id);
@@ -446,6 +446,7 @@ const GHLIntegration = () => {
                       <>
                         <p>Status: HTTP {connectionTest.status}</p>
                         <p>Error: {connectionTest.error}</p>
+                        <p>Key used: {connectionTest.usingTempKey ? 'Access Token from field' : 'Server secret (GHL_API_KEY)'}</p>
                         <p className="font-medium">{connectionTest.troubleshooting}</p>
                         {connectionTest.details && (
                           <div className="mt-2">
