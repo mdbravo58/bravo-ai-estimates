@@ -18,6 +18,7 @@ import Billing from "@/pages/Billing";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
 import Guide from "@/pages/Guide";
+import StepByStepGuides from "@/pages/StepByStepGuides";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -133,6 +134,14 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <Guide />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/step-by-step" 
+        element={
+          <ProtectedRoute>
+            <StepByStepGuides />
           </ProtectedRoute>
         } 
       />

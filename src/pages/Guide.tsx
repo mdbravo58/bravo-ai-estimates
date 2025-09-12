@@ -2,6 +2,8 @@ import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { 
   BarChart3, 
   Users, 
@@ -460,10 +462,10 @@ const GuidePage = () => {
               <div>
                 <h4 className="font-semibold">Training Resources</h4>
                 <ul className="space-y-1 text-sm mt-2">
-                  <li>• Video tutorials for each feature</li>
-                  <li>• Step-by-step setup guides</li>
+                  <li>• <Button variant="link" className="p-0 h-auto" asChild><Link to="/step-by-step">Detailed step-by-step guides</Link></Button></li>
+                  <li>• Complete setup walkthroughs</li>
                   <li>• Best practices documentation</li>
-                  <li>• Webinar training sessions</li>
+                  <li>• Interactive feature tutorials</li>
                 </ul>
               </div>
               
