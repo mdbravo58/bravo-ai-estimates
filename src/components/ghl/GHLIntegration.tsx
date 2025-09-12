@@ -37,6 +37,7 @@ const GHLIntegration = () => {
     }
 
     setIsLoading(true);
+    let step: 'setup' | 'sync' = 'setup';
     try {
       console.log('Starting GHL contact sync...');
       
@@ -52,6 +53,7 @@ const GHLIntegration = () => {
       const organizationId = ensured?.organizationId;
       if (!organizationId) throw new Error('Organization setup incomplete');
 
+      step = 'sync';
       console.log('Calling ghl-sync-contacts with org:', organizationId);
       const { data, error } = await supabase.functions.invoke('ghl-sync-contacts', {
         body: {
@@ -62,7 +64,7 @@ const GHLIntegration = () => {
       
       console.log('ghl-sync-contacts response:', { data, error });
 
-      if (error) throw error;
+      if (error) throw new Error(`Sync failed: ${error.message}`);
 
       setSyncStats(data);
       toast({
@@ -70,11 +72,14 @@ const GHLIntegration = () => {
         description: data.message,
       });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Sync error:', error);
+      const generic = step === 'setup'
+        ? 'Setup failed. Please refresh and try again.'
+        : 'Sync failed. Double-check your GHL Location ID and that the GHL API key is set.';
       toast({
-        title: "Sync Failed",
-        description: error.message || "Failed to sync contacts",
+        title: step === 'setup' ? 'Setup Failed' : 'Sync Failed',
+        description: error?.message || generic,
         variant: "destructive",
       });
     } finally {
