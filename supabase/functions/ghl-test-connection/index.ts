@@ -125,21 +125,68 @@ serve(async (req) => {
       });
     }
 
-    // Parse successful response
-    let responseData;
-    try {
-      responseData = JSON.parse(responseText);
-    } catch (e) {
-      responseData = { raw: responseText };
+    // Try both possible API hosts (region-specific)
+    const hosts = [
+      'https://services.leadconnectorhq.com',
+      'https://api.msgsndr.com'
+    ];
+
+    const results: any[] = [];
+
+    for (const host of hosts) {
+      try {
+        const url = `${host}/contacts/search?locationId=${locationId}&limit=1`;
+        const res = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${apiKeyToUse}`,
+            'Version': '2021-07-28',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'LocationId': locationId,
+            'Location-Id': locationId,
+          },
+        });
+        const text = await res.text();
+        let parsed: any = null;
+        try { parsed = JSON.parse(text); } catch { parsed = { raw: text }; }
+        results.push({ host, ok: res.ok, status: res.status, statusText: res.statusText, body: parsed });
+      } catch (e: any) {
+        results.push({ host, ok: false, status: 0, statusText: 'Network Error', body: { error: String(e) } });
+      }
+    }
+
+    const success = results.find(r => r.ok);
+
+    if (!success) {
+      const primary = results[0];
+      const errorMessage = primary?.body?.message || `HTTP ${primary?.status}: ${primary?.statusText}`;
+      return new Response(JSON.stringify({
+        success: false,
+        status: primary?.status,
+        error: errorMessage,
+        details: primary?.body,
+        troubleshooting: (primary?.status === 401 || primary?.status === 403)
+          ? 'Invalid API key or key not valid for this region/subaccount. Regenerate key in this subaccount. If still failing, your account may use a different API host.'
+          : 'Check Location ID and try again.',
+        usingTempKey: !!tempApiKey,
+        accessibleLocations,
+        hostResults: results
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     return new Response(JSON.stringify({
       success: true,
-      status: ghlResponse.status,
-      message: "Connection successful!",
-      contactsFound: responseData?.contacts?.length || 0,
-      details: responseData,
-      usingTempKey: !!tempApiKey
+      status: success.status,
+      message: 'Connection successful!',
+      contactsFound: Array.isArray(success?.body?.contacts) ? success.body.contacts.length : 0,
+      details: success.body,
+      usingTempKey: !!tempApiKey,
+      usedHost: success.host,
+      hostResults: results,
+      accessibleLocations
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
