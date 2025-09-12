@@ -20,11 +20,65 @@ import {
 
 const GHLIntegration = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isTestingConnection, setIsTestingConnection] = useState(false);
   const [locationId, setLocationId] = useState('');
   const [pipelineId, setPipelineId] = useState('');
   const [workflowId, setWorkflowId] = useState('');
   const [syncStats, setSyncStats] = useState<any>(null);
+  const [connectionTest, setConnectionTest] = useState<any>(null);
   const { toast } = useToast();
+
+  const handleTestConnection = async () => {
+    if (!locationId) {
+      toast({
+        title: "Error",
+        description: "Please enter your GHL Location ID",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsTestingConnection(true);
+    setConnectionTest(null);
+
+    try {
+      console.log('Testing GHL connection...');
+      
+      const { data: testResult, error: testError } = await supabase.functions.invoke('ghl-test-connection', {
+        body: { locationId }
+      });
+      
+      console.log('Test connection response:', { testResult, testError });
+
+      if (testError) {
+        throw new Error(testError.message);
+      }
+
+      setConnectionTest(testResult);
+      
+      if (testResult.success) {
+        toast({
+          title: "Success",
+          description: testResult.message,
+        });
+      } else {
+        toast({
+          title: "Connection Failed",
+          description: testResult.troubleshooting || testResult.error,
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      console.error('Test connection error:', error);
+      toast({
+        title: "Test Failed",
+        description: `Connection test failed: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsTestingConnection(false);
+    }
+  };
 
   const handleContactSync = async () => {
     if (!locationId) {
@@ -232,23 +286,92 @@ const GHLIntegration = () => {
                 This will import all contact details including names, emails, phones, and addresses.
               </p>
               
-              <Button 
-                onClick={handleContactSync} 
-                disabled={isLoading || !locationId}
-                className="w-full"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Syncing Contacts...
-                  </>
-                ) : (
-                  <>
-                    <Users className="mr-2 h-4 w-4" />
-                    Sync Contacts from GHL
-                  </>
-                )}
-              </Button>
+              <div className="space-y-3">
+                <Button 
+                  onClick={handleTestConnection} 
+                  disabled={isTestingConnection || !locationId}
+                  variant="outline"
+                  className="w-full"
+                >
+                  {isTestingConnection ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Testing Connection...
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="mr-2 h-4 w-4" />
+                      Test GHL Connection
+                    </>
+                  )}
+                </Button>
+                
+                <Button 
+                  onClick={handleContactSync} 
+                  disabled={isLoading || !locationId}
+                  className="w-full"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Syncing Contacts...
+                    </>
+                  ) : (
+                    <>
+                      <Users className="mr-2 h-4 w-4" />
+                      Sync Contacts from GHL
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {connectionTest && (
+                <div className={`p-4 border rounded-lg ${
+                  connectionTest.success 
+                    ? 'bg-green-50 border-green-200' 
+                    : 'bg-red-50 border-red-200'
+                }`}>
+                  <div className="flex items-center gap-2 mb-2">
+                    {connectionTest.success ? (
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <AlertCircle className="h-4 w-4 text-red-600" />
+                    )}
+                    <span className={`font-medium ${
+                      connectionTest.success ? 'text-green-800' : 'text-red-800'
+                    }`}>
+                      {connectionTest.success ? 'Connection Successful' : 'Connection Failed'}
+                    </span>
+                  </div>
+                  <div className={`text-sm space-y-1 ${
+                    connectionTest.success ? 'text-green-700' : 'text-red-700'
+                  }`}>
+                    {connectionTest.success ? (
+                      <>
+                        <p>Status: HTTP {connectionTest.status}</p>
+                        <p>Contacts available: {connectionTest.contactsFound}</p>
+                        <p>✅ API key and Location ID are working correctly</p>
+                      </>
+                    ) : (
+                      <>
+                        <p>Status: HTTP {connectionTest.status}</p>
+                        <p>Error: {connectionTest.error}</p>
+                        <p className="font-medium">{connectionTest.troubleshooting}</p>
+                        {connectionTest.details && (
+                          <details className="mt-2">
+                            <summary className="cursor-pointer">View Details</summary>
+                            <pre className="text-xs mt-1 p-2 bg-gray-100 rounded overflow-auto">
+                              {typeof connectionTest.details === 'string' 
+                                ? connectionTest.details 
+                                : JSON.stringify(connectionTest.details, null, 2)}
+                            </pre>
+                          </details>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {syncStats && (
                 <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
