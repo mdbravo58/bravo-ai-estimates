@@ -1290,6 +1290,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      is_organization_owner: {
+        Args: { user_org_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       cost_code_type:
