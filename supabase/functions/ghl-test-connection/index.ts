@@ -44,8 +44,23 @@ serve(async (req) => {
     const decoded = decodeJwtPayload(apiKeyToUse);
     const now = Math.floor(Date.now() / 1000);
     const isExpired = decoded?.exp ? decoded.exp < now : false;
+    const isJwtLike = apiKeyToUse.split('.').length >= 3;
     console.log('JWT decoded (partial):', decoded ? { exp: decoded.exp, iss: decoded.iss, sub: decoded.sub, aud: decoded.aud } : 'unparseable');
-    
+
+    if (!isJwtLike || !decoded) {
+      return new Response(JSON.stringify({
+        success: false,
+        status: 401,
+        error: 'Token is not a valid JWT',
+        details: { note: 'Expected sub-account Access Token (JWT). The value provided does not look like a JWT.', decoded },
+        troubleshooting: 'In GHL, go to the specific sub-account → Settings → Integrations → Access Tokens → Create Access Token, then paste it here.',
+        usingTempKey: !!tempApiKey
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     if (isExpired) {
       return new Response(JSON.stringify({
         success: false,
