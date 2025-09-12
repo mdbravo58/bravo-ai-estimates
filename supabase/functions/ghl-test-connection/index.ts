@@ -19,7 +19,6 @@ function decodeJwtPayload(token: string) {
   }
 }
 
-
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -46,6 +45,7 @@ serve(async (req) => {
     const now = Math.floor(Date.now() / 1000);
     const isExpired = decoded?.exp ? decoded.exp < now : false;
     console.log('JWT decoded (partial):', decoded ? { exp: decoded.exp, iss: decoded.iss, sub: decoded.sub, aud: decoded.aud } : 'unparseable');
+    
     if (isExpired) {
       return new Response(JSON.stringify({
         success: false,
@@ -71,59 +71,13 @@ serve(async (req) => {
         },
       });
       const locText = await locRes.text();
-      try { accessibleLocations = JSON.parse(locText)?.locations || []; } catch { /* ignore */ }
+      try { 
+        const locData = JSON.parse(locText);
+        accessibleLocations = locData?.locations || []; 
+      } catch { /* ignore */ }
       console.log('Accessible locations count:', accessibleLocations.length);
     } catch (e) {
       console.log('Locations discovery failed (ignored):', e);
-    }
-
-    // Test the GHL API connection using the newer Search Contacts API
-    const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/search?locationId=${locationId}&limit=1`, {
-      headers: {
-        'Authorization': `Bearer ${apiKeyToUse}`,
-        'Version': '2021-07-28',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'LocationId': locationId,
-        'Location-Id': locationId,
-      },
-    });
-
-    const responseText = await ghlResponse.text();
-    
-    console.log('GHL Response Status:', ghlResponse.status);
-    // If key or response is invalid, include host and locations data below
-
-    if (!ghlResponse.ok) {
-      let errorMessage = `HTTP ${ghlResponse.status}: ${ghlResponse.statusText}`;
-      let details = responseText;
-      
-      // Parse error details if JSON
-      try {
-        const errorData = JSON.parse(responseText);
-        if (errorData.message) {
-          errorMessage = errorData.message;
-        }
-        details = JSON.stringify(errorData, null, 2);
-      // Normalize certain common HTML error pages to a message
-      if (typeof details === 'string' && details.includes('<html')) {
-        details = 'HTML error page returned by host (likely wrong host/region).';
-      }
-
-      return new Response(JSON.stringify({
-        success: false,
-        status: ghlResponse.status,
-        error: errorMessage,
-        details: details,
-        troubleshooting: ghlResponse.status === 401 
-          ? "Invalid API key or insufficient permissions. Make sure you're using the API key from the correct GHL subaccount."
-          : "Check your Location ID and API key configuration.",
-        usingTempKey: !!tempApiKey,
-        accessibleLocations
-      }), {
-        status: 200, // Return 200 so the frontend can handle the error
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
     }
 
     // Try both possible API hosts (region-specific)
@@ -149,7 +103,16 @@ serve(async (req) => {
         });
         const text = await res.text();
         let parsed: any = null;
-        try { parsed = JSON.parse(text); } catch { parsed = { raw: text }; }
+        try { 
+          parsed = JSON.parse(text); 
+        } catch { 
+          // Normalize certain common HTML error pages to a message
+          if (typeof text === 'string' && text.includes('<html')) {
+            parsed = { message: 'HTML error page returned by host (likely wrong host/region).' };
+          } else {
+            parsed = { raw: text };
+          }
+        }
         results.push({ host, ok: res.ok, status: res.status, statusText: res.statusText, body: parsed });
       } catch (e: any) {
         results.push({ host, ok: false, status: 0, statusText: 'Network Error', body: { error: String(e) } });
