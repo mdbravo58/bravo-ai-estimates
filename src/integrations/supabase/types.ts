@@ -14,63 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      belt_tests: {
-        Row: {
-          created_at: string
-          current_belt: string
-          id: string
-          instructor_id: string
-          notes: string | null
-          score: number | null
-          status: string
-          student_id: string
-          test_date: string
-          testing_for_belt: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          current_belt: string
-          id?: string
-          instructor_id: string
-          notes?: string | null
-          score?: number | null
-          status?: string
-          student_id: string
-          test_date: string
-          testing_for_belt: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          current_belt?: string
-          id?: string
-          instructor_id?: string
-          notes?: string | null
-          score?: number | null
-          status?: string
-          student_id?: string
-          test_date?: string
-          testing_for_belt?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "belt_tests_instructor_id_fkey"
-            columns: ["instructor_id"]
-            isOneToOne: false
-            referencedRelation: "instructors"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "belt_tests_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       cart_items: {
         Row: {
           created_at: string
@@ -129,101 +72,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
-      class_enrollments: {
-        Row: {
-          active: boolean
-          class_id: string
-          created_at: string
-          enrollment_date: string
-          id: string
-          student_id: string
-        }
-        Insert: {
-          active?: boolean
-          class_id: string
-          created_at?: string
-          enrollment_date?: string
-          id?: string
-          student_id: string
-        }
-        Update: {
-          active?: boolean
-          class_id?: string
-          created_at?: string
-          enrollment_date?: string
-          id?: string
-          student_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_enrollments_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_enrollments_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      classes: {
-        Row: {
-          active: boolean
-          belt_requirements: string[] | null
-          created_at: string
-          day_of_week: number
-          description: string | null
-          end_time: string
-          id: string
-          instructor_id: string
-          max_capacity: number | null
-          name: string
-          start_time: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          belt_requirements?: string[] | null
-          created_at?: string
-          day_of_week: number
-          description?: string | null
-          end_time: string
-          id?: string
-          instructor_id: string
-          max_capacity?: number | null
-          name: string
-          start_time: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          belt_requirements?: string[] | null
-          created_at?: string
-          day_of_week?: number
-          description?: string | null
-          end_time?: string
-          id?: string
-          instructor_id?: string
-          max_capacity?: number | null
-          name?: string
-          start_time?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "classes_instructor_id_fkey"
-            columns: ["instructor_id"]
-            isOneToOne: false
-            referencedRelation: "instructors"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       connections: {
         Row: {
@@ -504,54 +352,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      instructors: {
-        Row: {
-          active: boolean
-          avatar_url: string | null
-          belt_level: string
-          bio: string | null
-          created_at: string
-          email: string
-          full_name: string
-          hire_date: string
-          id: string
-          phone: string | null
-          specializations: string[] | null
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          active?: boolean
-          avatar_url?: string | null
-          belt_level: string
-          bio?: string | null
-          created_at?: string
-          email: string
-          full_name: string
-          hire_date?: string
-          id?: string
-          phone?: string | null
-          specializations?: string[] | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          active?: boolean
-          avatar_url?: string | null
-          belt_level?: string
-          bio?: string | null
-          created_at?: string
-          email?: string
-          full_name?: string
-          hire_date?: string
-          id?: string
-          phone?: string | null
-          specializations?: string[] | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
       }
       inventory: {
         Row: {
@@ -1219,57 +1019,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      students: {
-        Row: {
-          active: boolean
-          belt_level: string
-          created_at: string
-          date_of_birth: string | null
-          email: string | null
-          emergency_contact: string | null
-          emergency_phone: string | null
-          full_name: string
-          id: string
-          join_date: string
-          notes: string | null
-          phone: string | null
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          active?: boolean
-          belt_level?: string
-          created_at?: string
-          date_of_birth?: string | null
-          email?: string | null
-          emergency_contact?: string | null
-          emergency_phone?: string | null
-          full_name: string
-          id?: string
-          join_date?: string
-          notes?: string | null
-          phone?: string | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          active?: boolean
-          belt_level?: string
-          created_at?: string
-          date_of_birth?: string | null
-          email?: string | null
-          emergency_contact?: string | null
-          emergency_phone?: string | null
-          full_name?: string
-          id?: string
-          join_date?: string
-          notes?: string | null
-          phone?: string | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
       }
       subcontracts: {
         Row: {
