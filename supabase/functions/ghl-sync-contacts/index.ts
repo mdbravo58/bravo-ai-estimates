@@ -54,7 +54,16 @@ serve(async (req) => {
     });
 
     if (!ghlResponse.ok) {
-      throw new Error(`GHL API error: ${ghlResponse.status} ${ghlResponse.statusText}`);
+      const status = ghlResponse.status;
+      const raw = await ghlResponse.text();
+      const details = raw?.slice(0, 500);
+      const msg = (status === 401 || status === 403)
+        ? 'Invalid GHL API key or insufficient permissions'
+        : `GHL API error: ${status} ${ghlResponse.statusText}`;
+      return new Response(JSON.stringify({ error: msg, details }), {
+        status,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     const ghlData = await ghlResponse.json();
