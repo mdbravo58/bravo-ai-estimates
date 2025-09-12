@@ -51,6 +51,8 @@ serve(async (req) => {
         'Version': '2021-07-28',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'LocationId': locationId,
+        'Location-Id': locationId,
       },
     });
 
