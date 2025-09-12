@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   Home,
   HelpCircle,
+  Brain,
 } from "lucide-react";
 
 const navigation = [
@@ -24,6 +25,7 @@ const navigation = [
   { name: "Reports", icon: BarChart3, href: "/reports" },
   { name: "Billing", icon: CreditCard, href: "/billing" },
   { name: "Settings", icon: Settings, href: "/settings" },
+  { name: "AI Assistant", icon: Brain, href: "/ai" },
   { name: "Guide", icon: HelpCircle, href: "/guide" },
 ];
 

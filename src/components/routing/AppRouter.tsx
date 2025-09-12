@@ -19,6 +19,7 @@ import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
 import Guide from "@/pages/Guide";
 import StepByStepGuides from "@/pages/StepByStepGuides";
+import AI from "@/pages/AI";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -142,6 +143,14 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <StepByStepGuides />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/ai" 
+        element={
+          <ProtectedRoute>
+            <AI />
           </ProtectedRoute>
         } 
       />
