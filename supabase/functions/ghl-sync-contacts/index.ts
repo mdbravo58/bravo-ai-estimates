@@ -51,7 +51,9 @@ serve(async (req) => {
         'Version': '2021-07-28',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        // Some environments expect Location-Id while others accept LocationId
         'LocationId': locationId,
+        'Location-Id': locationId,
       },
     });
 
