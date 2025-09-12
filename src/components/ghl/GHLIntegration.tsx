@@ -38,20 +38,29 @@ const GHLIntegration = () => {
 
     setIsLoading(true);
     try {
+      console.log('Starting GHL contact sync...');
+      
       // Ensure user/org exists and get organization id
+      console.log('Calling ensure-user-org...');
       const { data: ensured, error: ensureError } = await supabase.functions.invoke('ensure-user-org', {
         body: {}
       });
-      if (ensureError) throw ensureError;
+      
+      console.log('ensure-user-org response:', { ensured, ensureError });
+      if (ensureError) throw new Error(`Setup failed: ${ensureError.message}`);
+      
       const organizationId = ensured?.organizationId;
-      if (!organizationId) throw new Error('Organization not set up');
+      if (!organizationId) throw new Error('Organization setup incomplete');
 
+      console.log('Calling ghl-sync-contacts with org:', organizationId);
       const { data, error } = await supabase.functions.invoke('ghl-sync-contacts', {
         body: {
           organizationId,
           locationId: locationId
         }
       });
+      
+      console.log('ghl-sync-contacts response:', { data, error });
 
       if (error) throw error;
 
