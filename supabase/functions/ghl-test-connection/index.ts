@@ -92,7 +92,7 @@ serve(async (req) => {
     const responseText = await ghlResponse.text();
     
     console.log('GHL Response Status:', ghlResponse.status);
-    console.log('GHL Response Text:', responseText);
+    // If key or response is invalid, include host and locations data below
 
     if (!ghlResponse.ok) {
       let errorMessage = `HTTP ${ghlResponse.status}: ${ghlResponse.statusText}`;
@@ -105,8 +105,9 @@ serve(async (req) => {
           errorMessage = errorData.message;
         }
         details = JSON.stringify(errorData, null, 2);
-      } catch (e) {
-        // Not JSON, use raw text
+      // Normalize certain common HTML error pages to a message
+      if (typeof details === 'string' && details.includes('<html')) {
+        details = 'HTML error page returned by host (likely wrong host/region).';
       }
 
       return new Response(JSON.stringify({

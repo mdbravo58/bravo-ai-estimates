@@ -343,6 +343,10 @@ const GHLIntegration = () => {
                     </>
                   )}
                 </Button>
+
+                {!connectionTest && (
+                  <p className="text-xs text-muted-foreground">Tip: If it fails, I’ll show the exact error and API host details here.</p>
+                )}
                 
                 <Button 
                   onClick={handleContactSync} 
@@ -396,19 +400,18 @@ const GHLIntegration = () => {
                         <p>Error: {connectionTest.error}</p>
                         <p className="font-medium">{connectionTest.troubleshooting}</p>
                         {connectionTest.details && (
-                          <details className="mt-2">
-                            <summary className="cursor-pointer">View Details</summary>
+                          <div className="mt-2">
+                            <div className="text-xs font-medium">Details</div>
                             <pre className="text-xs mt-1 p-2 bg-gray-100 rounded overflow-auto">
                               {typeof connectionTest.details === 'string' 
                                 ? connectionTest.details 
                                 : JSON.stringify(connectionTest.details, null, 2)}
                             </pre>
-                          </details>
+                          </div>
                         )}
-
-                        {Array.isArray(connectionTest.accessibleLocations) && (
-                          <details className="mt-2">
-                            <summary className="cursor-pointer">Accessible Locations</summary>
+                        {Array.isArray(connectionTest.accessibleLocations) && connectionTest.accessibleLocations.length > 0 && (
+                          <div className="mt-2">
+                            <div className="text-xs font-medium">Accessible Locations</div>
                             <ul className="text-xs mt-1 p-2 bg-gray-100 rounded overflow-auto space-y-1">
                               {connectionTest.accessibleLocations.map((loc: any, idx: number) => (
                                 <li key={idx}>
@@ -417,12 +420,11 @@ const GHLIntegration = () => {
                                 </li>
                               ))}
                             </ul>
-                          </details>
+                          </div>
                         )}
-
                         {Array.isArray(connectionTest.hostResults) && (
-                          <details className="mt-2">
-                            <summary className="cursor-pointer">API Host Results</summary>
+                          <div className="mt-2">
+                            <div className="text-xs font-medium">API Host Results</div>
                             <ul className="text-xs mt-1 p-2 bg-gray-100 rounded overflow-auto space-y-1">
                               {connectionTest.hostResults.map((r: any, idx: number) => (
                                 <li key={idx}>
@@ -432,7 +434,7 @@ const GHLIntegration = () => {
                                 </li>
                               ))}
                             </ul>
-                          </details>
+                          </div>
                         )}
                       </>
                     )}
