@@ -38,21 +38,17 @@ const GHLIntegration = () => {
 
     setIsLoading(true);
     try {
-      // Get current user's organization
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Not authenticated');
-
-      const { data: userInfo } = await supabase
-        .from('users')
-        .select('organization_id')
-        .eq('auth_user_id', userData.user.id)
-        .single();
-
-      if (!userInfo) throw new Error('User not found');
+      // Ensure user/org exists and get organization id
+      const { data: ensured, error: ensureError } = await supabase.functions.invoke('ensure-user-org', {
+        body: {}
+      });
+      if (ensureError) throw ensureError;
+      const organizationId = ensured?.organizationId;
+      if (!organizationId) throw new Error('Organization not set up');
 
       const { data, error } = await supabase.functions.invoke('ghl-sync-contacts', {
         body: {
-          organizationId: userInfo.organization_id,
+          organizationId,
           locationId: locationId
         }
       });

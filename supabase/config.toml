@@ -2,3 +2,6 @@ project_id = "kgwruguzjidernenftyb"
 
 [functions.auth-trigger]
 verify_jwt = false
+
+[functions.ensure-user-org]
+verify_jwt = true
