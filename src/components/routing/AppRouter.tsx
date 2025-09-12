@@ -8,6 +8,7 @@ import CustomerPortal from "@/pages/CustomerPortal";
 import Jobs from "@/pages/Jobs";
 import TechMobile from "@/pages/TechMobile";
 import Auth from "@/pages/Auth";
+import Demo from "@/pages/Demo";
 import NotFound from "@/pages/NotFound";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
@@ -25,6 +26,7 @@ export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
+      <Route path="/demo" element={<Demo />} />
       <Route 
         path="/" 
         element={

@@ -114,15 +114,17 @@ const LandingPage = () => {
             Streamline your home services business with professional estimate tools that help you win more jobs and grow faster.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/auth">
+            <Link to="/demo">
               <Button variant="secondary" size="lg" className="text-lg px-8">
-                Start Free Trial
+                Try Live Demo
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="text-lg px-8 bg-white/10 border-white/20 text-white hover:bg-white/20">
-              Watch Demo
-            </Button>
+            <Link to="/auth">
+              <Button variant="outline" size="lg" className="text-lg px-8 bg-white/10 border-white/20 text-white hover:bg-white/20">
+                Get Started Free
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
