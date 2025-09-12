@@ -10,8 +10,12 @@ import {
   Download,
   MessageSquare,
   Star,
-  Shield
+  Shield,
+  Camera,
+  FolderOpen
 } from "lucide-react";
+import { DocumentUpload } from "@/components/files/DocumentUpload";
+import { PhotoGallery } from "@/components/files/PhotoGallery";
 
 interface EstimateData {
   id: string;
@@ -394,6 +398,18 @@ export function CustomerPortal() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Document Storage */}
+            <DocumentUpload 
+              jobId="sample-job-id" 
+              onUploadComplete={() => console.log('Document uploaded')}
+            />
+
+            {/* Photo Gallery */}
+            <PhotoGallery 
+              jobId="sample-job-id" 
+              onUploadComplete={() => console.log('Photo uploaded')}
+            />
           </div>
         </div>
       </div>
