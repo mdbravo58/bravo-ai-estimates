@@ -30,6 +30,26 @@ const GHLIntegration = () => {
   const [organizationId, setOrganizationId] = useState<string>('');
   const { toast } = useToast();
 
+  // Fetch organization ID on component mount
+  React.useEffect(() => {
+    const fetchOrgId = async () => {
+      try {
+        const { data: orgData, error } = await supabase
+          .from('organizations')
+          .select('id')
+          .single();
+        
+        if (orgData && !error) {
+          setOrganizationId(orgData.id);
+        }
+      } catch (err) {
+        console.log('Could not fetch organization ID:', err);
+      }
+    };
+    
+    fetchOrgId();
+  }, []);
+
   const handleTestConnection = async () => {
     if (!locationId) {
       toast({
