@@ -16,7 +16,8 @@ import {
   ClipboardList,
   TrendingUp,
   Bot,
-  Brain
+  Brain,
+  Zap
 } from "lucide-react";
 
 const GuidePage = () => {
@@ -31,7 +32,7 @@ const GuidePage = () => {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="estimates">Estimates</TabsTrigger>
@@ -40,6 +41,7 @@ const GuidePage = () => {
             <TabsTrigger value="pricing">Pricing</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
             <TabsTrigger value="ai">AI Training</TabsTrigger>
+            <TabsTrigger value="ghl">GoHighLevel</TabsTrigger>
             <TabsTrigger value="mobile">Mobile</TabsTrigger>
           </TabsList>
 
@@ -70,6 +72,9 @@ const GuidePage = () => {
                       <li>• AI estimate generation</li>
                       <li>• Voice assistant capabilities</li>
                       <li>• AI analytics and insights</li>
+                      <li>• GoHighLevel CRM integration</li>
+                      <li>• Marketing automation workflows</li>
+                      <li>• Lead nurturing and follow-ups</li>
                       <li>• Mobile field technician app</li>
                       <li>• Billing and payment processing</li>
                       <li>• Team collaboration tools</li>
@@ -524,6 +529,103 @@ const GuidePage = () => {
                       <li>• Access job details and specifications</li>
                       <li>• Report issues or delays immediately</li>
                     </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="ghl" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="h-5 w-5" />
+                  GoHighLevel Integration
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p>Supercharge your service business with GoHighLevel's powerful marketing automation and CRM capabilities integrated seamlessly with Bravo Service Suite.</p>
+                
+                <div className="space-y-3">
+                  <div>
+                    <h4 className="font-semibold flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      Customer & Lead Sync
+                    </h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Automatically sync GHL contacts to your customer database</li>
+                      <li>• Two-way data synchronization keeps both systems updated</li>
+                      <li>• Import contact details: names, emails, phones, addresses</li>
+                      <li>• Maintain lead source tracking from GHL campaigns</li>
+                      <li>• Preserve contact history and interaction timeline</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">Opportunity Management</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Auto-create GHL opportunities when estimates are generated</li>
+                      <li>• Sync estimate values to deal monetary amounts</li>
+                      <li>• Update deal stages based on estimate status changes</li>
+                      <li>• Track conversion rates from leads to closed deals</li>
+                      <li>• Maintain sales pipeline visibility across both platforms</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">Marketing Automation Workflows</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Trigger follow-up sequences for pending estimates</li>
+                      <li>• Automated nurture campaigns for declined estimates</li>
+                      <li>• Job completion workflows with review requests</li>
+                      <li>• Seasonal service reminder campaigns</li>
+                      <li>• Customer retention and upsell automation</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">Communication Hub</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Multi-channel messaging: SMS, email, voice calls</li>
+                      <li>• Appointment scheduling and reminder automation</li>
+                      <li>• Customer portal integration with GHL messaging</li>
+                      <li>• Team notifications and internal communication</li>
+                      <li>• Conversation history across all touchpoints</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">Business Intelligence</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Combined analytics from both platforms</li>
+                      <li>• Lead source performance tracking</li>
+                      <li>• Campaign ROI measurement and optimization</li>
+                      <li>• Customer lifetime value calculations</li>
+                      <li>• Conversion funnel analysis and insights</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold">Setup & Configuration</h4>
+                    <ul className="space-y-1 text-sm mt-2">
+                      <li>• Navigate to the GoHighLevel section in your sidebar</li>
+                      <li>• Enter your GHL Location ID and Pipeline configuration</li>
+                      <li>• Configure workflow IDs for automated sequences</li>
+                      <li>• Test the integration with a sample contact sync</li>
+                      <li>• Monitor integration analytics and success rates</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Zap className="h-4 w-4 text-blue-600" />
+                      <span className="font-medium text-blue-800">Pro Tip</span>
+                    </div>
+                    <p className="text-sm text-blue-700">
+                      Start with customer sync to build your unified database, then configure 
+                      estimate follow-up workflows to immediately improve your conversion rates. 
+                      The integration works automatically once configured - no manual data entry required!
+                    </p>
                   </div>
                 </div>
               </CardContent>
