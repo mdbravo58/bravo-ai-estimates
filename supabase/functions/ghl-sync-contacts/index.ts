@@ -50,6 +50,8 @@ serve(async (req) => {
         'Authorization': `Bearer ${ghlApiKey}`,
         'Version': '2021-07-28',
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'LocationId': locationId,
       },
     });
 
