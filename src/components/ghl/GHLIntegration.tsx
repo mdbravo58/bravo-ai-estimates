@@ -60,12 +60,20 @@ const GHLIntegration = () => {
       return;
     }
 
+    if (!tempApiKey) {
+      toast({
+        title: "Access Token required",
+        description: "Paste your GHL sub-account Access Token (JWT) before testing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsTestingConnection(true);
     setConnectionTest(null);
 
     try {
       console.log('Testing GHL connection...');
-      
       const { data: testResult, error: testError } = await supabase.functions.invoke('ghl-test-connection', {
         body: { locationId, tempApiKey }
       });
