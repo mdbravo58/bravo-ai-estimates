@@ -223,6 +223,10 @@ const GHLIntegration = () => {
     }
   };
 
+  // Connection status derived from last test
+  const connectionStatus = connectionTest ? (connectionTest.success ? 'connected' : 'disconnected') : 'unknown';
+  const statusLabel = connectionStatus === 'connected' ? 'Connected' : connectionStatus === 'disconnected' ? 'Not connected' : 'Not tested';
+
   return (
     <div className="space-y-6">
       <Card>
@@ -230,7 +234,18 @@ const GHLIntegration = () => {
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-orange-500" />
             GoHighLevel Integration
-            <Badge variant="outline" className="ml-2">Active</Badge>
+            <Badge 
+              variant="outline" 
+              className={`ml-2 ${
+                connectionStatus === 'connected' 
+                  ? 'bg-green-50 text-green-700 border-green-200' 
+                  : connectionStatus === 'disconnected'
+                  ? 'bg-red-50 text-red-700 border-red-200'
+                  : 'bg-gray-50 text-gray-700 border-gray-200'
+              }`}
+            >
+              {statusLabel}
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
