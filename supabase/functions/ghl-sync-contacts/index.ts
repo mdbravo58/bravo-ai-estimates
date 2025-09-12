@@ -44,16 +44,13 @@ serve(async (req) => {
 
     console.log('Syncing GHL contacts for organization:', organizationId);
 
-    // Fetch contacts from GHL
-    const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/?locationId=${locationId}`, {
+    // Fetch contacts from GHL using the newer Search Contacts API
+    const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/search?locationId=${locationId}&limit=100`, {
       headers: {
         'Authorization': `Bearer ${ghlApiKey}`,
         'Version': '2021-07-28',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // Some environments expect Location-Id while others accept LocationId
-        'LocationId': locationId,
-        'Location-Id': locationId,
       },
     });
 

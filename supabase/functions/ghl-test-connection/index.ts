@@ -26,15 +26,13 @@ serve(async (req) => {
     console.log('Testing GHL connection for location:', locationId);
     console.log('Using GHL API key (first 10 chars):', ghlApiKey?.substring(0, 10) + '...');
 
-    // Test the GHL API connection
-    const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/?locationId=${locationId}&limit=1`, {
+    // Test the GHL API connection using the newer Search Contacts API
+    const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/search?locationId=${locationId}&limit=1`, {
       headers: {
         'Authorization': `Bearer ${ghlApiKey}`,
         'Version': '2021-07-28',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'LocationId': locationId,
-        'Location-Id': locationId,
       },
     });
 
