@@ -15,15 +15,19 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 
-    // Attach the caller's Authorization header so we can identify the user
     const authHeader = req.headers.get('Authorization') || '';
 
-    const supabase = createClient(supabaseUrl, serviceRoleKey, {
+    // Use an authed client (anon key + user's JWT) for reading with RLS
+    const authedClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
 
-    const { data: userResp, error: userErr } = await supabase.auth.getUser();
+    // Use an admin client (service role, no Authorization header) to bypass RLS for privileged writes
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+
+    const { data: userResp, error: userErr } = await authedClient.auth.getUser();
     if (userErr || !userResp?.user) {
       return new Response(JSON.stringify({ error: 'Not authenticated' }), {
         status: 401,
@@ -34,8 +38,7 @@ serve(async (req) => {
     const authUserId = userResp.user.id;
     const email = userResp.user.email ?? '';
 
-    // Check if app user already exists
-    const { data: existingUser, error: selectErr } = await supabase
+    const { data: existingUser, error: selectErr } = await authedClient
       .from('users')
       .select('id, organization_id, role')
       .eq('auth_user_id', authUserId)
@@ -51,9 +54,9 @@ serve(async (req) => {
       });
     }
 
-    // Create a default organization for this user
+    // Create a default organization for this user using admin client (bypass RLS)
     const defaultOrgName = email ? `${email.split('@')[0]} Company` : 'My Company';
-    const { data: org, error: orgErr } = await supabase
+    const { data: org, error: orgErr } = await adminClient
       .from('organizations')
       .insert({ name: defaultOrgName, plan: 'basic' })
       .select('id')
@@ -67,8 +70,8 @@ serve(async (req) => {
       });
     }
 
-    // Insert the app user as owner of this org
-    const { data: insertedUser, error: userInsertErr } = await supabase
+    // Insert the app user as owner of this org (also via admin client to bypass RLS on INSERT)
+    const { data: insertedUser, error: userInsertErr } = await adminClient
       .from('users')
       .insert({
         auth_user_id: authUserId,
