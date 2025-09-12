@@ -40,7 +40,25 @@ serve(async (req) => {
     
     console.log('Testing GHL connection for location:', locationId);
     console.log('Using temp API key:', tempApiKey ? 'YES (direct)' : 'NO (from env)');
-    console.log('API key (first 10 chars):', apiKeyToUse?.substring(0, 10) + '...');
+
+    // Decode JWT (without verifying) to help debug
+    const decoded = decodeJwtPayload(apiKeyToUse);
+    const now = Math.floor(Date.now() / 1000);
+    const isExpired = decoded?.exp ? decoded.exp < now : false;
+    console.log('JWT decoded (partial):', decoded ? { exp: decoded.exp, iss: decoded.iss, sub: decoded.sub } : 'unparseable');
+    if (isExpired) {
+      return new Response(JSON.stringify({
+        success: false,
+        status: 401,
+        error: 'API key appears expired',
+        details: { decoded },
+        troubleshooting: 'Regenerate the API key in the same GHL subaccount and try again.',
+        usingTempKey: !!tempApiKey
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     // Test the GHL API connection using the newer Search Contacts API
     const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/search?locationId=${locationId}&limit=1`, {
