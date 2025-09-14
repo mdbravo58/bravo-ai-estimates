@@ -42,44 +42,62 @@ serve(async (req) => {
       });
     }
 
+    // Use temporary API key if provided, otherwise use environment key
+    const apiKeyToUse = (tempApiKey || ghlApiKey || '').trim();
+
     console.log('Syncing GHL contacts for organization:', organizationId);
+    console.log('Using temp API key:', tempApiKey ? 'YES (direct)' : 'NO (from env)');
 
-    // Fetch contacts from GHL using the newer Search Contacts API
-    const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/search?locationId=${locationId}&limit=100`, {
-      headers: {
-        'Authorization': `Bearer ${ghlApiKey}`,
-        'Version': '2021-07-28',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'LocationId': locationId,
-        'Location-Id': locationId,
-      },
-    });
+    // Try different hosts like the test connection function
+    const hosts = [
+      'https://services.leadconnectorhq.com',
+      'https://rest.gohighlevel.com',
+    ];
 
-    if (!ghlResponse.ok) {
-      const status = ghlResponse.status;
-      const raw = await ghlResponse.text();
-      const details = raw?.slice(0, 1000);
-      const msg = (status === 401 || status === 403)
-        ? 'Invalid GHL API key or insufficient permissions'
-        : `GHL API error: ${status} ${ghlResponse.statusText}`;
-      // Return 200 so the frontend can display detailed error info
+    let ghlData: any = null;
+    let contacts: GHLContact[] = [];
+
+    // Try each host to find one that works
+    for (const host of hosts) {
+      try {
+        // Use the v1 API endpoint for contacts
+        const ghlResponse = await fetch(`${host}/v1/contacts/`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiKeyToUse}`,
+            'Version': '2021-07-28',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+
+        if (ghlResponse.ok) {
+          ghlData = await ghlResponse.json();
+          contacts = ghlData.contacts || [];
+          console.log(`Successfully fetched contacts from host: ${host}`);
+          break;
+        } else {
+          console.log(`Failed to fetch from host ${host}: ${ghlResponse.status}`);
+        }
+      } catch (error) {
+        console.log(`Error with host ${host}:`, error);
+        continue;
+      }
+    }
+
+    // If no host worked, return error
+    if (!ghlData || !contacts.length) {
       return new Response(JSON.stringify({ 
         success: false,
-        status,
-        error: msg,
-        details,
-        troubleshooting: (status === 401 || status === 403)
-          ? 'Use the subaccount API key that owns this Location ID and update the GHL_API_KEY secret, then retry Test Connection.'
-          : 'Double-check the Location ID and try again.'
+        status: 401,
+        error: 'Unable to fetch contacts from GoHighLevel',
+        details: 'No working API host found',
+        troubleshooting: 'Verify your API key is correct and has proper permissions.'
       }), {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-
-    const ghlData = await ghlResponse.json();
-    const contacts: GHLContact[] = ghlData.contacts || [];
 
     console.log(`Found ${contacts.length} contacts in GHL`);
 
