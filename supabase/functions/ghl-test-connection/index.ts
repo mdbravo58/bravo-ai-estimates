@@ -79,7 +79,7 @@ serve(async (req) => {
     let accessibleLocations: any[] = [];
     const hostsSet = new Set<string>([
       'https://services.leadconnectorhq.com',
-      'https://api.msgsndr.com',
+      'https://rest.gohighlevel.com',
     ]);
 
     // Try to infer regional host from JWT `iss`
@@ -128,15 +128,15 @@ serve(async (req) => {
 
     for (const host of hosts) {
       try {
-        const url = `${host}/contacts/search?locationId=${locationId}&limit=1`;
+        // Use the v1 API endpoint for contacts with location filter
+        const url = `${host}/v1/contacts/`;
         const res = await fetch(url, {
+          method: 'GET',
           headers: {
             'Authorization': `Bearer ${apiKeyToUse}`,
             'Version': '2021-07-28',
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'LocationId': locationId,
-            'Location-Id': locationId,
           },
         });
         const text = await res.text();
