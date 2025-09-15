@@ -21,6 +21,7 @@ import Guide from "@/pages/Guide";
 import StepByStepGuides from "@/pages/StepByStepGuides";
 import AI from "@/pages/AI";
 import GHL from "@/pages/GHL";
+import CoverPage from "@/pages/Cover";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -36,6 +37,7 @@ export const AppRouter = () => {
 
   return (
     <Routes>
+      <Route path="/cover" element={<CoverPage />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/demo" element={<Demo />} />
       <Route 
@@ -43,15 +45,23 @@ export const AppRouter = () => {
         element={
           user ? (
             <ProtectedRoute>
-              <Dashboard />
+              <CoverPage />
             </ProtectedRoute>
           ) : (
             <LandingPage />
           )
+        }
+      />
+      <Route 
+        path="/dashboard" 
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
         } 
       />
       <Route 
-        path="/estimates" 
+        path="/estimates"
         element={
           <ProtectedRoute>
             <Estimates />
