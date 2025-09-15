@@ -133,12 +133,15 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
       if (!authLogs) return 'low';
 
       // Analyze patterns
-      const failedAttempts = authLogs.filter(log => 
-        log.payload?.event === 'signin_failed' || 
-        log.payload?.error_code === 'invalid_credentials'
-      ).length;
+      const failedAttempts = authLogs.filter(log => {
+        const payload = log.payload as Record<string, any>;
+        return payload?.event === 'signin_failed' || payload?.error_code === 'invalid_credentials';
+      }).length;
 
-      const uniqueIPs = new Set(authLogs.map(log => log.payload?.ip_address)).size;
+      const uniqueIPs = new Set(authLogs.map(log => {
+        const payload = log.payload as Record<string, any>;
+        return payload?.ip_address;
+      })).size;
 
       // Risk assessment logic
       if (failedAttempts > 5 || uniqueIPs > 3) {

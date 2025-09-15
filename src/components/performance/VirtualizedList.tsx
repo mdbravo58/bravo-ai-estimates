@@ -75,6 +75,7 @@ function VirtualizedList<T extends Record<string, any>>({
         ) : (
           <List
             height={containerHeight}
+            width="100%"
             itemCount={filteredItems.length}
             itemSize={itemHeight}
             overscanCount={5} // Render 5 extra items for smoother scrolling
