@@ -14,30 +14,188 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage_logs: {
+        Row: {
+          cost_usd: number | null
+          created_at: string | null
+          feature: string
+          id: string
+          model: string
+          organization_id: string
+          tokens_used: number | null
+          user_id: string | null
+        }
+        Insert: {
+          cost_usd?: number | null
+          created_at?: string | null
+          feature: string
+          id?: string
+          model: string
+          organization_id: string
+          tokens_used?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          cost_usd?: number | null
+          created_at?: string | null
+          feature?: string
+          id?: string
+          model?: string
+          organization_id?: string
+          tokens_used?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_usage_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_usage_summary: {
+        Row: {
+          created_at: string | null
+          feature: string
+          id: string
+          month: string
+          organization_id: string
+          total_cost_usd: number | null
+          total_requests: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          feature: string
+          id?: string
+          month: string
+          organization_id: string
+          total_cost_usd?: number | null
+          total_requests?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          feature?: string
+          id?: string
+          month?: string
+          organization_id?: string
+          total_cost_usd?: number | null
+          total_requests?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_summary_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attendance: {
+        Row: {
+          class_date: string
+          class_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          present: boolean
+          student_id: string
+        }
+        Insert: {
+          class_date: string
+          class_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          present?: boolean
+          student_id: string
+        }
+        Update: {
+          class_date?: string
+          class_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          present?: boolean
+          student_id?: string
+        }
+        Relationships: []
+      }
+      belt_levels: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          organization_id: string
+          rank_order: number
+          requirements: string | null
+          updated_at: string
+        }
+        Insert: {
+          color: string
+          created_at?: string
+          id?: string
+          name: string
+          organization_id: string
+          rank_order: number
+          requirements?: string | null
+          updated_at?: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          rank_order?: number
+          requirements?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cart_items: {
         Row: {
           created_at: string
           id: string
+          notes: string | null
           product_id: string
           quantity: number
           updated_at: string
           user_id: string | null
+          variant_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
+          notes?: string | null
           product_id: string
           quantity?: number
           updated_at?: string
           user_id?: string | null
+          variant_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
+          notes?: string | null
           product_id?: string
           quantity?: number
           updated_at?: string
           user_id?: string | null
+          variant_id?: string | null
         }
         Relationships: [
           {
@@ -69,6 +227,162 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      class_enrollments: {
+        Row: {
+          class_id: string
+          created_at: string
+          enrolled_at: string
+          id: string
+          status: string
+          student_id: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          enrolled_at?: string
+          id?: string
+          status?: string
+          student_id: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          enrolled_at?: string
+          id?: string
+          status?: string
+          student_id?: string
+        }
+        Relationships: []
+      }
+      class_schedules: {
+        Row: {
+          active: boolean
+          class_id: string
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          start_time: string
+        }
+        Insert: {
+          active?: boolean
+          class_id: string
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: string
+          start_time: string
+        }
+        Update: {
+          active?: boolean
+          class_id?: string
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          start_time?: string
+        }
+        Relationships: []
+      }
+      classes: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          instructor_id: string | null
+          max_capacity: number | null
+          name: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          instructor_id?: string | null
+          max_capacity?: number | null
+          name: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          instructor_id?: string | null
+          max_capacity?: number | null
+          name?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      colors: {
+        Row: {
+          created_at: string
+          hex_code: string
+          id: string
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          hex_code: string
+          id?: string
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          hex_code?: string
+          id?: string
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      connection_tokens: {
+        Row: {
+          connection_id: string
+          created_at: string
+          encrypted_access_token: string | null
+          encrypted_refresh_token: string | null
+          id: string
+          last_used_at: string | null
+          token_hash: string | null
+          updated_at: string
+        }
+        Insert: {
+          connection_id: string
+          created_at?: string
+          encrypted_access_token?: string | null
+          encrypted_refresh_token?: string | null
+          id?: string
+          last_used_at?: string | null
+          token_hash?: string | null
+          updated_at?: string
+        }
+        Update: {
+          connection_id?: string
+          created_at?: string
+          encrypted_access_token?: string | null
+          encrypted_refresh_token?: string | null
+          id?: string
+          last_used_at?: string | null
+          token_hash?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -387,6 +701,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          invite_code: string
+          invited_by: string
+          invited_email: string
+          invited_role: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invite_code: string
+          invited_by: string
+          invited_email: string
+          invited_role?: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invite_code?: string
+          invited_by?: string
+          invited_email?: string
+          invited_role?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       invoices: {
         Row: {
@@ -773,6 +1126,42 @@ export type Database = {
           },
         ]
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          organization_id: string
+          recipient_id: string | null
+          recipient_type: string
+          sender_id: string
+          sent_at: string
+          subject: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          recipient_id?: string | null
+          recipient_type: string
+          sender_id: string
+          sent_at?: string
+          subject: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          recipient_id?: string | null
+          recipient_type?: string
+          sender_id?: string
+          sent_at?: string
+          subject?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -781,6 +1170,7 @@ export type Database = {
           price: number
           product_id: string
           quantity: number
+          variant_id: string | null
         }
         Insert: {
           created_at?: string
@@ -789,6 +1179,7 @@ export type Database = {
           price: number
           product_id: string
           quantity: number
+          variant_id?: string | null
         }
         Update: {
           created_at?: string
@@ -797,6 +1188,7 @@ export type Database = {
           price?: number
           product_id?: string
           quantity?: number
+          variant_id?: string | null
         }
         Relationships: [
           {
@@ -850,28 +1242,46 @@ export type Database = {
       }
       organizations: {
         Row: {
+          address: string | null
+          business_email: string | null
+          business_phone: string | null
           created_at: string
+          description: string | null
           external_ref: string | null
           id: string
+          logo_url: string | null
           name: string
           plan: string | null
           updated_at: string
+          website: string | null
         }
         Insert: {
+          address?: string | null
+          business_email?: string | null
+          business_phone?: string | null
           created_at?: string
+          description?: string | null
           external_ref?: string | null
           id?: string
+          logo_url?: string | null
           name: string
           plan?: string | null
           updated_at?: string
+          website?: string | null
         }
         Update: {
+          address?: string | null
+          business_email?: string | null
+          business_phone?: string | null
           created_at?: string
+          description?: string | null
           external_ref?: string | null
           id?: string
+          logo_url?: string | null
           name?: string
           plan?: string | null
           updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -905,6 +1315,42 @@ export type Database = {
           organization_id?: string
           updated_at?: string
           value?: number
+        }
+        Relationships: []
+      }
+      product_variants: {
+        Row: {
+          color_id: string | null
+          created_at: string
+          id: string
+          price_modifier: number | null
+          product_id: string
+          size_id: string | null
+          sku: string | null
+          stock_quantity: number
+          updated_at: string
+        }
+        Insert: {
+          color_id?: string | null
+          created_at?: string
+          id?: string
+          price_modifier?: number | null
+          product_id: string
+          size_id?: string | null
+          sku?: string | null
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          color_id?: string | null
+          created_at?: string
+          id?: string
+          price_modifier?: number | null
+          product_id?: string
+          size_id?: string | null
+          sku?: string | null
+          stock_quantity?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -954,6 +1400,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          belt_level_id: string | null
           created_at: string
           emergency_contact: string | null
           emergency_phone: string | null
@@ -964,6 +1411,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          belt_level_id?: string | null
           created_at?: string
           emergency_contact?: string | null
           emergency_phone?: string | null
@@ -974,6 +1422,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          belt_level_id?: string | null
           created_at?: string
           emergency_contact?: string | null
           emergency_phone?: string | null
@@ -982,6 +1431,33 @@ export type Database = {
           phone?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      sizes: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          name?: string
+          sort_order?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1019,6 +1495,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      student_progress: {
+        Row: {
+          created_at: string
+          current_belt_id: string | null
+          id: string
+          notes: string | null
+          organization_id: string
+          promotion_date: string | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_belt_id?: string | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          promotion_date?: string | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_belt_id?: string | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          promotion_date?: string | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       subcontracts: {
         Row: {
@@ -1147,9 +1656,43 @@ export type Database = {
           },
         ]
       }
+      token_access_audit: {
+        Row: {
+          access_type: string
+          accessed_by: string
+          connection_id: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          success: boolean
+          user_agent: string | null
+        }
+        Insert: {
+          access_type: string
+          accessed_by: string
+          connection_id: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean
+          user_agent?: string | null
+        }
+        Update: {
+          access_type?: string
+          accessed_by?: string
+          connection_id?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           auth_user_id: string | null
+          avatar_url: string | null
           created_at: string
           email: string
           id: string
@@ -1161,6 +1704,7 @@ export type Database = {
         }
         Insert: {
           auth_user_id?: string | null
+          avatar_url?: string | null
           created_at?: string
           email: string
           id?: string
@@ -1172,6 +1716,7 @@ export type Database = {
         }
         Update: {
           auth_user_id?: string | null
+          avatar_url?: string | null
           created_at?: string
           email?: string
           id?: string
@@ -1283,9 +1828,127 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      connections_safe: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          metadata: Json | null
+          organization_id: string | null
+          provider: string | null
+          scope: string | null
+          token_status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          provider?: string | null
+          scope?: string | null
+          token_status?: never
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          provider?: string | null
+          scope?: string | null
+          token_status?: never
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_directory: {
+        Row: {
+          created_at: string | null
+          full_name: string | null
+          id: string | null
+          organization_id: string | null
+          role: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles_emergency_contact: {
+        Row: {
+          created_at: string | null
+          emergency_contact: string | null
+          emergency_phone: string | null
+          full_name: string | null
+          id: string | null
+          organization_id: string | null
+          phone: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      can_access_connection_tokens: {
+        Args: { connection_id: string }
+        Returns: boolean
+      }
+      can_access_employee_profiles: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      create_school_with_owner: {
+        Args: {
+          p_owner_name: string
+          p_owner_user_id: string
+          p_school_name: string
+          p_school_type: string
+        }
+        Returns: string
+      }
+      encrypt_connection_token: {
+        Args: { connection_id: string; token: string }
+        Returns: string
+      }
+      fix_missing_user_records: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      generate_invite_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_connection_token_for_api: {
+        Args: { connection_id: string; purpose?: string }
+        Returns: string
+      }
       get_current_user_org_id: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -1294,9 +1957,37 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_user_organization_id: {
+        Args: { user_auth_id: string }
+        Returns: string
+      }
       is_organization_owner: {
         Args: { user_org_id: string }
         Returns: boolean
+      }
+      is_user_owner: {
+        Args: { user_auth_id: string }
+        Returns: boolean
+      }
+      join_school_as_student: {
+        Args: {
+          p_organization_id: string
+          p_student_name: string
+          p_student_user_id: string
+        }
+        Returns: undefined
+      }
+      log_profile_access: {
+        Args: { access_type: string; profile_user_id: string }
+        Returns: undefined
+      }
+      store_connection_tokens: {
+        Args: {
+          p_access_token?: string
+          p_connection_id: string
+          p_refresh_token?: string
+        }
+        Returns: undefined
       }
     }
     Enums: {

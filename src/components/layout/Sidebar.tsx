@@ -19,6 +19,7 @@ import {
   Star,
   UserCog,
   Briefcase,
+  Activity,
 } from "lucide-react";
 
 const navigation = [
@@ -35,6 +36,7 @@ const navigation = [
   { name: "Billing", icon: CreditCard, href: "/billing" },
   { name: "Settings", icon: Settings, href: "/settings" },
   { name: "AI Assistant", icon: Brain, href: "/ai" },
+  { name: "AI Usage", icon: Activity, href: "/ai-usage" },
   { name: "GoHighLevel", icon: Zap, href: "/ghl" },
   { name: "Guide", icon: HelpCircle, href: "/guide" },
 ];

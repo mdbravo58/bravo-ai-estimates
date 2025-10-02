@@ -20,6 +20,7 @@ import NotFound from "@/pages/NotFound";
 import Guide from "@/pages/Guide";
 import StepByStepGuides from "@/pages/StepByStepGuides";
 import AI from "@/pages/AI";
+import AIUsage from "@/pages/AIUsage";
 import GHL from "@/pages/GHL";
 import CoverPage from "@/pages/Cover";
 import Scheduling from "@/pages/Scheduling";
@@ -165,6 +166,14 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <AI />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/ai-usage" 
+        element={
+          <ProtectedRoute>
+            <AIUsage />
           </ProtectedRoute>
         } 
       />
