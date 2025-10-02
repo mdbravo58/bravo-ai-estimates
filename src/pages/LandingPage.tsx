@@ -93,12 +93,17 @@ const LandingPage = () => {
             </div>
             <span className="font-heading font-bold text-xl">Bravo Service Suite</span>
           </div>
-          <Link to="/auth">
-            <Button variant="hero" size="lg">
-              Get Started
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/pricing">
+              <Button variant="ghost">Pricing</Button>
+            </Link>
+            <Link to="/auth">
+              <Button variant="hero" size="lg">
+                Get Started
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -237,7 +242,13 @@ const LandingPage = () => {
             </div>
             <span className="font-heading font-bold">Bravo Service Suite</span>
           </div>
-          <p>&copy; 2024 Bravo Service Suite. All rights reserved.</p>
+          <p>&copy; 2025 Bravo Service Suite. All rights reserved.</p>
+          <div className="flex justify-center gap-6 mt-4 text-sm">
+            <Link to="/terms" className="hover:text-foreground">Terms of Service</Link>
+            <Link to="/privacy" className="hover:text-foreground">Privacy Policy</Link>
+            <Link to="/pricing" className="hover:text-foreground">Pricing</Link>
+            <a href="mailto:support@bravoservice.com" className="hover:text-foreground">Contact</a>
+          </div>
         </div>
       </footer>
     </div>

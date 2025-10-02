@@ -1162,6 +1162,47 @@ export type Database = {
         }
         Relationships: []
       }
+      monthly_usage: {
+        Row: {
+          ai_chats_used: number | null
+          created_at: string | null
+          id: string
+          month: string
+          organization_id: string
+          reports_generated: number | null
+          updated_at: string | null
+          voice_calls_used: number | null
+        }
+        Insert: {
+          ai_chats_used?: number | null
+          created_at?: string | null
+          id?: string
+          month: string
+          organization_id: string
+          reports_generated?: number | null
+          updated_at?: string | null
+          voice_calls_used?: number | null
+        }
+        Update: {
+          ai_chats_used?: number | null
+          created_at?: string | null
+          id?: string
+          month?: string
+          organization_id?: string
+          reports_generated?: number | null
+          updated_at?: string | null
+          voice_calls_used?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monthly_usage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           created_at: string
@@ -1406,6 +1447,7 @@ export type Database = {
           emergency_phone: string | null
           full_name: string | null
           id: string
+          onboarding_completed: boolean | null
           phone: string | null
           updated_at: string
           user_id: string
@@ -1417,6 +1459,7 @@ export type Database = {
           emergency_phone?: string | null
           full_name?: string | null
           id?: string
+          onboarding_completed?: boolean | null
           phone?: string | null
           updated_at?: string
           user_id: string
@@ -1428,6 +1471,7 @@ export type Database = {
           emergency_phone?: string | null
           full_name?: string | null
           id?: string
+          onboarding_completed?: boolean | null
           phone?: string | null
           updated_at?: string
           user_id?: string
@@ -1593,6 +1637,86 @@ export type Database = {
           },
         ]
       }
+      subscription_limits: {
+        Row: {
+          ai_chats_per_month: number
+          created_at: string | null
+          plan_name: string
+          price_cents: number
+          reports_per_month: number
+          voice_calls_per_month: number
+        }
+        Insert: {
+          ai_chats_per_month: number
+          created_at?: string | null
+          plan_name: string
+          price_cents: number
+          reports_per_month: number
+          voice_calls_per_month: number
+        }
+        Update: {
+          ai_chats_per_month?: number
+          created_at?: string | null
+          plan_name?: string
+          price_cents?: number
+          reports_per_month?: number
+          voice_calls_per_month?: number
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          organization_id: string
+          plan_name: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          trial_end: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          organization_id: string
+          plan_name: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_end?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          organization_id?: string
+          plan_name?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_end?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       time_entries: {
         Row: {
           approved: boolean | null
@@ -1686,6 +1810,27 @@ export type Database = {
           ip_address?: unknown | null
           success?: boolean
           user_agent?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -1961,6 +2106,13 @@ export type Database = {
         Args: { user_auth_id: string }
         Returns: string
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_organization_owner: {
         Args: { user_org_id: string }
         Returns: boolean
@@ -1991,6 +2143,16 @@ export type Database = {
       }
     }
     Enums: {
+      app_role:
+        | "owner"
+        | "manager"
+        | "admin"
+        | "technician"
+        | "sales"
+        | "customer_service"
+        | "hr"
+        | "student"
+        | "instructor"
       cost_code_type:
         | "labor"
         | "material"
@@ -2139,6 +2301,17 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: [
+        "owner",
+        "manager",
+        "admin",
+        "technician",
+        "sales",
+        "customer_service",
+        "hr",
+        "student",
+        "instructor",
+      ],
       cost_code_type: [
         "labor",
         "material",

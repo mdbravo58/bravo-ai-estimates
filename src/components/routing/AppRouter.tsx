@@ -26,6 +26,10 @@ import CoverPage from "@/pages/Cover";
 import Scheduling from "@/pages/Scheduling";
 import Reviews from "@/pages/Reviews";
 import Team from "@/pages/Team";
+import Pricing from "@/pages/Pricing";
+import Subscribe from "@/pages/Subscribe";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -44,6 +48,17 @@ export const AppRouter = () => {
       <Route path="/cover" element={<CoverPage />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/demo" element={<Demo />} />
+      <Route path="/pricing" element={<Pricing />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route 
+        path="/subscribe" 
+        element={
+          <ProtectedRoute>
+            <Subscribe />
+          </ProtectedRoute>
+        } 
+      />
       <Route 
         path="/" 
         element={
