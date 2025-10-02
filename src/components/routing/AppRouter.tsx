@@ -22,6 +22,9 @@ import StepByStepGuides from "@/pages/StepByStepGuides";
 import AI from "@/pages/AI";
 import GHL from "@/pages/GHL";
 import CoverPage from "@/pages/Cover";
+import Scheduling from "@/pages/Scheduling";
+import Reviews from "@/pages/Reviews";
+import Team from "@/pages/Team";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -170,6 +173,30 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <GHL />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/scheduling" 
+        element={
+          <ProtectedRoute>
+            <Scheduling />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/reviews" 
+        element={
+          <ProtectedRoute>
+            <Reviews />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/team" 
+        element={
+          <ProtectedRoute>
+            <Team />
           </ProtectedRoute>
         } 
       />

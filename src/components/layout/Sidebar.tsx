@@ -15,12 +15,20 @@ import {
   HelpCircle,
   Brain,
   Zap,
+  Calendar,
+  Star,
+  UserCog,
+  Briefcase,
 } from "lucide-react";
 
 const navigation = [
   { name: "Dashboard", icon: Home, href: "/" },
   { name: "Estimates", icon: FileText, href: "/estimates" },
+  { name: "Jobs", icon: Briefcase, href: "/jobs" },
   { name: "Customers", icon: Users, href: "/customers" },
+  { name: "Scheduling", icon: Calendar, href: "/scheduling" },
+  { name: "Reviews", icon: Star, href: "/reviews" },
+  { name: "Team", icon: UserCog, href: "/team" },
   { name: "Price Books", icon: BookOpen, href: "/price-books" },
   { name: "Calculator", icon: Calculator, href: "/calculator" },
   { name: "Reports", icon: BarChart3, href: "/reports" },
