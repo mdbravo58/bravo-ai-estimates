@@ -272,6 +272,20 @@ const SettingsPage = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
+                      <p className="font-medium">GoHighLevel</p>
+                      <p className="text-sm text-muted-foreground">
+                        Marketing automation & CRM integration
+                      </p>
+                    </div>
+                    <Button variant="outline" size="sm" asChild>
+                      <a href="/ghl">Configure</a>
+                    </Button>
+                  </div>
+
+                  <Separator />
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
                       <p className="font-medium">QuickBooks</p>
                       <p className="text-sm text-muted-foreground">
                         Sync invoices and expenses
