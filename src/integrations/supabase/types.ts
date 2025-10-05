@@ -166,6 +166,54 @@ export type Database = {
         }
         Relationships: []
       }
+      belt_promotions: {
+        Row: {
+          created_at: string
+          from_belt_id: string | null
+          id: string
+          instructor_id: string | null
+          notes: string | null
+          promotion_date: string
+          student_id: string
+          to_belt_id: string
+        }
+        Insert: {
+          created_at?: string
+          from_belt_id?: string | null
+          id?: string
+          instructor_id?: string | null
+          notes?: string | null
+          promotion_date: string
+          student_id: string
+          to_belt_id: string
+        }
+        Update: {
+          created_at?: string
+          from_belt_id?: string | null
+          id?: string
+          instructor_id?: string | null
+          notes?: string | null
+          promotion_date?: string
+          student_id?: string
+          to_belt_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "belt_promotions_from_belt_id_fkey"
+            columns: ["from_belt_id"]
+            isOneToOne: false
+            referencedRelation: "belt_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "belt_promotions_to_belt_id_fkey"
+            columns: ["to_belt_id"]
+            isOneToOne: false
+            referencedRelation: "belt_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cart_items: {
         Row: {
           created_at: string
@@ -500,6 +548,97 @@ export type Database = {
         }
         Relationships: []
       }
+      event_registrations: {
+        Row: {
+          checked_in: boolean | null
+          event_id: string
+          id: string
+          paid: boolean | null
+          registered_at: string
+          student_id: string
+        }
+        Insert: {
+          checked_in?: boolean | null
+          event_id: string
+          id?: string
+          paid?: boolean | null
+          registered_at?: string
+          student_id: string
+        }
+        Update: {
+          checked_in?: boolean | null
+          event_id?: string
+          id?: string
+          paid?: boolean | null
+          registered_at?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          description: string | null
+          event_date: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          location: string | null
+          max_capacity: number | null
+          name: string
+          organization_id: string
+          price: number | null
+          registration_deadline: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          description?: string | null
+          event_date: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location?: string | null
+          max_capacity?: number | null
+          name: string
+          organization_id: string
+          price?: number | null
+          registration_deadline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          location?: string | null
+          max_capacity?: number | null
+          name?: string
+          organization_id?: string
+          price?: number | null
+          registration_deadline?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fact_expense: {
         Row: {
           amount_cents: number
@@ -663,6 +802,79 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      families: {
+        Row: {
+          created_at: string
+          discount_percentage: number | null
+          ghl_family_id: string | null
+          id: string
+          name: string
+          organization_id: string
+          primary_contact_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          discount_percentage?: number | null
+          ghl_family_id?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          primary_contact_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          discount_percentage?: number | null
+          ghl_family_id?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          primary_contact_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "families_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_members: {
+        Row: {
+          created_at: string
+          family_id: string
+          id: string
+          relationship: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          family_id: string
+          id?: string
+          relationship?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          family_id?: string
+          id?: string
+          relationship?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
             referencedColumns: ["id"]
           },
         ]
@@ -925,6 +1137,7 @@ export type Database = {
           customer_id: string
           description: string | null
           end_date: string | null
+          ghl_opportunity_id: string | null
           id: string
           name: string
           notes: string | null
@@ -941,6 +1154,7 @@ export type Database = {
           customer_id: string
           description?: string | null
           end_date?: string | null
+          ghl_opportunity_id?: string | null
           id?: string
           name: string
           notes?: string | null
@@ -957,6 +1171,7 @@ export type Database = {
           customer_id?: string
           description?: string | null
           end_date?: string | null
+          ghl_opportunity_id?: string | null
           id?: string
           name?: string
           notes?: string | null
@@ -1042,6 +1257,65 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "kpi_targets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          email: string | null
+          ghl_contact_id: string | null
+          id: string
+          name: string
+          notes: string | null
+          organization_id: string
+          phone: string | null
+          score: number | null
+          source: Database["public"]["Enums"]["lead_source"] | null
+          status: Database["public"]["Enums"]["lead_status"] | null
+          trial_class_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          email?: string | null
+          ghl_contact_id?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          organization_id: string
+          phone?: string | null
+          score?: number | null
+          source?: Database["public"]["Enums"]["lead_source"] | null
+          status?: Database["public"]["Enums"]["lead_status"] | null
+          trial_class_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          email?: string | null
+          ghl_contact_id?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          phone?: string | null
+          score?: number | null
+          source?: Database["public"]["Enums"]["lead_source"] | null
+          status?: Database["public"]["Enums"]["lead_status"] | null
+          trial_class_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -1289,6 +1563,9 @@ export type Database = {
           created_at: string
           description: string | null
           external_ref: string | null
+          ghl_api_key_hash: string | null
+          ghl_connected_at: string | null
+          ghl_location_id: string | null
           id: string
           logo_url: string | null
           name: string
@@ -1303,6 +1580,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           external_ref?: string | null
+          ghl_api_key_hash?: string | null
+          ghl_connected_at?: string | null
+          ghl_location_id?: string | null
           id?: string
           logo_url?: string | null
           name: string
@@ -1317,6 +1597,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           external_ref?: string | null
+          ghl_api_key_hash?: string | null
+          ghl_connected_at?: string | null
+          ghl_location_id?: string | null
           id?: string
           logo_url?: string | null
           name?: string
@@ -1356,6 +1639,48 @@ export type Database = {
           organization_id?: string
           updated_at?: string
           value?: number
+        }
+        Relationships: []
+      }
+      payment_methods: {
+        Row: {
+          card_brand: string | null
+          card_last4: string | null
+          created_at: string
+          expiry_month: number | null
+          expiry_year: number | null
+          id: string
+          is_default: boolean | null
+          reminder_sent: boolean | null
+          stripe_payment_method_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_brand?: string | null
+          card_last4?: string | null
+          created_at?: string
+          expiry_month?: number | null
+          expiry_year?: number | null
+          id?: string
+          is_default?: boolean | null
+          reminder_sent?: boolean | null
+          stripe_payment_method_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          card_brand?: string | null
+          card_last4?: string | null
+          created_at?: string
+          expiry_month?: number | null
+          expiry_year?: number | null
+          id?: string
+          is_default?: boolean | null
+          reminder_sent?: boolean | null
+          stripe_payment_method_id?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1478,6 +1803,99 @@ export type Database = {
         }
         Relationships: []
       }
+      promotion_eligibility: {
+        Row: {
+          classes_attended: number | null
+          classes_required: number
+          created_at: string
+          current_belt_id: string
+          eligible_date: string | null
+          id: string
+          next_belt_id: string
+          notified: boolean | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          classes_attended?: number | null
+          classes_required: number
+          created_at?: string
+          current_belt_id: string
+          eligible_date?: string | null
+          id?: string
+          next_belt_id: string
+          notified?: boolean | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          classes_attended?: number | null
+          classes_required?: number
+          created_at?: string
+          current_belt_id?: string
+          eligible_date?: string | null
+          id?: string
+          next_belt_id?: string
+          notified?: boolean | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promotion_eligibility_current_belt_id_fkey"
+            columns: ["current_belt_id"]
+            isOneToOne: false
+            referencedRelation: "belt_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promotion_eligibility_next_belt_id_fkey"
+            columns: ["next_belt_id"]
+            isOneToOne: false
+            referencedRelation: "belt_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          enrolled_at: string | null
+          id: string
+          referred_email: string | null
+          referred_id: string | null
+          referred_name: string
+          referred_phone: string | null
+          referrer_id: string
+          reward_amount: number | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          enrolled_at?: string | null
+          id?: string
+          referred_email?: string | null
+          referred_id?: string | null
+          referred_name: string
+          referred_phone?: string | null
+          referrer_id: string
+          reward_amount?: number | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          enrolled_at?: string | null
+          id?: string
+          referred_email?: string | null
+          referred_id?: string | null
+          referred_name?: string
+          referred_phone?: string | null
+          referrer_id?: string
+          reward_amount?: number | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       sizes: {
         Row: {
           category: string
@@ -1539,6 +1957,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      student_goals: {
+        Row: {
+          category: string
+          created_at: string
+          current: number
+          id: string
+          target: number
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          current?: number
+          id?: string
+          target: number
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          current?: number
+          id?: string
+          target?: number
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       student_progress: {
         Row: {
@@ -1812,6 +2263,60 @@ export type Database = {
           user_agent?: string | null
         }
         Relationships: []
+      }
+      trial_classes: {
+        Row: {
+          attended: boolean | null
+          class_id: string | null
+          converted: boolean | null
+          created_at: string
+          ghl_appointment_id: string | null
+          id: string
+          instructor_notes: string | null
+          lead_id: string | null
+          scheduled_date: string
+          updated_at: string
+        }
+        Insert: {
+          attended?: boolean | null
+          class_id?: string | null
+          converted?: boolean | null
+          created_at?: string
+          ghl_appointment_id?: string | null
+          id?: string
+          instructor_notes?: string | null
+          lead_id?: string | null
+          scheduled_date: string
+          updated_at?: string
+        }
+        Update: {
+          attended?: boolean | null
+          class_id?: string | null
+          converted?: boolean | null
+          created_at?: string
+          ghl_appointment_id?: string | null
+          id?: string
+          instructor_notes?: string | null
+          lead_id?: string | null
+          scheduled_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trial_classes_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trial_classes_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -2160,6 +2665,7 @@ export type Database = {
         | "equipment"
         | "fee"
         | "overhead"
+      event_type: "seminar" | "tournament" | "belt_testing" | "other"
       integration_provider: "ghl" | "quickbooks" | "xero"
       invoice_method: "fixed" | "t_and_m" | "progress" | "milestone"
       job_status:
@@ -2169,6 +2675,20 @@ export type Database = {
         | "hold"
         | "complete"
         | "invoiced"
+      lead_source:
+        | "website"
+        | "referral"
+        | "social_media"
+        | "walk_in"
+        | "phone"
+        | "other"
+      lead_status:
+        | "new"
+        | "contacted"
+        | "trial_scheduled"
+        | "trial_completed"
+        | "enrolled"
+        | "lost"
       overhead_method:
         | "percent_of_labor"
         | "percent_of_direct_cost"
@@ -2320,6 +2840,7 @@ export const Constants = {
         "fee",
         "overhead",
       ],
+      event_type: ["seminar", "tournament", "belt_testing", "other"],
       integration_provider: ["ghl", "quickbooks", "xero"],
       invoice_method: ["fixed", "t_and_m", "progress", "milestone"],
       job_status: [
@@ -2329,6 +2850,22 @@ export const Constants = {
         "hold",
         "complete",
         "invoiced",
+      ],
+      lead_source: [
+        "website",
+        "referral",
+        "social_media",
+        "walk_in",
+        "phone",
+        "other",
+      ],
+      lead_status: [
+        "new",
+        "contacted",
+        "trial_scheduled",
+        "trial_completed",
+        "enrolled",
+        "lost",
       ],
       overhead_method: [
         "percent_of_labor",

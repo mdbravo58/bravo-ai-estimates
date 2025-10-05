@@ -87,9 +87,24 @@ const GHLIntegration = () => {
       setConnectionTest(testResult);
       
       if (testResult.success) {
+        // Save Location ID to organization on successful test
+        if (organizationId) {
+          const { error: updateError } = await supabase
+            .from('organizations')
+            .update({ 
+              ghl_location_id: locationId,
+              ghl_connected_at: new Date().toISOString()
+            })
+            .eq('id', organizationId);
+          
+          if (updateError) {
+            console.error('Failed to save Location ID:', updateError);
+          }
+        }
+
         toast({
           title: "Success",
-          description: testResult.message,
+          description: testResult.message + " - Connection settings saved!",
         });
       } else {
         toast({

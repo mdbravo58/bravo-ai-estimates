@@ -68,9 +68,11 @@ const SettingsPage = () => {
                       <Palette className="h-4 w-4 mr-2" />
                       Appearance
                     </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Globe className="h-4 w-4 mr-2" />
-                      Integrations
+                    <Button variant="ghost" className="w-full justify-start" asChild>
+                      <a href="/ghl">
+                        <Globe className="h-4 w-4 mr-2" />
+                        GoHighLevel Integration
+                      </a>
                     </Button>
                   </nav>
                 </CardContent>
