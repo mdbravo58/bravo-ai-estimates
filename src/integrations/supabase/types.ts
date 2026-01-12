@@ -14,6 +14,97 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          name: string
+          organization_id: string
+          points_reward: number
+          requirement_type: string
+          requirement_value: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description: string
+          icon?: string
+          id?: string
+          name: string
+          organization_id: string
+          points_reward?: number
+          requirement_type: string
+          requirement_value: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          points_reward?: number
+          requirement_type?: string
+          requirement_value?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "achievements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_sensei_cache: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          insights: Json
+          metrics: Json
+          school_id: string
+          updated_at: string | null
+          weekly_focus: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          insights: Json
+          metrics: Json
+          school_id: string
+          updated_at?: string | null
+          weekly_focus: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          insights?: Json
+          metrics?: Json
+          school_id?: string
+          updated_at?: string | null
+          weekly_focus?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_sensei_cache_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_usage_logs: {
         Row: {
           cost_usd: number | null
@@ -879,6 +970,38 @@ export type Database = {
           },
         ]
       }
+      ghl_credential_audit: {
+        Row: {
+          action: string
+          changed_by: string
+          created_at: string
+          id: string
+          organization_id: string
+        }
+        Insert: {
+          action: string
+          changed_by: string
+          created_at?: string
+          id?: string
+          organization_id: string
+        }
+        Update: {
+          action?: string
+          changed_by?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ghl_credential_audit_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inventory: {
         Row: {
           id: string
@@ -1400,6 +1523,63 @@ export type Database = {
           },
         ]
       }
+      message_history: {
+        Row: {
+          created_at: string
+          delivery_status: string | null
+          error_message: string | null
+          external_message_id: string | null
+          id: string
+          message: string
+          message_type: string
+          organization_id: string
+          recipient_contact: string
+          recipient_id: string | null
+          recipient_name: string
+          recipient_type: string
+          sender_id: string
+          status: string
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_status?: string | null
+          error_message?: string | null
+          external_message_id?: string | null
+          id?: string
+          message: string
+          message_type: string
+          organization_id: string
+          recipient_contact: string
+          recipient_id?: string | null
+          recipient_name: string
+          recipient_type: string
+          sender_id: string
+          status?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          delivery_status?: string | null
+          error_message?: string | null
+          external_message_id?: string | null
+          id?: string
+          message?: string
+          message_type?: string
+          organization_id?: string
+          recipient_contact?: string
+          recipient_id?: string | null
+          recipient_name?: string
+          recipient_type?: string
+          sender_id?: string
+          status?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
@@ -1564,6 +1744,7 @@ export type Database = {
           description: string | null
           external_ref: string | null
           ghl_api_key_hash: string | null
+          ghl_configured: boolean | null
           ghl_connected_at: string | null
           ghl_location_id: string | null
           id: string
@@ -1581,6 +1762,7 @@ export type Database = {
           description?: string | null
           external_ref?: string | null
           ghl_api_key_hash?: string | null
+          ghl_configured?: boolean | null
           ghl_connected_at?: string | null
           ghl_location_id?: string | null
           id?: string
@@ -1598,6 +1780,7 @@ export type Database = {
           description?: string | null
           external_ref?: string | null
           ghl_api_key_hash?: string | null
+          ghl_configured?: boolean | null
           ghl_connected_at?: string | null
           ghl_location_id?: string | null
           id?: string
@@ -1683,6 +1866,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      points_transactions: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          points: number
+          reason: string
+          reference_id: string | null
+          reference_type: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          points: number
+          reason: string
+          reference_id?: string | null
+          reference_type?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          points?: number
+          reason?: string
+          reference_id?: string | null
+          reference_type?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_transactions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_variants: {
         Row: {
@@ -2238,7 +2462,7 @@ export type Database = {
           connection_id: string
           created_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           success: boolean
           user_agent: string | null
         }
@@ -2248,7 +2472,7 @@ export type Database = {
           connection_id: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean
           user_agent?: string | null
         }
@@ -2258,7 +2482,7 @@ export type Database = {
           connection_id?: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean
           user_agent?: string | null
         }
@@ -2318,6 +2542,35 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -2343,11 +2596,16 @@ export type Database = {
         Row: {
           auth_user_id: string | null
           avatar_url: string | null
+          belt_level_id: string | null
           created_at: string
           email: string
+          emergency_contact: string | null
+          emergency_phone: string | null
+          ghl_contact_id: string | null
           id: string
           name: string | null
           organization_id: string
+          phone: string | null
           role: string
           status: string | null
           updated_at: string
@@ -2355,11 +2613,16 @@ export type Database = {
         Insert: {
           auth_user_id?: string | null
           avatar_url?: string | null
+          belt_level_id?: string | null
           created_at?: string
           email: string
+          emergency_contact?: string | null
+          emergency_phone?: string | null
+          ghl_contact_id?: string | null
           id?: string
           name?: string | null
           organization_id: string
+          phone?: string | null
           role: string
           status?: string | null
           updated_at?: string
@@ -2367,16 +2630,28 @@ export type Database = {
         Update: {
           auth_user_id?: string | null
           avatar_url?: string | null
+          belt_level_id?: string | null
           created_at?: string
           email?: string
+          emergency_contact?: string | null
+          emergency_phone?: string | null
+          ghl_contact_id?: string | null
           id?: string
           name?: string | null
           organization_id?: string
+          phone?: string | null
           role?: string
           status?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "users_belt_level_id_fkey"
+            columns: ["belt_level_id"]
+            isOneToOne: false
+            referencedRelation: "belt_levels"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "users_organization_id_fkey"
             columns: ["organization_id"]
@@ -2570,10 +2845,7 @@ export type Database = {
         Args: { connection_id: string }
         Returns: boolean
       }
-      can_access_employee_profiles: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      can_access_employee_profiles: { Args: never; Returns: boolean }
       create_school_with_owner: {
         Args: {
           p_owner_name: string
@@ -2587,29 +2859,27 @@ export type Database = {
         Args: { connection_id: string; token: string }
         Returns: string
       }
-      fix_missing_user_records: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      generate_invite_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      fix_missing_user_records: { Args: never; Returns: undefined }
+      generate_invite_code: { Args: never; Returns: string }
       get_connection_token_for_api: {
         Args: { connection_id: string; purpose?: string }
         Returns: string
       }
-      get_current_user_org_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
+      get_current_user_org_id: { Args: never; Returns: string }
+      get_current_user_role: { Args: never; Returns: string }
+      get_user_org_id_direct: {
+        Args: { user_auth_id: string }
         Returns: string
       }
       get_user_organization_id: {
         Args: { user_auth_id: string }
         Returns: string
+      }
+      get_user_roles: {
+        Args: { p_user_id: string }
+        Returns: {
+          role: Database["public"]["Enums"]["app_role"]
+        }[]
       }
       has_role: {
         Args: {
@@ -2618,14 +2888,12 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_organization_owner: {
-        Args: { user_org_id: string }
+      is_org_owner_via_roles: {
+        Args: { check_user_id: string }
         Returns: boolean
       }
-      is_user_owner: {
-        Args: { user_auth_id: string }
-        Returns: boolean
-      }
+      is_organization_owner: { Args: { user_org_id: string }; Returns: boolean }
+      is_user_owner: { Args: { user_auth_id: string }; Returns: boolean }
       join_school_as_student: {
         Args: {
           p_organization_id: string
@@ -2645,6 +2913,13 @@ export type Database = {
           p_refresh_token?: string
         }
         Returns: undefined
+      }
+      user_has_role: {
+        Args: {
+          p_role: Database["public"]["Enums"]["app_role"]
+          p_user_id: string
+        }
+        Returns: boolean
       }
     }
     Enums: {
