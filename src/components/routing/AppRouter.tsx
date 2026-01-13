@@ -17,8 +17,6 @@ import Reports from "@/pages/Reports";
 import Billing from "@/pages/Billing";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
-import Guide from "@/pages/Guide";
-import StepByStepGuides from "@/pages/StepByStepGuides";
 import AI from "@/pages/AI";
 import AIUsage from "@/pages/AIUsage";
 import GHL from "@/pages/GHL";
@@ -162,22 +160,6 @@ export const AppRouter = () => {
         } 
       />
       <Route path="/portal/:estimateId" element={<CustomerPortal />} />
-      <Route 
-        path="/guide" 
-        element={
-          <ProtectedRoute>
-            <Guide />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/step-by-step" 
-        element={
-          <ProtectedRoute>
-            <StepByStepGuides />
-          </ProtectedRoute>
-        } 
-      />
       <Route 
         path="/ai" 
         element={
