@@ -22,6 +22,7 @@ import StepByStepGuides from "@/pages/StepByStepGuides";
 import AI from "@/pages/AI";
 import AIUsage from "@/pages/AIUsage";
 import GHL from "@/pages/GHL";
+import QuickBooks from "@/pages/QuickBooks";
 import CoverPage from "@/pages/Cover";
 import Scheduling from "@/pages/Scheduling";
 import Reviews from "@/pages/Reviews";
@@ -230,6 +231,14 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <GPSTracking />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/quickbooks" 
+        element={
+          <ProtectedRoute>
+            <QuickBooks />
           </ProtectedRoute>
         } 
       />

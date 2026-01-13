@@ -21,6 +21,7 @@ import {
   Briefcase,
   Activity,
   MapPin,
+  Receipt,
 } from "lucide-react";
 
 const navigation = [
@@ -40,6 +41,7 @@ const navigation = [
   { name: "AI Assistant", icon: Brain, href: "/ai" },
   { name: "AI Usage", icon: Activity, href: "/ai-usage" },
   { name: "GoHighLevel", icon: Zap, href: "/ghl" },
+  { name: "QuickBooks", icon: Receipt, href: "/quickbooks" },
   { name: "Guide", icon: HelpCircle, href: "/guide" },
 ];
 
