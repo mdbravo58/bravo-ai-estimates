@@ -215,6 +215,10 @@ function WelcomeStep({ onComplete }: { onComplete: () => void; onSkip: () => voi
 function CompanySetupStep({ onComplete }: { onComplete: () => void; onSkip: () => void }) {
   const [companyName, setCompanyName] = useState("");
   const [industry, setIndustry] = useState("");
+  const [businessPhone, setBusinessPhone] = useState("");
+  const [businessEmail, setBusinessEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [website, setWebsite] = useState("");
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -228,11 +232,42 @@ function CompanySetupStep({ onComplete }: { onComplete: () => void; onSkip: () =
       return;
     }
 
-    try {
-      await supabase.from('organizations').upsert({
-        name: companyName,
-        // You might want to add industry field to organizations table
+    if (!businessPhone.trim()) {
+      toast({
+        title: "Phone number required",
+        description: "Please enter your business phone number.",
+        variant: "destructive"
       });
+      return;
+    }
+
+    if (!businessEmail.trim()) {
+      toast({
+        title: "Email required",
+        description: "Please enter your business email address.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Get user's organization
+      const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('auth_user_id', user?.id)
+        .single();
+
+      if (userData?.organization_id) {
+        await supabase.from('organizations').update({
+          name: companyName,
+          business_phone: businessPhone,
+          business_email: businessEmail,
+          address: address || null,
+          website: website || null,
+          description: industry || null,
+        }).eq('id', userData.organization_id);
+      }
       
       toast({
         title: "Company information saved",
@@ -241,6 +276,7 @@ function CompanySetupStep({ onComplete }: { onComplete: () => void; onSkip: () =
       
       onComplete();
     } catch (error) {
+      console.error('Error saving company:', error);
       toast({
         title: "Error saving company information",
         description: "Please try again.",
@@ -250,35 +286,87 @@ function CompanySetupStep({ onComplete }: { onComplete: () => void; onSkip: () =
   };
 
   return (
-    <div className="space-y-6 max-w-md mx-auto">
+    <div className="space-y-4 max-w-md mx-auto">
       <div>
         <label className="block text-sm font-medium mb-2">Company Name *</label>
         <input
           type="text"
           value={companyName}
           onChange={(e) => setCompanyName(e.target.value)}
-          placeholder="Enter your company name"
-          className="w-full p-3 border rounded-lg"
+          placeholder="e.g., ABC Plumbing Services"
+          className="w-full p-3 border rounded-lg bg-background"
         />
       </div>
+      
+      <div>
+        <label className="block text-sm font-medium mb-2">Business Phone *</label>
+        <input
+          type="tel"
+          value={businessPhone}
+          onChange={(e) => setBusinessPhone(e.target.value)}
+          placeholder="(555) 123-4567"
+          className="w-full p-3 border rounded-lg bg-background"
+        />
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium mb-2">Business Email *</label>
+        <input
+          type="email"
+          value={businessEmail}
+          onChange={(e) => setBusinessEmail(e.target.value)}
+          placeholder="info@yourcompany.com"
+          className="w-full p-3 border rounded-lg bg-background"
+        />
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium mb-2">Business Address</label>
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="123 Main St, City, State ZIP"
+          className="w-full p-3 border rounded-lg bg-background"
+        />
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium mb-2">Website</label>
+        <input
+          type="url"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+          placeholder="https://yourcompany.com"
+          className="w-full p-3 border rounded-lg bg-background"
+        />
+      </div>
+      
       <div>
         <label className="block text-sm font-medium mb-2">Industry</label>
         <select
           value={industry}
           onChange={(e) => setIndustry(e.target.value)}
-          className="w-full p-3 border rounded-lg"
+          className="w-full p-3 border rounded-lg bg-background"
         >
           <option value="">Select your industry</option>
           <option value="hvac">HVAC</option>
           <option value="plumbing">Plumbing</option>
           <option value="electrical">Electrical</option>
-          <option value="handyman">Handyman Services</option>
+          <option value="roofing">Roofing</option>
           <option value="landscaping">Landscaping</option>
           <option value="cleaning">Cleaning Services</option>
+          <option value="painting">Painting</option>
+          <option value="pest-control">Pest Control</option>
+          <option value="garage-doors">Garage Doors</option>
+          <option value="windows-doors">Windows & Doors</option>
+          <option value="general-contractor">General Contractor</option>
+          <option value="handyman">Handyman Services</option>
           <option value="other">Other</option>
         </select>
       </div>
-      <Button onClick={handleSubmit} className="w-full">
+      
+      <Button onClick={handleSubmit} className="w-full mt-4">
         Continue
       </Button>
     </div>
