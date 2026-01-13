@@ -125,11 +125,8 @@ const AIPage = () => {
               </p>
               <AIAnalyticsDashboard />
             </div>
-          </TabsContent>
+        </TabsContent>
         </Tabs>
-
-        {/* Global Chat Widget */}
-        <CustomerChatWidget />
       </div>
     </Layout>
   );
