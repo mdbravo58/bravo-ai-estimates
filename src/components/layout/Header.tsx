@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Building2, Settings, User, LogOut } from "lucide-react";
+import { Settings, User, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
+import bravoLogo from "@/assets/bravo-ai-logo.png";
 
 interface HeaderProps {
   organization?: {
@@ -36,20 +37,14 @@ export function Header({ organization, user }: HeaderProps) {
         {/* Logo and Organization */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
-            {organization?.logo ? (
-              <img
-                src={organization.logo}
-                alt={organization.name}
-                className="h-8 w-auto"
-              />
-            ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-gradient-primary">
-                <Building2 className="h-5 w-5 text-primary-foreground" />
-              </div>
-            )}
+            <img
+              src={bravoLogo}
+              alt="Bravo AI Systems"
+              className="h-10 w-auto"
+            />
             <div>
               <h1 className="font-heading text-lg font-semibold text-foreground">
-                {organization?.name || "Bravo Book Buddy"}
+                {organization?.name || "Bravo AI Systems"}
               </h1>
             </div>
           </div>
