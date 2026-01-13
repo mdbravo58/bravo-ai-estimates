@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Search, Package, DollarSign } from "lucide-react";
+import { Plus, Search, Package, DollarSign, Lightbulb, X } from "lucide-react";
 
 interface Item {
   id: string;
@@ -23,6 +24,7 @@ const PriceBooksPage = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showTip, setShowTip] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -91,7 +93,27 @@ const PriceBooksPage = () => {
             </Button>
           </div>
 
-          {/* Search */}
+          {/* Pro Tip */}
+          {showTip && (
+            <Alert className="bg-primary/5 border-primary/20">
+              <Lightbulb className="h-4 w-4 text-primary" />
+              <AlertDescription className="flex items-center justify-between">
+                <span>
+                  <strong>Pro Tip:</strong> Add your most common services here once, use them forever. 
+                  Price Books make estimates <strong>10x faster</strong> — just click to add instead of typing every time!
+                </span>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowTip(false)}
+                  className="ml-4 shrink-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+
           <Card>
             <CardContent className="pt-6">
               <div className="relative">
