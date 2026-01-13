@@ -5,12 +5,12 @@ import { AIEstimateGenerator } from "@/components/ai/AIEstimateGenerator";
 import { VoiceAssistant } from "@/components/ai/VoiceAssistant";
 import { AIAnalyticsDashboard } from "@/components/ai/AIAnalyticsDashboard";
 import { 
-  MessageCircle, 
+  HelpCircle, 
   FileText, 
   Mic, 
   BarChart3,
   Brain,
-  Sparkles
+  BookOpen
 } from "lucide-react";
 
 const AIPage = () => {
@@ -27,11 +27,11 @@ const AIPage = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="chat" className="space-y-4">
+        <Tabs defaultValue="guide" className="space-y-4">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="chat" className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Customer Chat
+            <TabsTrigger value="guide" className="flex items-center gap-2">
+              <HelpCircle className="h-4 w-4" />
+              Software Guide
             </TabsTrigger>
             <TabsTrigger value="estimates" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
@@ -47,39 +47,39 @@ const AIPage = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="chat" className="space-y-4">
+          <TabsContent value="guide" className="space-y-4">
             <div className="grid gap-6 md:grid-cols-2">
               <div>
                 <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <MessageCircle className="h-6 w-6 text-primary" />
-                  AI Customer Service Chat
+                  <HelpCircle className="h-6 w-6 text-primary" />
+                  AI Software Guide
                 </h2>
                 <div className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-lg">
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
-                      <Sparkles className="h-4 w-4" />
-                      24/7 Customer Support
+                      <BookOpen className="h-4 w-4" />
+                      In-App Software Help
                     </h3>
                     <ul className="text-sm space-y-1 text-muted-foreground">
-                      <li>• Instant responses to customer inquiries</li>
-                      <li>• Schedule appointments automatically</li>
-                      <li>• Provide service estimates</li>
-                      <li>• Handle emergency requests</li>
-                      <li>• Check job status and updates</li>
-                      <li>• Answer billing questions</li>
+                      <li>• Navigate the dashboard and features</li>
+                      <li>• Learn how to create jobs and estimates</li>
+                      <li>• Understand scheduling and team management</li>
+                      <li>• Get help with reports and analytics</li>
+                      <li>• Find settings and configuration options</li>
+                      <li>• Quick answers about any feature</li>
                     </ul>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Click the chat widget in the bottom right to test the AI customer service assistant.
-                    It's trained on your business services and can help customers with common requests.
+                    Click the help widget in the bottom right to get instant guidance on using the Bravo Service Suite.
+                    Ask questions about any feature and get step-by-step instructions.
                   </p>
                 </div>
               </div>
               <div className="relative h-96 border-2 border-dashed border-muted rounded-lg flex items-center justify-center">
                 <div className="text-center">
-                  <MessageCircle className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-muted-foreground">Chat widget is active</p>
-                  <p className="text-sm text-muted-foreground">Check bottom right corner</p>
+                  <HelpCircle className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-muted-foreground">Help guide is active</p>
+                  <p className="text-sm text-muted-foreground">Click the help icon in the bottom right</p>
                 </div>
               </div>
             </div>
