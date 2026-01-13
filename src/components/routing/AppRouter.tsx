@@ -30,6 +30,7 @@ import Pricing from "@/pages/Pricing";
 import Subscribe from "@/pages/Subscribe";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
+import GPSTracking from "@/pages/GPSTracking";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -221,6 +222,14 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <Team />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/gps-tracking" 
+        element={
+          <ProtectedRoute>
+            <GPSTracking />
           </ProtectedRoute>
         } 
       />
