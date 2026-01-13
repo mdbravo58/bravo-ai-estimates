@@ -5,13 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useLocation } from 'react-router-dom';
 import { 
-  MessageCircle, 
+  HelpCircle, 
   X, 
   Send, 
   Bot, 
   User,
-  Loader2
+  Loader2,
+  Lightbulb
 } from 'lucide-react';
 
 interface Message {
@@ -26,6 +28,13 @@ interface CustomerChatWidgetProps {
   onToggle?: () => void;
 }
 
+const quickHelp = [
+  { label: "How do I create an estimate?", icon: "📝" },
+  { label: "How do I add a customer?", icon: "👤" },
+  { label: "How do I schedule a job?", icon: "📅" },
+  { label: "What does this page do?", icon: "❓" },
+];
+
 export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
   isOpen: controlledIsOpen,
   onToggle
@@ -35,7 +44,7 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
     {
       id: '1',
       role: 'assistant',
-      content: 'Hello! I\'m your AI assistant for Bravo Service Suite. I can help you schedule appointments, get service estimates, check job status, or answer questions about our services. How can I help you today?',
+      content: 'Hi! I\'m your Bravo Service Suite assistant. I\'m here to help you learn how to use the software. Ask me anything about features, navigation, or how to complete tasks!',
       timestamp: new Date()
     }
   ]);
@@ -43,6 +52,7 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const location = useLocation();
 
   const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
 
@@ -62,13 +72,14 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
     }
   };
 
-  const sendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+  const sendMessage = async (messageText?: string) => {
+    const text = messageText || inputValue.trim();
+    if (!text || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputValue.trim(),
+      content: text,
       timestamp: new Date()
     };
 
@@ -86,7 +97,8 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
       const { data, error } = await supabase.functions.invoke('ai-customer-chat', {
         body: {
           message: userMessage.content,
-          conversationHistory
+          conversationHistory,
+          currentPage: location.pathname
         }
       });
 
@@ -119,15 +131,20 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
     }
   };
 
+  const handleQuickHelp = (question: string) => {
+    sendMessage(question);
+  };
+
   if (!isOpen) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={handleToggle}
-          className="h-14 w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg"
+          className="h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg"
           size="icon"
+          title="Need help? Click for software guide"
         >
-          <MessageCircle className="h-6 w-6" />
+          <HelpCircle className="h-6 w-6" />
         </Button>
       </div>
     );
@@ -135,23 +152,43 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      <Card className="w-96 h-[500px] shadow-2xl border">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-primary text-primary-foreground">
+      <Card className="w-96 h-[520px] shadow-2xl border">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-blue-600 text-white rounded-t-lg">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Bot className="h-5 w-5" />
-            AI Customer Support
+            <Lightbulb className="h-5 w-5" />
+            Software Help Guide
           </CardTitle>
           <Button
             variant="ghost"
             size="icon"
             onClick={handleToggle}
-            className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+            className="h-8 w-8 text-white hover:bg-white/20"
           >
             <X className="h-4 w-4" />
           </Button>
         </CardHeader>
         
-        <CardContent className="p-0 flex flex-col h-[calc(500px-80px)]">
+        <CardContent className="p-0 flex flex-col h-[calc(520px-72px)]">
+          {/* Quick Help Buttons */}
+          {messages.length <= 1 && (
+            <div className="p-3 border-b bg-muted/30">
+              <p className="text-xs text-muted-foreground mb-2">Quick help:</p>
+              <div className="flex flex-wrap gap-1">
+                {quickHelp.map((item) => (
+                  <Button
+                    key={item.label}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-7"
+                    onClick={() => handleQuickHelp(item.label)}
+                  >
+                    {item.icon} {item.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <ScrollArea className="flex-1 p-4">
             <div className="space-y-4">
               {messages.map((message) => (
@@ -162,14 +199,14 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
                   <div
                     className={`max-w-[80%] rounded-lg p-3 ${
                       message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
+                        ? 'bg-blue-600 text-white'
                         : 'bg-muted'
                     }`}
                   >
                     <div className="flex items-start gap-2">
-                      {message.role === 'assistant' && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+                      {message.role === 'assistant' && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0 text-blue-600" />}
                       {message.role === 'user' && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
-                      <div className="text-sm">{message.content}</div>
+                      <div className="text-sm whitespace-pre-wrap">{message.content}</div>
                     </div>
                     <div className="text-xs opacity-70 mt-1">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -181,9 +218,9 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
                 <div className="flex justify-start">
                   <div className="bg-muted rounded-lg p-3 max-w-[80%]">
                     <div className="flex items-center gap-2">
-                      <Bot className="h-4 w-4" />
+                      <Bot className="h-4 w-4 text-blue-600" />
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">AI is thinking...</span>
+                      <span className="text-sm">Looking up help...</span>
                     </div>
                   </div>
                 </div>
@@ -198,20 +235,21 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
+                placeholder="Ask how to use any feature..."
                 disabled={isLoading}
                 className="flex-1"
               />
               <Button
-                onClick={sendMessage}
+                onClick={() => sendMessage()}
                 disabled={!inputValue.trim() || isLoading}
                 size="icon"
+                className="bg-blue-600 hover:bg-blue-700"
               >
                 <Send className="h-4 w-4" />
               </Button>
             </div>
             <div className="text-xs text-muted-foreground mt-2 text-center">
-              AI Customer Support • Available 24/7
+              Your in-app software guide • Ask me anything!
             </div>
           </div>
         </CardContent>

@@ -1,11 +1,88 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Software documentation for the AI to reference
+const softwareGuide = `
+BRAVO SERVICE SUITE - SOFTWARE GUIDE
+
+NAVIGATION:
+- Dashboard (/) - Overview of your business: revenue, jobs, and key metrics
+- Estimates (/estimates) - Create and manage service estimates for customers
+- Jobs (/jobs) - Track all your jobs from start to finish
+- Customers (/customers) - Manage your customer database
+- Scheduling (/scheduling) - View and manage your team's schedule
+- GPS Tracking (/gps-tracking) - Real-time location of your technicians
+- Reviews (/reviews) - Monitor and respond to customer reviews
+- Team (/team) - Manage employees, roles, and permissions
+- Price Books (/price-books) - Set up your service pricing
+- Calculator (/calculator) - Calculate job costs and profits
+- Reports (/reports) - View business analytics and reports
+- Billing (/billing) - Manage invoices and payments
+- Settings (/settings) - Configure your organization
+- AI Assistant (/ai) - AI-powered tools for estimates, analytics, and voice
+- AI Usage (/ai-usage) - Monitor your AI feature usage
+- GoHighLevel (/ghl) - CRM and marketing automation integration
+- QuickBooks (/quickbooks) - Full accounting integration
+
+HOW TO CREATE AN ESTIMATE:
+1. Go to Estimates from the sidebar
+2. Click "New Estimate" button
+3. Select or add a customer
+4. Add line items with services/materials
+5. Set pricing and markup
+6. Preview and send to customer
+
+HOW TO ADD A CUSTOMER:
+1. Go to Customers from the sidebar
+2. Click "Add Customer" button
+3. Fill in name, email, phone, and address
+4. Save the customer record
+
+HOW TO CREATE A JOB:
+1. Go to Jobs from the sidebar
+2. Click "Create Job" button
+3. Link to an existing estimate or create standalone
+4. Assign a technician and set schedule
+5. Add job details and notes
+
+HOW TO SCHEDULE:
+1. Go to Scheduling from the sidebar
+2. View the calendar with all appointments
+3. Click on a time slot to add new appointment
+4. Drag and drop to reschedule
+
+HOW TO USE GPS TRACKING:
+1. Go to GPS Tracking from the sidebar
+2. View real-time locations of all technicians
+3. Click on a tech to see their current job
+4. Track drive times and optimize routes
+
+HOW TO CONNECT GOHIGHLEVEL:
+1. Go to GoHighLevel from the sidebar
+2. Enter your GHL Location ID
+3. Enter your Access Token (JWT)
+4. Test the connection
+5. Sync contacts and set up workflows
+
+HOW TO CONNECT QUICKBOOKS:
+1. Go to QuickBooks from the sidebar
+2. Enter your Client ID and Secret from Intuit Developer
+3. Click Connect to authorize
+4. Configure sync settings for invoices, expenses, payments
+
+FEATURES BY PAGE:
+- Estimates: AI-powered estimate generation, templates, customer approval
+- Jobs: Progress tracking, time entries, material tracking, photos
+- Scheduling: Calendar view, drag-drop scheduling, tech assignments
+- Reports: Revenue, job completion, technician performance
+- Price Books: Service catalog, pricing tiers, markup rules
+- AI Tools: Voice assistant, estimate generator, analytics dashboard
+`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -13,7 +90,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message, conversationHistory = [] } = await req.json();
+    const { message, conversationHistory = [], currentPage = '/' } = await req.json();
     
     if (!message) {
       throw new Error('Message is required');
@@ -24,44 +101,36 @@ serve(async (req) => {
       throw new Error('Lovable API key not configured');
     }
 
-    // System prompt for customer service
-    const systemPrompt = `You are an AI customer service assistant for Bravo Service Suite, a professional service business management platform. You help customers with:
+    // System prompt for software help assistant
+    const systemPrompt = `You are a helpful in-app assistant for Bravo Service Suite, a field service management software. Your ONLY job is to help users learn how to use the software.
 
-    SERVICES AVAILABLE:
-    - Plumbing repairs and installations
-    - HVAC maintenance and repairs  
-    - Electrical work
-    - General maintenance services
-    - Emergency services (24/7)
+${softwareGuide}
 
-    CAPABILITIES:
-    - Schedule service appointments
-    - Provide service estimates
-    - Check job status and updates
-    - Answer billing questions
-    - Provide service recommendations
-    - Handle emergency requests
+CURRENT PAGE: ${currentPage}
 
-    BUSINESS HOURS:
-    - Regular: Monday-Friday 8AM-6PM, Saturday 9AM-4PM
-    - Emergency: 24/7 available
-    - Response time: Within 2 hours for regular, 30 minutes for emergencies
+YOUR ROLE:
+- Help users navigate the software
+- Explain features and how to use them
+- Provide step-by-step instructions
+- Answer questions about functionality
+- Give tips for using features effectively
 
-    PERSONALITY:
-    - Professional but friendly
-    - Helpful and solution-oriented
-    - Knowledgeable about services
-    - Empathetic to customer needs
-    - Always offer to connect with human technician if needed
+RESPONSE STYLE:
+- Be concise and helpful
+- Use numbered steps for instructions
+- Reference specific menu items and buttons
+- If the user is on a specific page, give context-aware help
+- Use simple, non-technical language
 
-    If a customer wants to:
-    1. Schedule service - Ask for their contact info, service type, and preferred time
-    2. Get estimate - Ask about the specific issue/project details
-    3. Check status - Ask for their job reference number or contact info
-    4. Emergency - Prioritize and get location/contact info immediately
-    5. Billing - Direct to billing department but offer basic help
+DO NOT:
+- Answer questions unrelated to the software
+- Provide business advice or industry tips
+- Discuss pricing or subscription plans
+- Make promises about features that don't exist
 
-    Always be helpful and aim to resolve their issue or connect them with the right person.`;
+If asked about something outside the software, politely redirect: "I'm here to help you use Bravo Service Suite. Is there a feature I can help you with?"
+
+Always be encouraging and remember that users may be new to the software.`;
 
     // Build conversation messages
     const messages = [
@@ -70,7 +139,7 @@ serve(async (req) => {
       { role: 'user', content: message }
     ];
 
-    console.log('Sending request to Lovable AI Gateway with messages:', messages);
+    console.log('Software help request for page:', currentPage);
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -81,8 +150,8 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: messages,
-        max_tokens: 500,
-        temperature: 0.7,
+        max_tokens: 600,
+        temperature: 0.5,
         stream: false
       }),
     });
@@ -100,7 +169,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('Lovable AI Gateway response:', data);
+    console.log('AI help response received');
 
     const aiResponse = data.choices[0]?.message?.content;
     
