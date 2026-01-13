@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AuthenticatedRoute } from "@/components/auth/AuthenticatedRoute";
 import { AppRouter } from "./components/routing/AppRouter";
+import { CustomerChatWidget } from "@/components/ai/CustomerChatWidget";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <AppRouter />
+          {/* Global AI Assistant - Available on every page */}
+          <CustomerChatWidget />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
