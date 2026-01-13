@@ -23,6 +23,7 @@ import GHL from "@/pages/GHL";
 import QuickBooks from "@/pages/QuickBooks";
 import CoverPage from "@/pages/Cover";
 import Scheduling from "@/pages/Scheduling";
+import Payroll from "@/pages/Payroll";
 
 import Team from "@/pages/Team";
 import Pricing from "@/pages/Pricing";
@@ -213,6 +214,14 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <QuickBooks />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/payroll" 
+        element={
+          <ProtectedRoute>
+            <Payroll />
           </ProtectedRoute>
         } 
       />
