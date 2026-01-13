@@ -20,6 +20,7 @@ import {
   UserCog,
   Briefcase,
   Activity,
+  MapPin,
 } from "lucide-react";
 
 const navigation = [
@@ -28,6 +29,7 @@ const navigation = [
   { name: "Jobs", icon: Briefcase, href: "/jobs" },
   { name: "Customers", icon: Users, href: "/customers" },
   { name: "Scheduling", icon: Calendar, href: "/scheduling" },
+  { name: "GPS Tracking", icon: MapPin, href: "/gps-tracking" },
   { name: "Reviews", icon: Star, href: "/reviews" },
   { name: "Team", icon: UserCog, href: "/team" },
   { name: "Price Books", icon: BookOpen, href: "/price-books" },
