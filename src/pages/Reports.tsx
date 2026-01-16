@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { 
@@ -13,7 +14,6 @@ import {
   DollarSign, 
   Users, 
   FileText, 
-  Calendar,
   Download
 } from "lucide-react";
 
@@ -25,10 +25,24 @@ interface KPI {
   icon: any;
 }
 
+interface ReportData {
+  totalRevenue: number;
+  previousRevenue: number;
+  activeJobs: number;
+  completedJobs: number;
+  scheduledJobs: number;
+  totalCustomers: number;
+  newCustomersThisMonth: number;
+  totalEstimates: number;
+  approvedEstimates: number;
+  pendingEstimates: number;
+  avgJobValue: number;
+}
+
 const ReportsPage = () => {
   const [dateRange, setDateRange] = useState("30");
   const [loading, setLoading] = useState(true);
-  const [kpis, setKpis] = useState<KPI[]>([]);
+  const [data, setData] = useState<ReportData | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -38,67 +52,71 @@ const ReportsPage = () => {
   const fetchReportData = async () => {
     setLoading(true);
     try {
-      // Fetch various data for reports
-      const [jobsResult, customersResult] = await Promise.all([
-        supabase.from('jobs').select('*'),
-        supabase.from('customers').select('*')
+      const now = new Date();
+      const daysAgo = parseInt(dateRange);
+      const startDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000).toISOString();
+      const previousStartDate = new Date(now.getTime() - daysAgo * 2 * 24 * 60 * 60 * 1000).toISOString();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+      // Fetch all data in parallel
+      const [
+        jobsResult, 
+        customersResult, 
+        invoicesResult, 
+        previousInvoicesResult,
+        estimatesResult,
+        newCustomersResult
+      ] = await Promise.all([
+        supabase.from('jobs').select('id, status, created_at'),
+        supabase.from('customers').select('id, created_at'),
+        supabase.from('invoices').select('amount, approved, invoice_date').gte('invoice_date', startDate),
+        supabase.from('invoices').select('amount, approved, invoice_date').gte('invoice_date', previousStartDate).lt('invoice_date', startDate),
+        supabase.from('estimates').select('id, status, total, created_at').gte('created_at', startDate),
+        supabase.from('customers').select('id').gte('created_at', startOfMonth)
       ]);
 
       const jobs = jobsResult.data || [];
       const customers = customersResult.data || [];
+      const invoices = invoicesResult.data || [];
+      const previousInvoices = previousInvoicesResult.data || [];
+      const estimates = estimatesResult.data || [];
+      const newCustomers = newCustomersResult.data || [];
 
-      // Calculate KPIs
-      const totalJobs = jobs.length;
+      // Calculate revenue
+      const totalRevenue = invoices
+        .filter(inv => inv.approved)
+        .reduce((sum, inv) => sum + (inv.amount || 0), 0);
+
+      const previousRevenue = previousInvoices
+        .filter(inv => inv.approved)
+        .reduce((sum, inv) => sum + (inv.amount || 0), 0);
+
+      // Job stats
       const completedJobs = jobs.filter(job => job.status === 'complete').length;
-      const inProgressJobs = jobs.filter(job => job.status === 'in_progress').length;
-      const completionRate = totalJobs > 0 ? (completedJobs / totalJobs * 100) : 0;
+      const activeJobs = jobs.filter(job => job.status === 'in_progress').length;
+      const scheduledJobs = jobs.filter(job => job.status === 'scheduled').length;
 
-      const newKpis: KPI[] = [
-        {
-          title: "Total Revenue",
-          value: "$12,450",
-          change: "+15.3%",
-          positive: true,
-          icon: DollarSign
-        },
-        {
-          title: "Active Jobs",
-          value: inProgressJobs.toString(),
-          change: "+8.2%", 
-          positive: true,
-          icon: FileText
-        },
-        {
-          title: "Total Customers",
-          value: customers.length.toString(),
-          change: "+12.1%",
-          positive: true,
-          icon: Users
-        },
-        {
-          title: "Completion Rate",
-          value: `${completionRate.toFixed(1)}%`,
-          change: "-2.4%",
-          positive: false,
-          icon: TrendingUp
-        },
-        {
-          title: "Avg Job Value",
-          value: "$2,890",
-          change: "+5.7%",
-          positive: true,
-          icon: BarChart3
-        },
-        {
-          title: "Monthly Margin",
-          value: "28.5%",
-          change: "+1.2%",
-          positive: true,
-          icon: TrendingUp
-        }
-      ];
+      // Estimate stats
+      const approvedEstimates = estimates.filter(e => e.status === 'approved').length;
+      const pendingEstimates = estimates.filter(e => e.status === 'pending').length;
 
-      setKpis(newKpis);
+      // Average job value
+      const avgJobValue = completedJobs > 0 ? totalRevenue / completedJobs : 0;
+
+      setData({
+        totalRevenue,
+        previousRevenue,
+        activeJobs,
+        completedJobs,
+        scheduledJobs,
+        totalCustomers: customers.length,
+        newCustomersThisMonth: newCustomers.length,
+        totalEstimates: estimates.length,
+        approvedEstimates,
+        pendingEstimates,
+        avgJobValue
+      });
+
     } catch (error: any) {
       console.error('Error fetching report data:', error);
       toast({
@@ -111,18 +129,79 @@ const ReportsPage = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-2 text-muted-foreground">Loading reports...</p>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
+  const formatCurrency = (amount: number) => {
+    if (amount >= 1000) {
+      return `$${(amount / 1000).toFixed(1)}K`;
+    }
+    return `$${amount.toLocaleString()}`;
+  };
+
+  const calculateChange = (current: number, previous: number): { change: string; positive: boolean } => {
+    if (previous === 0) {
+      return { change: current > 0 ? '+100%' : '0%', positive: current >= 0 };
+    }
+    const percentChange = ((current - previous) / previous) * 100;
+    const sign = percentChange >= 0 ? '+' : '';
+    return { 
+      change: `${sign}${percentChange.toFixed(1)}%`, 
+      positive: percentChange >= 0 
+    };
+  };
+
+  const getKPIs = (): KPI[] => {
+    if (!data) return [];
+
+    const revenueChange = calculateChange(data.totalRevenue, data.previousRevenue);
+    const totalJobs = data.completedJobs + data.activeJobs + data.scheduledJobs;
+    const completionRate = totalJobs > 0 ? (data.completedJobs / totalJobs) * 100 : 0;
+
+    return [
+      {
+        title: "Total Revenue",
+        value: formatCurrency(data.totalRevenue),
+        change: revenueChange.change,
+        positive: revenueChange.positive,
+        icon: DollarSign
+      },
+      {
+        title: "Active Jobs",
+        value: data.activeJobs.toString(),
+        change: `${data.scheduledJobs} scheduled`,
+        positive: true,
+        icon: FileText
+      },
+      {
+        title: "Total Customers",
+        value: data.totalCustomers.toString(),
+        change: `+${data.newCustomersThisMonth} this month`,
+        positive: true,
+        icon: Users
+      },
+      {
+        title: "Completion Rate",
+        value: `${completionRate.toFixed(1)}%`,
+        change: `${data.completedJobs} completed`,
+        positive: completionRate >= 50,
+        icon: TrendingUp
+      },
+      {
+        title: "Avg Job Value",
+        value: formatCurrency(data.avgJobValue),
+        change: `${data.completedJobs} jobs`,
+        positive: true,
+        icon: BarChart3
+      },
+      {
+        title: "Estimates",
+        value: data.totalEstimates.toString(),
+        change: `${data.approvedEstimates} approved`,
+        positive: true,
+        icon: FileText
+      }
+    ];
+  };
+
+  const kpis = getKPIs();
 
   return (
     <Layout>
@@ -155,39 +234,50 @@ const ReportsPage = () => {
 
           {/* KPI Cards */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {kpis.map((kpi, index) => {
-              const Icon = kpi.icon;
-              return (
-                <Card key={index}>
+            {loading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <Card key={i}>
                   <CardContent className="pt-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          {kpi.title}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <p className="text-2xl font-bold">{kpi.value}</p>
-                          <Badge 
-                            variant={kpi.positive ? "default" : "destructive"}
-                            className="text-xs"
-                          >
-                            {kpi.positive ? (
-                              <TrendingUp className="h-3 w-3 mr-1" />
-                            ) : (
-                              <TrendingDown className="h-3 w-3 mr-1" />
-                            )}
-                            {kpi.change}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Icon className="h-6 w-6 text-primary" />
-                      </div>
-                    </div>
+                    <Skeleton className="h-4 w-24 mb-2" />
+                    <Skeleton className="h-8 w-20" />
                   </CardContent>
                 </Card>
-              );
-            })}
+              ))
+            ) : (
+              kpis.map((kpi, index) => {
+                const Icon = kpi.icon;
+                return (
+                  <Card key={index}>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {kpi.title}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-2xl font-bold">{kpi.value}</p>
+                            <Badge 
+                              variant={kpi.positive ? "default" : "destructive"}
+                              className="text-xs"
+                            >
+                              {kpi.positive ? (
+                                <TrendingUp className="h-3 w-3 mr-1" />
+                              ) : (
+                                <TrendingDown className="h-3 w-3 mr-1" />
+                              )}
+                              {kpi.change}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Icon className="h-6 w-6 text-primary" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
           </div>
 
           {/* Report Sections */}
@@ -198,39 +288,48 @@ const ReportsPage = () => {
                 <CardTitle>Revenue Analysis</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Monthly Revenue</span>
-                    <span className="font-semibold">$12,450</span>
+                {loading ? (
+                  <div className="space-y-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Skeleton key={i} className="h-6 w-full" />
+                    ))}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Last Month</span>
-                    <span className="text-muted-foreground">$10,800</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Growth</span>
-                    <Badge className="bg-green-100 text-green-800">
-                      +15.3%
-                    </Badge>
-                  </div>
-                  <div className="pt-4">
-                    <div className="text-sm text-muted-foreground mb-2">Revenue by Service</div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Plumbing</span>
-                        <span>68%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Repairs</span>
-                        <span>22%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Installation</span>
-                        <span>10%</span>
+                ) : data && (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span>Period Revenue</span>
+                      <span className="font-semibold">{formatCurrency(data.totalRevenue)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Previous Period</span>
+                      <span className="text-muted-foreground">{formatCurrency(data.previousRevenue)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Growth</span>
+                      {(() => {
+                        const change = calculateChange(data.totalRevenue, data.previousRevenue);
+                        return (
+                          <Badge className={change.positive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}>
+                            {change.change}
+                          </Badge>
+                        );
+                      })()}
+                    </div>
+                    <div className="pt-4">
+                      <div className="text-sm text-muted-foreground mb-2">Revenue Sources</div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Approved Invoices</span>
+                          <span>{formatCurrency(data.totalRevenue)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Pending Estimates</span>
+                          <span className="text-muted-foreground">{data.pendingEstimates} pending</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
@@ -240,37 +339,53 @@ const ReportsPage = () => {
                 <CardTitle>Job Performance</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Jobs Completed</span>
-                    <span className="font-semibold">12</span>
+                {loading ? (
+                  <div className="space-y-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Skeleton key={i} className="h-6 w-full" />
+                    ))}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Jobs In Progress</span>
-                    <span className="text-orange-600 font-semibold">5</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Average Job Duration</span>
-                    <span className="text-muted-foreground">3.2 days</span>
-                  </div>
-                  <div className="pt-4">
-                    <div className="text-sm text-muted-foreground mb-2">Job Status Distribution</div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Completed</span>
-                        <span>60%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>In Progress</span>
-                        <span>25%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Scheduled</span>
-                        <span>15%</span>
-                      </div>
+                ) : data && (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span>Jobs Completed</span>
+                      <span className="font-semibold">{data.completedJobs}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Jobs In Progress</span>
+                      <span className="text-orange-600 font-semibold">{data.activeJobs}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Jobs Scheduled</span>
+                      <span className="text-blue-600 font-semibold">{data.scheduledJobs}</span>
+                    </div>
+                    <div className="pt-4">
+                      <div className="text-sm text-muted-foreground mb-2">Job Status Distribution</div>
+                      {(() => {
+                        const total = data.completedJobs + data.activeJobs + data.scheduledJobs;
+                        if (total === 0) {
+                          return <p className="text-muted-foreground text-sm">No jobs yet</p>;
+                        }
+                        return (
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span>Completed</span>
+                              <span>{((data.completedJobs / total) * 100).toFixed(0)}%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>In Progress</span>
+                              <span>{((data.activeJobs / total) * 100).toFixed(0)}%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Scheduled</span>
+                              <span>{((data.scheduledJobs / total) * 100).toFixed(0)}%</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
@@ -280,33 +395,46 @@ const ReportsPage = () => {
                 <CardTitle>Customer Insights</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Total Customers</span>
-                    <span className="font-semibold">48</span>
+                {loading ? (
+                  <div className="space-y-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Skeleton key={i} className="h-6 w-full" />
+                    ))}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>New This Month</span>
-                    <span className="text-green-600 font-semibold">6</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Repeat Customers</span>
-                    <span className="text-muted-foreground">32%</span>
-                  </div>
-                  <div className="pt-4">
-                    <div className="text-sm text-muted-foreground mb-2">Customer Satisfaction</div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>5 Star Reviews</span>
-                        <span>78%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Average Rating</span>
-                        <span>4.6/5</span>
+                ) : data && (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span>Total Customers</span>
+                      <span className="font-semibold">{data.totalCustomers}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>New This Month</span>
+                      <span className="text-green-600 font-semibold">{data.newCustomersThisMonth}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Avg Revenue per Customer</span>
+                      <span className="text-muted-foreground">
+                        {data.totalCustomers > 0 
+                          ? formatCurrency(data.totalRevenue / data.totalCustomers)
+                          : '$0'
+                        }
+                      </span>
+                    </div>
+                    <div className="pt-4">
+                      <div className="text-sm text-muted-foreground mb-2">Customer Activity</div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Active Estimates</span>
+                          <span>{data.pendingEstimates} pending</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Approved Estimates</span>
+                          <span>{data.approvedEstimates}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
@@ -316,37 +444,45 @@ const ReportsPage = () => {
                 <CardTitle>Financial Summary</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Gross Revenue</span>
-                    <span className="font-semibold">$12,450</span>
+                {loading ? (
+                  <div className="space-y-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Skeleton key={i} className="h-6 w-full" />
+                    ))}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Total Costs</span>
-                    <span className="text-red-600">$8,900</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Net Profit</span>
-                    <span className="text-green-600 font-semibold">$3,550</span>
-                  </div>
-                  <div className="pt-4">
-                    <div className="text-sm text-muted-foreground mb-2">Expense Breakdown</div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Labor</span>
-                        <span>45%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Materials</span>
-                        <span>35%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Overhead</span>
-                        <span>20%</span>
+                ) : data && (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span>Gross Revenue</span>
+                      <span className="font-semibold">{formatCurrency(data.totalRevenue)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Average Job Value</span>
+                      <span className="text-muted-foreground">{formatCurrency(data.avgJobValue)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Jobs Completed</span>
+                      <span className="text-green-600 font-semibold">{data.completedJobs}</span>
+                    </div>
+                    <div className="pt-4">
+                      <div className="text-sm text-muted-foreground mb-2">Estimates Overview</div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Total Estimates</span>
+                          <span>{data.totalEstimates}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Approved</span>
+                          <span className="text-green-600">{data.approvedEstimates}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Pending</span>
+                          <span className="text-orange-600">{data.pendingEstimates}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
           </div>
