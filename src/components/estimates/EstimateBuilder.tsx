@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2, Calculator, Send, Save, Loader2, FileText, Sparkles } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Plus, Trash2, Calculator, Send, Save, Loader2, FileText, Sparkles, Download, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -32,6 +33,8 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [selectedState, setSelectedState] = useState<string>("");
+  const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
+  const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [taxRate, setTaxRate] = useState<number>(8);
 
   const stateOptions = getStateOptions();
@@ -316,14 +319,15 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
       yPos += 5;
       doc.text("Thank you for your business!", pageWidth / 2, yPos, { align: "center" });
 
-      // Open PDF in new tab
+      // Show PDF in preview modal
       const pdfBlob = doc.output('blob');
       const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl, '_blank');
+      setPdfPreviewUrl(pdfUrl);
+      setShowPdfPreview(true);
 
       toast({
         title: "PDF Generated",
-        description: "Your estimate preview has opened in a new tab.",
+        description: "Preview your estimate below.",
       });
     } catch (error: any) {
       console.error('PDF generation error:', error);
@@ -334,6 +338,30 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
       });
     } finally {
       setIsGeneratingPDF(false);
+    }
+  };
+
+  const handleDownloadPdf = () => {
+    if (pdfPreviewUrl) {
+      const link = document.createElement('a');
+      link.href = pdfPreviewUrl;
+      link.download = `estimate-${customerInfo.name || 'draft'}-${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: "PDF Downloaded",
+        description: "Your estimate has been downloaded.",
+      });
+    }
+  };
+
+  const handleClosePdfPreview = () => {
+    setShowPdfPreview(false);
+    if (pdfPreviewUrl) {
+      URL.revokeObjectURL(pdfPreviewUrl);
+      setPdfPreviewUrl(null);
     }
   };
 
@@ -669,6 +697,39 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
           </Card>
         </div>
       </div>
+
+      {/* PDF Preview Dialog */}
+      <Dialog open={showPdfPreview} onOpenChange={handleClosePdfPreview}>
+        <DialogContent className="max-w-4xl h-[85vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Estimate Preview
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="flex-1 min-h-0">
+            {pdfPreviewUrl && (
+              <iframe
+                src={pdfPreviewUrl}
+                className="w-full h-full border rounded-lg"
+                title="PDF Preview"
+              />
+            )}
+          </div>
+          
+          <DialogFooter className="flex gap-2 sm:gap-2">
+            <Button variant="outline" onClick={handleClosePdfPreview}>
+              <X className="h-4 w-4 mr-2" />
+              Close
+            </Button>
+            <Button onClick={handleDownloadPdf}>
+              <Download className="h-4 w-4 mr-2" />
+              Download PDF
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
