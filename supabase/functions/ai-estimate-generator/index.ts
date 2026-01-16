@@ -43,17 +43,57 @@ serve(async (req) => {
       .eq('auth_user_id', user.id)
       .single();
 
-    const { 
-      description, 
-      serviceType, 
-      location, 
-      urgency = 'standard',
-      customerInfo = {} 
-    } = await req.json();
+    const body = await req.json();
+    let { description, serviceType, location, urgency = 'standard', customerInfo = {} } = body;
     
-    if (!description) {
-      throw new Error('Service description is required');
+    // Input validation - description
+    if (!description || typeof description !== 'string') {
+      throw new Error('Service description is required and must be a string');
     }
+    
+    // Limit description length
+    if (description.length > 2000) {
+      description = description.substring(0, 2000);
+    }
+    
+    // Sanitize description
+    description = description.replace(/[<>]/g, '');
+    
+    // Validate serviceType with whitelist
+    const validServiceTypes = ['plumbing', 'hvac', 'electrical', 'general', 'maintenance', 'other', ''];
+    if (serviceType && typeof serviceType === 'string') {
+      if (!validServiceTypes.includes(serviceType.toLowerCase())) {
+        serviceType = 'other';
+      }
+      serviceType = serviceType.substring(0, 50);
+    } else {
+      serviceType = '';
+    }
+    
+    // Validate location
+    if (location && typeof location === 'string') {
+      location = location.substring(0, 200).replace(/[<>]/g, '');
+    } else {
+      location = '';
+    }
+    
+    // Validate urgency with whitelist
+    const validUrgencies = ['standard', 'urgent', 'emergency'];
+    if (!validUrgencies.includes(urgency)) {
+      urgency = 'standard';
+    }
+    
+    // Sanitize customerInfo - only allow specific fields
+    const allowedCustomerFields = ['name', 'email', 'phone', 'address'];
+    const sanitizedCustomerInfo: Record<string, string> = {};
+    if (customerInfo && typeof customerInfo === 'object') {
+      for (const key of allowedCustomerFields) {
+        if (customerInfo[key] && typeof customerInfo[key] === 'string') {
+          sanitizedCustomerInfo[key] = customerInfo[key].substring(0, 100).replace(/[<>]/g, '');
+        }
+      }
+    }
+    customerInfo = sanitizedCustomerInfo;
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     if (!lovableApiKey) {
