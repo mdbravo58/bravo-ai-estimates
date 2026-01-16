@@ -217,7 +217,72 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const analysisResult = JSON.parse(data.choices[0]?.message?.content || '{}');
+    const rawContent = data.choices[0]?.message?.content || '{}';
+    
+    console.log('Raw AI response length:', rawContent.length);
+    
+    // Clean and parse the AI response - handle potential markdown code blocks or truncation
+    let cleanedContent = rawContent;
+    
+    // Remove markdown code blocks if present
+    if (cleanedContent.includes('```json')) {
+      cleanedContent = cleanedContent.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+    } else if (cleanedContent.includes('```')) {
+      cleanedContent = cleanedContent.replace(/```\n?/g, '');
+    }
+    
+    // Trim whitespace
+    cleanedContent = cleanedContent.trim();
+    
+    // Try to parse the JSON, with fallback for truncated responses
+    let analysisResult;
+    try {
+      analysisResult = JSON.parse(cleanedContent);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError.message);
+      console.log('Attempting to fix truncated JSON...');
+      
+      // Try to find the last complete object/array and close it
+      let fixedContent = cleanedContent;
+      
+      // Count unclosed brackets
+      const openBraces = (fixedContent.match(/{/g) || []).length;
+      const closeBraces = (fixedContent.match(/}/g) || []).length;
+      const openBrackets = (fixedContent.match(/\[/g) || []).length;
+      const closeBrackets = (fixedContent.match(/]/g) || []).length;
+      
+      // Remove any trailing incomplete string or property
+      fixedContent = fixedContent.replace(/,\s*"[^"]*$/, '');
+      fixedContent = fixedContent.replace(/,\s*$/, '');
+      fixedContent = fixedContent.replace(/:\s*"[^"]*$/, ': ""');
+      
+      // Close any unclosed arrays and objects
+      for (let i = 0; i < openBrackets - closeBrackets; i++) {
+        fixedContent += ']';
+      }
+      for (let i = 0; i < openBraces - closeBraces; i++) {
+        fixedContent += '}';
+      }
+      
+      try {
+        analysisResult = JSON.parse(fixedContent);
+        console.log('Successfully parsed fixed JSON');
+      } catch (secondParseError) {
+        console.error('Could not fix JSON, returning fallback response');
+        // Return a minimal valid response
+        analysisResult = {
+          summary: "Analysis could not be fully generated. Please try again.",
+          kpis: [],
+          insights: [],
+          recommendations: [],
+          alerts: [{
+            type: "warning",
+            message: "The AI response was truncated. Try a smaller date range or try again.",
+            urgency: "immediate"
+          }]
+        };
+      }
+    }
     
     // Add metadata
     analysisResult.generatedAt = new Date().toISOString();
