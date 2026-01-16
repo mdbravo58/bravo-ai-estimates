@@ -15,7 +15,8 @@ serve(async (req) => {
   try {
     // Authenticate the user
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
+    if (!authHeader?.startsWith('Bearer ')) {
+      console.error('Missing or invalid Authorization header');
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -28,19 +29,26 @@ serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-    if (authError || !user) {
+    // Use getClaims for JWT validation
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
+    
+    if (claimsError || !claimsData?.claims) {
+      console.error('Auth claims error:', claimsError);
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
+    const userId = claimsData.claims.sub;
+    console.log('Authenticated user:', userId);
+
     // Get user's organization
     const { data: userData } = await supabaseClient
       .from('users')
       .select('organization_id')
-      .eq('auth_user_id', user.id)
+      .eq('auth_user_id', userId)
       .single();
 
     const body = await req.json();
@@ -172,7 +180,7 @@ serve(async (req) => {
     
     Please analyze the request and provide a comprehensive estimate with realistic pricing.`;
 
-    console.log('Generating estimate for user:', user.id, { description, serviceType, location, urgency });
+    console.log('Generating estimate for user:', userId, { description, serviceType, location, urgency });
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -226,7 +234,7 @@ serve(async (req) => {
 
       await supabaseAdmin.from('ai_usage_logs').insert({
         organization_id: userData.organization_id,
-        user_id: user.id,
+        user_id: userId,
         feature: 'estimate-generator',
         model: 'gemini-2.5-flash',
         tokens_used: Math.ceil((description.length + JSON.stringify(estimateData).length) / 4),
