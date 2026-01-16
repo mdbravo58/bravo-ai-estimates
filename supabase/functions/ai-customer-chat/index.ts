@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -90,6 +91,36 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate the user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Get user's organization
+    const { data: userData } = await supabaseClient
+      .from('users')
+      .select('organization_id')
+      .eq('auth_user_id', user.id)
+      .single();
+
     const { message, conversationHistory = [], currentPage = '/' } = await req.json();
     
     if (!message) {
@@ -139,7 +170,7 @@ Always be encouraging and remember that users may be new to the software.`;
       { role: 'user', content: message }
     ];
 
-    console.log('Software help request for page:', currentPage);
+    console.log('Software help request for page:', currentPage, 'user:', user.id);
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -165,7 +196,7 @@ Always be encouraging and remember that users may be new to the software.`;
       if (response.status === 402) {
         throw new Error('AI credits exhausted. Please add more credits to your workspace.');
       }
-      throw new Error(`AI Gateway error: ${response.status} ${errorText}`);
+      throw new Error(`AI Gateway error: ${response.status}`);
     }
 
     const data = await response.json();
@@ -175,6 +206,23 @@ Always be encouraging and remember that users may be new to the software.`;
     
     if (!aiResponse) {
       throw new Error('No response from AI');
+    }
+
+    // Log usage with service role
+    if (userData?.organization_id) {
+      const supabaseAdmin = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+      );
+
+      await supabaseAdmin.from('ai_usage_logs').insert({
+        organization_id: userData.organization_id,
+        user_id: user.id,
+        feature: 'customer-chat',
+        model: 'gemini-2.5-flash',
+        tokens_used: Math.ceil((message.length + (aiResponse?.length || 0)) / 4),
+        cost_usd: 0.001
+      });
     }
 
     return new Response(JSON.stringify({ 

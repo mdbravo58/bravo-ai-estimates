@@ -13,6 +13,36 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate the user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Get user's organization
+    const { data: userData } = await supabaseClient
+      .from('users')
+      .select('organization_id')
+      .eq('auth_user_id', user.id)
+      .single();
+
     const { 
       description, 
       serviceType, 
@@ -102,7 +132,7 @@ serve(async (req) => {
     
     Please analyze the request and provide a comprehensive estimate with realistic pricing.`;
 
-    console.log('Generating estimate for:', { description, serviceType, location, urgency });
+    console.log('Generating estimate for user:', user.id, { description, serviceType, location, urgency });
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -146,6 +176,23 @@ serve(async (req) => {
     // Add timestamp
     estimateData.createdAt = new Date().toISOString();
     estimateData.customerInfo = customerInfo;
+
+    // Log usage with service role
+    if (userData?.organization_id) {
+      const supabaseAdmin = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+      );
+
+      await supabaseAdmin.from('ai_usage_logs').insert({
+        organization_id: userData.organization_id,
+        user_id: user.id,
+        feature: 'estimate-generator',
+        model: 'gemini-2.5-flash',
+        tokens_used: Math.ceil((description.length + JSON.stringify(estimateData).length) / 4),
+        cost_usd: 0.002
+      });
+    }
 
     return new Response(JSON.stringify(estimateData), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
