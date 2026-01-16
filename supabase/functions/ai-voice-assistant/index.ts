@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -42,7 +43,37 @@ serve(async (req) => {
   }
 
   try {
-    const { audio, action = 'transcribe' } = await req.json();
+    // Authenticate the user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Get user's organization
+    const { data: userData } = await supabaseClient
+      .from('users')
+      .select('organization_id')
+      .eq('auth_user_id', user.id)
+      .single();
+
+    const { audio, action = 'transcribe', text } = await req.json();
     
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
@@ -54,7 +85,7 @@ serve(async (req) => {
         throw new Error('No audio data provided');
       }
 
-      console.log('Processing voice transcription...');
+      console.log('Processing voice transcription for user:', user.id);
 
       // Process audio in chunks
       const binaryAudio = processBase64Chunks(audio);
@@ -142,22 +173,37 @@ serve(async (req) => {
       const assistantData = await assistantResponse.json();
       const aiResponseText = assistantData.choices[0]?.message?.content;
 
+      // Log usage with service role
+      if (userData?.organization_id) {
+        const supabaseAdmin = createClient(
+          Deno.env.get('SUPABASE_URL')!,
+          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+        );
+
+        await supabaseAdmin.from('ai_usage_logs').insert({
+          organization_id: userData.organization_id,
+          user_id: user.id,
+          feature: 'voice-assistant',
+          model: 'whisper-1+gpt-4',
+          tokens_used: Math.ceil((result.text.length + (aiResponseText?.length || 0)) / 4),
+          cost_usd: 0.01
+        });
+      }
+
       return new Response(JSON.stringify({
         transcription: result.text,
         aiResponse: aiResponseText,
-        action: 'schedule_followup' // Could be: schedule_followup, emergency_dispatch, provide_quote, general_info
+        action: 'schedule_followup'
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
 
     } else if (action === 'text_to_speech') {
-      const { text } = await req.json();
-      
       if (!text) {
         throw new Error('No text provided for speech synthesis');
       }
 
-      console.log('Converting text to speech:', text);
+      console.log('Converting text to speech for user:', user.id);
 
       const response = await fetch('https://api.openai.com/v1/audio/speech', {
         method: 'POST',
@@ -179,6 +225,23 @@ serve(async (req) => {
 
       const audioBuffer = await response.arrayBuffer();
       const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
+
+      // Log usage with service role
+      if (userData?.organization_id) {
+        const supabaseAdmin = createClient(
+          Deno.env.get('SUPABASE_URL')!,
+          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+        );
+
+        await supabaseAdmin.from('ai_usage_logs').insert({
+          organization_id: userData.organization_id,
+          user_id: user.id,
+          feature: 'text-to-speech',
+          model: 'tts-1',
+          tokens_used: Math.ceil(text.length / 4),
+          cost_usd: 0.005
+        });
+      }
 
       return new Response(JSON.stringify({
         audio: base64Audio,
