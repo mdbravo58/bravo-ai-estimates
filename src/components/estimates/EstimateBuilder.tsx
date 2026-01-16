@@ -5,8 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2, Calculator, Send, Save } from "lucide-react";
+import { Plus, Trash2, Calculator, Send, Save, Loader2, FileText, Sparkles } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { jsPDF } from "jspdf";
 
 interface EstimateItem {
   id: string;
@@ -24,6 +27,10 @@ interface EstimateBuilderProps {
 }
 
 export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
+  const { toast } = useToast();
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
     email: "",
@@ -78,8 +85,244 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
   };
 
   const subtotal = items.reduce((sum, item) => sum + calculateLineTotal(item), 0);
-  const tax = subtotal * 0.08; // 8% tax
+  const tax = subtotal * 0.08;
   const total = subtotal + tax;
+
+  const generateAISuggestions = async () => {
+    if (!projectInfo.description.trim()) {
+      toast({
+        title: "Description Required",
+        description: "Please enter a project description to generate AI suggestions.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGeneratingAI(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-estimate-generator', {
+        body: {
+          description: projectInfo.description,
+          serviceType: projectInfo.serviceType || 'general',
+          location: customerInfo.address || undefined,
+          customerInfo: customerInfo.name ? {
+            name: customerInfo.name,
+            email: customerInfo.email,
+            phone: customerInfo.phone,
+            address: customerInfo.address,
+          } : undefined,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.lineItems && Array.isArray(data.lineItems)) {
+        const newItems: EstimateItem[] = data.lineItems.map((item: any, index: number) => ({
+          id: `ai-${Date.now()}-${index}`,
+          name: item.description || item.category || 'Item',
+          description: item.category || '',
+          quantity: item.quantity || 1,
+          unitCost: item.unitPrice || 0,
+          markup: 0,
+          isLabor: (item.category?.toLowerCase().includes('labor') || item.unit?.toLowerCase().includes('hour')) ?? false,
+        }));
+
+        setItems(prev => [...prev, ...newItems]);
+
+        toast({
+          title: "AI Suggestions Generated",
+          description: `Added ${newItems.length} line items from AI analysis.`,
+        });
+      } else {
+        throw new Error('Invalid response format from AI');
+      }
+    } catch (error: any) {
+      console.error('AI generation error:', error);
+      toast({
+        title: "Generation Failed",
+        description: error.message || "Failed to generate AI suggestions. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
+
+  const generatePDF = () => {
+    setIsGeneratingPDF(true);
+    
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 20;
+      let yPos = 20;
+
+      // Header
+      doc.setFontSize(24);
+      doc.setFont("helvetica", "bold");
+      doc.text("ESTIMATE", pageWidth / 2, yPos, { align: "center" });
+      yPos += 10;
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text("Bravo AI Estimates", pageWidth / 2, yPos, { align: "center" });
+      yPos += 8;
+
+      const today = new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      doc.setFontSize(10);
+      doc.text(`Date: ${today}`, pageWidth / 2, yPos, { align: "center" });
+      yPos += 15;
+
+      // Divider
+      doc.setDrawColor(200);
+      doc.line(margin, yPos, pageWidth - margin, yPos);
+      yPos += 10;
+
+      // Customer Information
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Customer Information", margin, yPos);
+      yPos += 8;
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      if (customerInfo.name) {
+        doc.text(`Name: ${customerInfo.name}`, margin, yPos);
+        yPos += 5;
+      }
+      if (customerInfo.email) {
+        doc.text(`Email: ${customerInfo.email}`, margin, yPos);
+        yPos += 5;
+      }
+      if (customerInfo.phone) {
+        doc.text(`Phone: ${customerInfo.phone}`, margin, yPos);
+        yPos += 5;
+      }
+      if (customerInfo.address) {
+        doc.text(`Address: ${customerInfo.address}`, margin, yPos);
+        yPos += 5;
+      }
+      yPos += 10;
+
+      // Project Details
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Project Details", margin, yPos);
+      yPos += 8;
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      if (projectInfo.title) {
+        doc.text(`Project: ${projectInfo.title}`, margin, yPos);
+        yPos += 5;
+      }
+      if (projectInfo.serviceType) {
+        doc.text(`Service Type: ${projectInfo.serviceType.charAt(0).toUpperCase() + projectInfo.serviceType.slice(1)}`, margin, yPos);
+        yPos += 5;
+      }
+      if (projectInfo.description) {
+        const descLines = doc.splitTextToSize(`Description: ${projectInfo.description}`, pageWidth - margin * 2);
+        doc.text(descLines, margin, yPos);
+        yPos += descLines.length * 5;
+      }
+      yPos += 10;
+
+      // Line Items Table
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Line Items", margin, yPos);
+      yPos += 10;
+
+      // Table header
+      doc.setFillColor(245, 245, 245);
+      doc.rect(margin, yPos - 5, pageWidth - margin * 2, 8, 'F');
+      
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      const colWidths = [60, 20, 30, 25, 30];
+      const startX = margin;
+      doc.text("Item", startX, yPos);
+      doc.text("Qty", startX + colWidths[0], yPos);
+      doc.text("Unit Cost", startX + colWidths[0] + colWidths[1], yPos);
+      doc.text("Markup", startX + colWidths[0] + colWidths[1] + colWidths[2], yPos);
+      doc.text("Total", startX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3], yPos);
+      yPos += 8;
+
+      // Table rows
+      doc.setFont("helvetica", "normal");
+      items.forEach((item) => {
+        if (yPos > 260) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        const lineTotal = calculateLineTotal(item);
+        const itemName = item.name || 'Unnamed Item';
+        const truncatedName = itemName.length > 30 ? itemName.substring(0, 27) + '...' : itemName;
+        
+        doc.text(truncatedName, startX, yPos);
+        doc.text(item.quantity.toString(), startX + colWidths[0], yPos);
+        doc.text(`$${item.unitCost.toFixed(2)}`, startX + colWidths[0] + colWidths[1], yPos);
+        doc.text(`${item.markup}%`, startX + colWidths[0] + colWidths[1] + colWidths[2], yPos);
+        doc.text(`$${lineTotal.toFixed(2)}`, startX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3], yPos);
+        yPos += 6;
+      });
+
+      yPos += 10;
+
+      // Totals
+      doc.line(pageWidth - 80, yPos, pageWidth - margin, yPos);
+      yPos += 8;
+
+      doc.setFont("helvetica", "normal");
+      doc.text("Subtotal:", pageWidth - 80, yPos);
+      doc.text(`$${subtotal.toFixed(2)}`, pageWidth - margin, yPos, { align: "right" });
+      yPos += 6;
+
+      doc.text("Tax (8%):", pageWidth - 80, yPos);
+      doc.text(`$${tax.toFixed(2)}`, pageWidth - margin, yPos, { align: "right" });
+      yPos += 8;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.text("Total:", pageWidth - 80, yPos);
+      doc.text(`$${total.toFixed(2)}`, pageWidth - margin, yPos, { align: "right" });
+      yPos += 15;
+
+      // Footer
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "italic");
+      doc.setTextColor(128);
+      const validUntil = new Date();
+      validUntil.setDate(validUntil.getDate() + 30);
+      doc.text(`This estimate is valid until ${validUntil.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, pageWidth / 2, yPos, { align: "center" });
+      yPos += 5;
+      doc.text("Thank you for your business!", pageWidth / 2, yPos, { align: "center" });
+
+      // Open PDF in new tab
+      const pdfBlob = doc.output('blob');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      window.open(pdfUrl, '_blank');
+
+      toast({
+        title: "PDF Generated",
+        description: "Your estimate preview has opened in a new tab.",
+      });
+    } catch (error: any) {
+      console.error('PDF generation error:', error);
+      toast({
+        title: "PDF Generation Failed",
+        description: "Failed to generate PDF. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -316,11 +559,42 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
               </div>
               
               <div className="mt-6 space-y-3">
-                <Button variant="premium" className="w-full" size="lg">
-                  Generate AI Suggestions
+                <Button 
+                  variant="premium" 
+                  className="w-full" 
+                  size="lg"
+                  onClick={generateAISuggestions}
+                  disabled={isGeneratingAI}
+                >
+                  {isGeneratingAI ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      Generate AI Suggestions
+                    </>
+                  )}
                 </Button>
-                <Button variant="success" className="w-full">
-                  Preview PDF
+                <Button 
+                  variant="success" 
+                  className="w-full"
+                  onClick={generatePDF}
+                  disabled={isGeneratingPDF}
+                >
+                  {isGeneratingPDF ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Generating PDF...
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="h-4 w-4" />
+                      Preview PDF
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>
