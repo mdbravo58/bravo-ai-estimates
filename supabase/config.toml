@@ -51,7 +51,7 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.ai-estimate-generator]
-verify_jwt = true
+verify_jwt = false
 
 [functions.ai-voice-assistant]
 verify_jwt = true
