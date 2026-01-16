@@ -5,6 +5,7 @@ import LandingPage from "@/pages/LandingPage";
 import Dashboard from "@/pages/Dashboard";
 import EstimateBuilder from "@/pages/EstimateBuilder";
 import CustomerPortal from "@/pages/CustomerPortal";
+import EstimatePortal from "@/pages/EstimatePortal";
 import Jobs from "@/pages/Jobs";
 import TechMobile from "@/pages/TechMobile";
 import Auth from "@/pages/Auth";
@@ -161,6 +162,7 @@ export const AppRouter = () => {
         } 
       />
       <Route path="/portal/:estimateId" element={<CustomerPortal />} />
+      <Route path="/estimate/:token" element={<EstimatePortal />} />
       <Route 
         path="/ai" 
         element={

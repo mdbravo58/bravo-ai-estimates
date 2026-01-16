@@ -639,6 +639,164 @@ export type Database = {
         }
         Relationships: []
       }
+      estimate_line_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string
+          estimate_id: string
+          id: string
+          quantity: number | null
+          sort_order: number | null
+          total: number | null
+          unit: string | null
+          unit_price: number | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description: string
+          estimate_id: string
+          id?: string
+          quantity?: number | null
+          sort_order?: number | null
+          total?: number | null
+          unit?: string | null
+          unit_price?: number | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string
+          estimate_id?: string
+          id?: string
+          quantity?: number | null
+          sort_order?: number | null
+          total?: number | null
+          unit?: string | null
+          unit_price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estimate_line_items_estimate_id_fkey"
+            columns: ["estimate_id"]
+            isOneToOne: false
+            referencedRelation: "estimates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estimates: {
+        Row: {
+          approved_at: string | null
+          approved_package: string | null
+          created_at: string
+          customer_email: string | null
+          customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          description: string | null
+          estimate_number: string
+          estimated_duration: string | null
+          ghl_message_id: string | null
+          id: string
+          labor_hours: number | null
+          location: string | null
+          material_costs: number | null
+          notes: string | null
+          organization_id: string
+          overhead: number | null
+          portal_token: string | null
+          sent_at: string | null
+          sent_via: string | null
+          service_type: string | null
+          status: string | null
+          subtotal: number | null
+          total: number | null
+          updated_at: string
+          urgency: string | null
+          valid_until: string | null
+          viewed_at: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_package?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          description?: string | null
+          estimate_number: string
+          estimated_duration?: string | null
+          ghl_message_id?: string | null
+          id?: string
+          labor_hours?: number | null
+          location?: string | null
+          material_costs?: number | null
+          notes?: string | null
+          organization_id: string
+          overhead?: number | null
+          portal_token?: string | null
+          sent_at?: string | null
+          sent_via?: string | null
+          service_type?: string | null
+          status?: string | null
+          subtotal?: number | null
+          total?: number | null
+          updated_at?: string
+          urgency?: string | null
+          valid_until?: string | null
+          viewed_at?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_package?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          description?: string | null
+          estimate_number?: string
+          estimated_duration?: string | null
+          ghl_message_id?: string | null
+          id?: string
+          labor_hours?: number | null
+          location?: string | null
+          material_costs?: number | null
+          notes?: string | null
+          organization_id?: string
+          overhead?: number | null
+          portal_token?: string | null
+          sent_at?: string | null
+          sent_via?: string | null
+          service_type?: string | null
+          status?: string | null
+          subtotal?: number | null
+          total?: number | null
+          updated_at?: string
+          urgency?: string | null
+          valid_until?: string | null
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estimates_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estimates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_registrations: {
         Row: {
           checked_in: boolean | null
