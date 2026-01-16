@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { jsPDF } from "jspdf";
+import { STATE_TAX_RATES, getStateOptions } from "@/data/stateTaxRates";
 
 interface EstimateItem {
   id: string;
@@ -30,6 +31,17 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
   const { toast } = useToast();
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [selectedState, setSelectedState] = useState<string>("");
+  const [taxRate, setTaxRate] = useState<number>(8);
+
+  const stateOptions = getStateOptions();
+
+  const handleStateChange = (stateCode: string) => {
+    setSelectedState(stateCode);
+    if (stateCode && STATE_TAX_RATES[stateCode]) {
+      setTaxRate(STATE_TAX_RATES[stateCode].rate);
+    }
+  };
 
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
@@ -85,7 +97,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
   };
 
   const subtotal = items.reduce((sum, item) => sum + calculateLineTotal(item), 0);
-  const tax = subtotal * 0.08;
+  const tax = subtotal * (taxRate / 100);
   const total = subtotal + tax;
 
   const generateAISuggestions = async () => {
@@ -283,7 +295,8 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
       doc.text(`$${subtotal.toFixed(2)}`, pageWidth - margin, yPos, { align: "right" });
       yPos += 6;
 
-      doc.text("Tax (8%):", pageWidth - 80, yPos);
+      const taxLabel = selectedState ? `Tax (${STATE_TAX_RATES[selectedState]?.name || selectedState} ${taxRate}%):` : `Tax (${taxRate}%):`;
+      doc.text(taxLabel, pageWidth - 80, yPos);
       doc.text(`$${tax.toFixed(2)}`, pageWidth - margin, yPos, { align: "right" });
       yPos += 8;
 
@@ -332,11 +345,11 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
           Create Estimate
         </h1>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => onSave?.({ customerInfo, projectInfo, items, subtotal, tax, total })}>
+          <Button variant="outline" onClick={() => onSave?.({ customerInfo, projectInfo, items, subtotal, taxRate, selectedState, tax, total })}>
             <Save className="h-4 w-4" />
             Save Draft
           </Button>
-          <Button variant="hero" onClick={() => onSend?.({ customerInfo, projectInfo, items, subtotal, tax, total })}>
+          <Button variant="hero" onClick={() => onSend?.({ customerInfo, projectInfo, items, subtotal, taxRate, selectedState, tax, total })}>
             <Send className="h-4 w-4" />
             Send Estimate
           </Button>
@@ -547,10 +560,47 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
                   <span>Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Tax (8%)</span>
+                
+                {/* Tax State Selection */}
+                <div className="space-y-2">
+                  <Label htmlFor="tax-state" className="text-sm">Tax State</Label>
+                  <Select value={selectedState} onValueChange={handleStateChange}>
+                    <SelectTrigger id="tax-state" className="h-9">
+                      <SelectValue placeholder="Select state" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {stateOptions.map((state) => (
+                        <SelectItem key={state.code} value={state.code}>
+                          {state.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Editable Tax Rate */}
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <span>Tax Rate</span>
+                    <div className="flex items-center">
+                      <Input
+                        type="number"
+                        value={taxRate}
+                        onChange={(e) => setTaxRate(Number(e.target.value))}
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        className="w-16 h-7 text-sm text-center"
+                      />
+                      <span className="ml-1 text-sm">%</span>
+                    </div>
+                  </div>
                   <span>${tax.toFixed(2)}</span>
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  Adjust for local city/county rates if needed
+                </p>
+                
                 <Separator />
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
