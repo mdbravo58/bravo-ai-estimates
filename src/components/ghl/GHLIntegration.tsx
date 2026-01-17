@@ -25,30 +25,58 @@ const GHLIntegration = () => {
   const [tempApiKey, setTempApiKey] = useState('');
   const [pipelineId, setPipelineId] = useState('');
   const [workflowId, setWorkflowId] = useState('');
+  const [calendarId, setCalendarId] = useState('');
   const [syncStats, setSyncStats] = useState<any>(null);
   const [connectionTest, setConnectionTest] = useState<any>(null);
   const [organizationId, setOrganizationId] = useState<string>('');
+  const [availableCalendars, setAvailableCalendars] = useState<any[]>([]);
   const { toast } = useToast();
 
-  // Fetch organization ID on component mount
+  // Fetch organization ID and saved settings on component mount
   React.useEffect(() => {
-    const fetchOrgId = async () => {
+    const fetchOrgData = async () => {
       try {
         const { data: orgData, error } = await supabase
           .from('organizations')
-          .select('id')
+          .select('id, ghl_location_id, ghl_calendar_id')
           .maybeSingle();
         
         if (orgData && !error) {
           setOrganizationId(orgData.id);
+          if (orgData.ghl_location_id) setLocationId(orgData.ghl_location_id);
+          if (orgData.ghl_calendar_id) setCalendarId(orgData.ghl_calendar_id);
         }
       } catch (err) {
-        console.log('Could not fetch organization ID:', err);
+        console.log('Could not fetch organization data:', err);
       }
     };
     
-    fetchOrgId();
+    fetchOrgData();
   }, []);
+
+  const saveCalendarId = async () => {
+    if (!organizationId || !calendarId) return;
+    
+    try {
+      const { error } = await supabase
+        .from('organizations')
+        .update({ ghl_calendar_id: calendarId })
+        .eq('id', organizationId);
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Calendar ID Saved",
+        description: "Your GHL Calendar ID has been saved for scheduling sync.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Failed to Save",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleTestConnection = async () => {
     if (!locationId) {
@@ -359,6 +387,26 @@ const GHLIntegration = () => {
                 onChange={(e) => setWorkflowId(e.target.value)}
                 placeholder="Enter your Workflow ID"
               />
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 mb-6">
+            <div className="space-y-2">
+              <Label htmlFor="calendarId">Calendar ID (for Scheduling)</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="calendarId"
+                  value={calendarId}
+                  onChange={(e) => setCalendarId(e.target.value)}
+                  placeholder="Enter your GHL Calendar ID"
+                />
+                <Button onClick={saveCalendarId} variant="outline" size="sm">
+                  Save
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Find in GHL → Calendars → Select Calendar → Settings → Calendar ID
+              </p>
             </div>
           </div>
         </CardContent>

@@ -194,6 +194,88 @@ export type Database = {
           },
         ]
       }
+      appointments: {
+        Row: {
+          address: string | null
+          assigned_user_id: string | null
+          created_at: string | null
+          customer_id: string | null
+          description: string | null
+          end_time: string
+          ghl_calendar_id: string | null
+          ghl_contact_id: string | null
+          ghl_event_id: string | null
+          id: string
+          notes: string | null
+          organization_id: string
+          service_type: string | null
+          start_time: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          assigned_user_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          end_time: string
+          ghl_calendar_id?: string | null
+          ghl_contact_id?: string | null
+          ghl_event_id?: string | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          service_type?: string | null
+          start_time: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          assigned_user_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          end_time?: string
+          ghl_calendar_id?: string | null
+          ghl_contact_id?: string | null
+          ghl_event_id?: string | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          service_type?: string | null
+          start_time?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_assigned_user_id_fkey"
+            columns: ["assigned_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       attendance: {
         Row: {
           class_date: string
@@ -1902,6 +1984,7 @@ export type Database = {
           description: string | null
           external_ref: string | null
           ghl_api_key_hash: string | null
+          ghl_calendar_id: string | null
           ghl_configured: boolean | null
           ghl_connected_at: string | null
           ghl_location_id: string | null
@@ -1920,6 +2003,7 @@ export type Database = {
           description?: string | null
           external_ref?: string | null
           ghl_api_key_hash?: string | null
+          ghl_calendar_id?: string | null
           ghl_configured?: boolean | null
           ghl_connected_at?: string | null
           ghl_location_id?: string | null
@@ -1938,6 +2022,7 @@ export type Database = {
           description?: string | null
           external_ref?: string | null
           ghl_api_key_hash?: string | null
+          ghl_calendar_id?: string | null
           ghl_configured?: boolean | null
           ghl_connected_at?: string | null
           ghl_location_id?: string | null
@@ -2760,6 +2845,7 @@ export type Database = {
           emergency_contact: string | null
           emergency_phone: string | null
           ghl_contact_id: string | null
+          ghl_user_id: string | null
           id: string
           name: string | null
           organization_id: string
@@ -2777,6 +2863,7 @@ export type Database = {
           emergency_contact?: string | null
           emergency_phone?: string | null
           ghl_contact_id?: string | null
+          ghl_user_id?: string | null
           id?: string
           name?: string | null
           organization_id: string
@@ -2794,6 +2881,7 @@ export type Database = {
           emergency_contact?: string | null
           emergency_phone?: string | null
           ghl_contact_id?: string | null
+          ghl_user_id?: string | null
           id?: string
           name?: string | null
           organization_id?: string
