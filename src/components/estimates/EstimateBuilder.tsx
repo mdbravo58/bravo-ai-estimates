@@ -432,11 +432,26 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="plumbing">Plumbing</SelectItem>
-                      <SelectItem value="electrical">Electrical</SelectItem>
                       <SelectItem value="hvac">HVAC</SelectItem>
+                      <SelectItem value="electrical">Electrical</SelectItem>
+                      <SelectItem value="handyman">Handyman</SelectItem>
+                      <SelectItem value="home-cleaning">Home Cleaning</SelectItem>
+                      <SelectItem value="general-contractor">General Contractor</SelectItem>
                       <SelectItem value="roofing">Roofing</SelectItem>
+                      <SelectItem value="painting">Painting</SelectItem>
                       <SelectItem value="landscaping">Landscaping</SelectItem>
-                      <SelectItem value="cleaning">Cleaning</SelectItem>
+                      <SelectItem value="pest-control">Pest Control</SelectItem>
+                      <SelectItem value="pool-service">Pool Service</SelectItem>
+                      <SelectItem value="garage-doors">Garage Doors</SelectItem>
+                      <SelectItem value="flooring">Flooring</SelectItem>
+                      <SelectItem value="car-detailing">Car Detailing</SelectItem>
+                      <SelectItem value="janitorial">Janitorial</SelectItem>
+                      <SelectItem value="window-cleaning">Window Cleaning</SelectItem>
+                      <SelectItem value="carpet-cleaning">Carpet Cleaning</SelectItem>
+                      <SelectItem value="pressure-washing">Pressure Washing</SelectItem>
+                      <SelectItem value="locksmith">Locksmith</SelectItem>
+                      <SelectItem value="moving-services">Moving Services</SelectItem>
+                      <SelectItem value="appliance-repair">Appliance Repair</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
