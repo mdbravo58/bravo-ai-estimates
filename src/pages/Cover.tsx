@@ -21,7 +21,12 @@ import {
   DoorOpen,
   Grid3X3,
   Hammer,
-  Car
+  Car,
+  Building2,
+  Wind,
+  Key,
+  Truck,
+  Refrigerator
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
@@ -43,6 +48,14 @@ const industries = [
   { name: "Garage Doors", icon: DoorOpen, gradient: "from-zinc-500 to-neutral-600" },
   { name: "Flooring", icon: Grid3X3, gradient: "from-amber-500 to-yellow-500" },
   { name: "Car Detailing", icon: Car, gradient: "from-sky-500 to-indigo-500" },
+  // Row 3
+  { name: "Janitorial", icon: Building2, gradient: "from-teal-500 to-cyan-500" },
+  { name: "Window Cleaning", icon: Sparkles, gradient: "from-blue-400 to-sky-500" },
+  { name: "Carpet Cleaning", icon: Waves, gradient: "from-indigo-500 to-violet-500" },
+  { name: "Pressure Washing", icon: Wind, gradient: "from-slate-400 to-blue-500" },
+  { name: "Locksmith", icon: Key, gradient: "from-yellow-600 to-amber-500" },
+  { name: "Moving Services", icon: Truck, gradient: "from-orange-500 to-amber-500" },
+  { name: "Appliance Repair", icon: Refrigerator, gradient: "from-blue-600 to-indigo-600" },
 ];
 
 const stats = [
