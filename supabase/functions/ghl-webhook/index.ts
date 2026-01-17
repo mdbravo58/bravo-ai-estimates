@@ -36,6 +36,19 @@ interface GHLWebhookData {
     pipelineId: string;
     contactId: string;
   };
+  appointment?: {
+    id: string;
+    calendarId: string;
+    contactId: string;
+    title: string;
+    description?: string;
+    startTime: string;
+    endTime: string;
+    appointmentStatus: string;
+    assignedUserId?: string;
+    address?: string;
+    notes?: string;
+  };
 }
 
 serve(async (req) => {
@@ -151,6 +164,107 @@ serve(async (req) => {
         }
 
         console.log('Job synced successfully:', opportunity.id);
+      }
+    }
+
+    // Handle appointment events
+    if (webhookData.type === 'appointment.created' || webhookData.type === 'appointment.updated') {
+      if (webhookData.appointment) {
+        const appointment = webhookData.appointment;
+        
+        // Find organization by location ID
+        const { data: orgData, error: orgError } = await supabase
+          .from('organizations')
+          .select('id')
+          .eq('ghl_location_id', webhookData.locationId)
+          .single();
+
+        if (orgError || !orgData) {
+          console.error('Organization not found for location:', webhookData.locationId);
+          return new Response(JSON.stringify({ 
+            error: 'Organization not found for this location ID' 
+          }), {
+            status: 404,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        // Find customer by GHL contact ID if available
+        let customerId = null;
+        if (appointment.contactId) {
+          const { data: customer } = await supabase
+            .from('customers')
+            .select('id')
+            .eq('ghl_contact_id', appointment.contactId)
+            .eq('organization_id', orgData.id)
+            .single();
+          
+          if (customer) {
+            customerId = customer.id;
+          }
+        }
+
+        // Find assigned user by GHL user ID if available
+        let assignedUserId = null;
+        if (appointment.assignedUserId) {
+          const { data: assignedUser } = await supabase
+            .from('users')
+            .select('id')
+            .eq('ghl_user_id', appointment.assignedUserId)
+            .eq('organization_id', orgData.id)
+            .single();
+          
+          if (assignedUser) {
+            assignedUserId = assignedUser.id;
+          }
+        }
+
+        const appointmentData = {
+          organization_id: orgData.id,
+          ghl_event_id: appointment.id,
+          ghl_calendar_id: appointment.calendarId,
+          ghl_contact_id: appointment.contactId,
+          customer_id: customerId,
+          assigned_user_id: assignedUserId,
+          title: appointment.title || 'Untitled Appointment',
+          description: appointment.description || null,
+          address: appointment.address || null,
+          start_time: new Date(parseInt(appointment.startTime)).toISOString(),
+          end_time: new Date(parseInt(appointment.endTime)).toISOString(),
+          status: appointment.appointmentStatus || 'confirmed',
+          notes: appointment.notes || null,
+        };
+
+        const { error: appointmentError } = await supabase
+          .from('appointments')
+          .upsert(appointmentData, {
+            onConflict: 'ghl_event_id',
+            ignoreDuplicates: false,
+          });
+
+        if (appointmentError) {
+          console.error('Error upserting appointment:', appointmentError);
+          throw appointmentError;
+        }
+
+        console.log('Appointment synced successfully:', appointment.id);
+      }
+    }
+
+    // Handle appointment deletion
+    if (webhookData.type === 'appointment.deleted') {
+      if (webhookData.appointment) {
+        const { error: deleteError } = await supabase
+          .from('appointments')
+          .delete()
+          .eq('ghl_event_id', webhookData.appointment.id);
+
+        if (deleteError) {
+          console.error('Error deleting appointment:', deleteError);
+          throw deleteError;
+        }
+
+        console.log('Appointment deleted successfully:', webhookData.appointment.id);
       }
     }
 

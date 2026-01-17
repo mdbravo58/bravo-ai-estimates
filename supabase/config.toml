@@ -85,3 +85,12 @@ verify_jwt = false
 
 [functions.ghl-send-estimate]
 verify_jwt = true
+
+[functions.ghl-calendar-sync]
+verify_jwt = false
+
+[functions.ghl-create-appointment]
+verify_jwt = false
+
+[functions.ghl-list-calendars]
+verify_jwt = false
