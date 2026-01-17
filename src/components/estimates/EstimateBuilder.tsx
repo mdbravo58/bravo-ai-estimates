@@ -715,25 +715,32 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
 
       {/* PDF Preview Dialog */}
       <Dialog open={showPdfPreview} onOpenChange={handleClosePdfPreview}>
-        <DialogContent className="max-w-4xl h-[85vh] !flex !flex-col">
-          <DialogHeader className="flex-shrink-0">
+        <DialogContent 
+          className="max-w-4xl max-h-[90vh] p-0 overflow-hidden"
+          style={{ display: 'flex', flexDirection: 'column' }}
+        >
+          <DialogHeader className="flex-shrink-0 p-6 pb-0">
             <DialogTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
               Estimate Preview
             </DialogTitle>
           </DialogHeader>
           
-          <div className="flex-1 min-h-0 overflow-hidden">
-            {pdfPreviewUrl && (
+          <div className="flex-1 p-6 pt-4 min-h-0" style={{ height: 'calc(90vh - 140px)' }}>
+            {pdfPreviewUrl ? (
               <iframe
                 src={pdfPreviewUrl}
                 className="w-full h-full border rounded-lg"
                 title="PDF Preview"
               />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                Loading PDF...
+              </div>
             )}
           </div>
           
-          <DialogFooter className="flex-shrink-0 flex gap-2 sm:gap-2">
+          <DialogFooter className="flex-shrink-0 p-6 pt-4 flex gap-2 sm:gap-2 border-t">
             <Button variant="outline" onClick={handleClosePdfPreview}>
               <X className="h-4 w-4 mr-2" />
               Close
