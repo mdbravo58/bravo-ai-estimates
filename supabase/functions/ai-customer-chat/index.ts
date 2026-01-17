@@ -93,7 +93,7 @@ serve(async (req) => {
   try {
     // Authenticate the user
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
+    if (!authHeader?.startsWith('Bearer ')) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -106,19 +106,23 @@ serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-    if (authError || !user) {
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: authError } = await supabaseClient.auth.getClaims(token);
+    if (authError || !claimsData?.claims) {
+      console.error('Auth error:', authError);
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
+    const userId = claimsData.claims.sub;
+
     // Get user's organization
     const { data: userData } = await supabaseClient
       .from('users')
       .select('organization_id')
-      .eq('auth_user_id', user.id)
+      .eq('auth_user_id', userId)
       .single();
 
     const body = await req.json();
@@ -214,7 +218,7 @@ Always be encouraging and remember that users may be new to the software.`;
       { role: 'user', content: message }
     ];
 
-    console.log('Software help request for page:', currentPage, 'user:', user.id);
+    console.log('Software help request for page:', currentPage, 'user:', userId);
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -261,7 +265,7 @@ Always be encouraging and remember that users may be new to the software.`;
 
       await supabaseAdmin.from('ai_usage_logs').insert({
         organization_id: userData.organization_id,
-        user_id: user.id,
+        user_id: userId,
         feature: 'customer-chat',
         model: 'gemini-2.5-flash',
         tokens_used: Math.ceil((message.length + (aiResponse?.length || 0)) / 4),
