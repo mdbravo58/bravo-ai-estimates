@@ -20,7 +20,8 @@ import {
   Waves,
   DoorOpen,
   Grid3X3,
-  Hammer
+  Hammer,
+  Car
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
@@ -41,6 +42,7 @@ const industries = [
   { name: "Pool Service", icon: Waves, gradient: "from-cyan-400 to-blue-500" },
   { name: "Garage Doors", icon: DoorOpen, gradient: "from-zinc-500 to-neutral-600" },
   { name: "Flooring", icon: Grid3X3, gradient: "from-amber-500 to-yellow-500" },
+  { name: "Car Detailing", icon: Car, gradient: "from-sky-500 to-indigo-500" },
 ];
 
 const stats = [
