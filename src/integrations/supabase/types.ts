@@ -2635,6 +2635,66 @@ export type Database = {
           },
         ]
       }
+      team_invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string | null
+          email: string
+          expires_at: string
+          hourly_rate: number | null
+          id: string
+          invited_by: string | null
+          job_title: string | null
+          name: string | null
+          organization_id: string
+          role: string
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string | null
+          email: string
+          expires_at?: string
+          hourly_rate?: number | null
+          id?: string
+          invited_by?: string | null
+          job_title?: string | null
+          name?: string | null
+          organization_id: string
+          role?: string
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string
+          hourly_rate?: number | null
+          id?: string
+          invited_by?: string | null
+          job_title?: string | null
+          name?: string | null
+          organization_id?: string
+          role?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_invites_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_invites_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       time_entries: {
         Row: {
           approved: boolean | null
@@ -2846,7 +2906,11 @@ export type Database = {
           emergency_phone: string | null
           ghl_contact_id: string | null
           ghl_user_id: string | null
+          hourly_rate: number | null
           id: string
+          invite_accepted_at: string | null
+          invited_by: string | null
+          job_title: string | null
           name: string | null
           organization_id: string
           phone: string | null
@@ -2864,7 +2928,11 @@ export type Database = {
           emergency_phone?: string | null
           ghl_contact_id?: string | null
           ghl_user_id?: string | null
+          hourly_rate?: number | null
           id?: string
+          invite_accepted_at?: string | null
+          invited_by?: string | null
+          job_title?: string | null
           name?: string | null
           organization_id: string
           phone?: string | null
@@ -2882,7 +2950,11 @@ export type Database = {
           emergency_phone?: string | null
           ghl_contact_id?: string | null
           ghl_user_id?: string | null
+          hourly_rate?: number | null
           id?: string
+          invite_accepted_at?: string | null
+          invited_by?: string | null
+          job_title?: string | null
           name?: string | null
           organization_id?: string
           phone?: string | null
@@ -2896,6 +2968,13 @@ export type Database = {
             columns: ["belt_level_id"]
             isOneToOne: false
             referencedRelation: "belt_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "users_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
