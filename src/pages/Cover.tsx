@@ -13,18 +13,34 @@ import {
   BarChart3,
   Brain,
   Smartphone,
-  Shield
+  Shield,
+  Paintbrush,
+  Trees,
+  Bug,
+  Waves,
+  DoorOpen,
+  Grid3X3,
+  Hammer
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
 
 const industries = [
+  // Row 1
   { name: "Plumbing", icon: Droplets, gradient: "from-blue-500 to-cyan-500" },
   { name: "HVAC", icon: Zap, gradient: "from-orange-500 to-red-500" },
   { name: "Electrical", icon: Zap, gradient: "from-yellow-500 to-amber-500" },
   { name: "Handyman", icon: Wrench, gradient: "from-slate-500 to-slate-700" },
   { name: "Home Cleaning", icon: Sparkles, gradient: "from-purple-500 to-pink-500" },
   { name: "General Contractor", icon: Home, gradient: "from-emerald-500 to-teal-500" },
+  { name: "Roofing", icon: Hammer, gradient: "from-red-500 to-rose-500" },
+  // Row 2
+  { name: "Painting", icon: Paintbrush, gradient: "from-violet-500 to-purple-500" },
+  { name: "Landscaping", icon: Trees, gradient: "from-green-500 to-lime-500" },
+  { name: "Pest Control", icon: Bug, gradient: "from-gray-500 to-slate-600" },
+  { name: "Pool Service", icon: Waves, gradient: "from-cyan-400 to-blue-500" },
+  { name: "Garage Doors", icon: DoorOpen, gradient: "from-zinc-500 to-neutral-600" },
+  { name: "Flooring", icon: Grid3X3, gradient: "from-amber-500 to-yellow-500" },
 ];
 
 const stats = [
@@ -142,22 +158,22 @@ const CoverPage = () => {
         </div>
       </section>
 
-      {/* Industry Carousel */}
+      {/* Industry Grid - 2 Rows */}
       <section className="py-12 bg-muted/30 border-b">
         <div className="max-w-6xl mx-auto px-6">
-          <p className="text-center text-muted-foreground mb-6 text-sm font-medium uppercase tracking-wider">
+          <p className="text-center text-muted-foreground mb-8 text-sm font-medium uppercase tracking-wider">
             Built for service professionals
           </p>
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
             {industries.map((industry) => (
               <button
                 key={industry.name}
                 onClick={() => navigate("/dashboard")}
-                className="flex-shrink-0 snap-start group"
+                className="group"
               >
-                <div className={`w-40 h-24 rounded-xl bg-gradient-to-br ${industry.gradient} p-4 flex flex-col items-center justify-center gap-2 shadow-lg group-hover:scale-105 transition-transform cursor-pointer`}>
+                <div className={`w-full h-24 rounded-xl bg-gradient-to-br ${industry.gradient} p-4 flex flex-col items-center justify-center gap-2 shadow-lg group-hover:scale-105 transition-transform cursor-pointer`}>
                   <industry.icon className="h-8 w-8 text-white" />
-                  <span className="text-white font-medium text-sm">{industry.name}</span>
+                  <span className="text-white font-medium text-xs text-center leading-tight">{industry.name}</span>
                 </div>
               </button>
             ))}
