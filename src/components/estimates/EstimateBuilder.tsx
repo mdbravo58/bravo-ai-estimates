@@ -320,9 +320,9 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
       yPos += 5;
       doc.text("Thank you for your business!", pageWidth / 2, yPos, { align: "center" });
 
-      // Show PDF in preview modal using data URI (more reliable than blob URL)
-      const pdfDataUri = doc.output('datauristring');
-      setPdfPreviewUrl(pdfDataUri);
+      // Show PDF in preview modal using blob URI (most reliable for object embedding)
+      const pdfBlobUri = doc.output('bloburi');
+      setPdfPreviewUrl(pdfBlobUri.toString());
       setPdfDoc(doc);
       setShowPdfPreview(true);
 
@@ -354,6 +354,9 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
 
   const handleClosePdfPreview = () => {
     setShowPdfPreview(false);
+    if (pdfPreviewUrl && pdfPreviewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(pdfPreviewUrl);
+    }
     setPdfPreviewUrl(null);
     setPdfDoc(null);
   };
@@ -721,14 +724,24 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
           
           <div className="flex-1 p-6 pt-4 min-h-0" style={{ height: 'calc(90vh - 140px)' }}>
             {pdfPreviewUrl ? (
-              <iframe
-                src={pdfPreviewUrl}
+              <object
+                data={pdfPreviewUrl}
+                type="application/pdf"
                 className="w-full h-full border rounded-lg"
-                title="PDF Preview"
-              />
+                aria-label="PDF Preview"
+              >
+                <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
+                  <p>Unable to display PDF preview in browser.</p>
+                  <Button onClick={handleDownloadPdf}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF Instead
+                  </Button>
+                </div>
+              </object>
             ) : (
               <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                Loading PDF...
+                <Loader2 className="h-6 w-6 animate-spin mr-2" />
+                Generating PDF...
               </div>
             )}
           </div>
