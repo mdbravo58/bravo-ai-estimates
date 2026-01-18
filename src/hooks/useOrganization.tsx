@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 
@@ -29,7 +29,13 @@ interface UseOrganizationReturn {
   updateOrganization: (updates: Partial<Organization>) => Promise<boolean>;
 }
 
-export function useOrganization(): UseOrganizationReturn {
+const OrganizationContext = createContext<UseOrganizationReturn | null>(null);
+
+interface OrganizationProviderProps {
+  children: ReactNode;
+}
+
+export function OrganizationProvider({ children }: OrganizationProviderProps) {
   const { user } = useAuth();
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -38,6 +44,8 @@ export function useOrganization(): UseOrganizationReturn {
 
   const fetchOrganization = useCallback(async () => {
     if (!user?.id) {
+      setOrganization(null);
+      setUserData(null);
       setLoading(false);
       return;
     }
@@ -167,7 +175,7 @@ export function useOrganization(): UseOrganizationReturn {
     fetchOrganization();
   }, [fetchOrganization]);
 
-  return {
+  const value: UseOrganizationReturn = {
     organization,
     userData,
     loading,
@@ -175,4 +183,26 @@ export function useOrganization(): UseOrganizationReturn {
     refetch: fetchOrganization,
     updateOrganization,
   };
+
+  return (
+    <OrganizationContext.Provider value={value}>
+      {children}
+    </OrganizationContext.Provider>
+  );
+}
+
+export function useOrganization(): UseOrganizationReturn {
+  const context = useContext(OrganizationContext);
+  if (!context) {
+    // Return a default state for components outside the provider (like public pages)
+    return {
+      organization: null,
+      userData: null,
+      loading: false,
+      error: null,
+      refetch: async () => {},
+      updateOrganization: async () => false,
+    };
+  }
+  return context;
 }
