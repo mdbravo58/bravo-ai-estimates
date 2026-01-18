@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -30,13 +30,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  // Helper to ensure user has an organization after authentication
+  const ensureUserOrganization = useCallback(async () => {
+    try {
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      if (!currentSession?.access_token) return;
+      
+      const { error } = await supabase.functions.invoke('ensure-user-org', {
+        headers: {
+          Authorization: `Bearer ${currentSession.access_token}`,
+        },
+      });
+      
+      if (error) {
+        console.error('Failed to ensure user organization:', error);
+      }
+    } catch (error) {
+      console.error('Error ensuring user organization:', error);
+    }
+  }, []);
+
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Ensure organization exists on sign in
+        if (event === 'SIGNED_IN' && session) {
+          // Use setTimeout to avoid blocking the auth state change
+          setTimeout(() => {
+            ensureUserOrganization();
+          }, 0);
+        }
       }
     );
 
@@ -48,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [ensureUserOrganization]);
 
   const signUp = async (email: string, password: string) => {
     const redirectUrl = `${window.location.origin}/`;

@@ -51,31 +51,86 @@ export function useOrganization(): UseOrganizationReturn {
         .from('users')
         .select('id, name, email, role, organization_id')
         .eq('auth_user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (userError) {
-        // User might not have a record yet
-        console.log('No user record found:', userError.message);
+        console.error('Error fetching user record:', userError.message);
+        setError('Failed to load user data');
         setLoading(false);
         return;
       }
 
-      if (userRecord) {
-        setUserData(userRecord as UserData);
+      // If no user record exists, call ensure-user-org to create one
+      if (!userRecord) {
+        console.log('No user record found, creating organization...');
+        
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.access_token) {
+          const { error: fnError } = await supabase.functions.invoke('ensure-user-org', {
+            headers: {
+              Authorization: `Bearer ${session.access_token}`,
+            },
+          });
+          
+          if (fnError) {
+            console.error('Error creating organization:', fnError);
+            setError('Failed to create organization');
+            setLoading(false);
+            return;
+          }
+          
+          // Retry fetching after creation
+          const { data: newUserRecord, error: retryError } = await supabase
+            .from('users')
+            .select('id, name, email, role, organization_id')
+            .eq('auth_user_id', user.id)
+            .maybeSingle();
+          
+          if (retryError || !newUserRecord) {
+            console.error('Failed to fetch user after org creation:', retryError?.message);
+            setError('Failed to load user data');
+            setLoading(false);
+            return;
+          }
+          
+          setUserData(newUserRecord as UserData);
+          
+          // Fetch the newly created organization
+          const { data: orgData, error: orgError } = await supabase
+            .from('organizations')
+            .select('id, name, logo_url, business_phone, business_email, address, plan')
+            .eq('id', newUserRecord.organization_id)
+            .single();
 
-        // Now fetch the organization details
-        const { data: orgData, error: orgError } = await supabase
-          .from('organizations')
-          .select('id, name, logo_url, business_phone, business_email, address, plan')
-          .eq('id', userRecord.organization_id)
-          .single();
-
-        if (orgError) {
-          console.error('Error fetching organization:', orgError.message);
-          setError('Failed to load organization');
+          if (orgError) {
+            console.error('Error fetching organization:', orgError.message);
+            setError('Failed to load organization');
+          } else {
+            setOrganization(orgData as Organization);
+          }
         } else {
-          setOrganization(orgData as Organization);
+          setError('No active session');
         }
+        
+        setLoading(false);
+        return;
+      }
+
+      // User record exists, set user data and fetch organization
+      setUserData(userRecord as UserData);
+
+      const { data: orgData, error: orgError } = await supabase
+        .from('organizations')
+        .select('id, name, logo_url, business_phone, business_email, address, plan')
+        .eq('id', userRecord.organization_id)
+        .single();
+
+      if (orgError) {
+        console.error('Error fetching organization:', orgError.message);
+        setError('Failed to load organization');
+      } else {
+        setOrganization(orgData as Organization);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
