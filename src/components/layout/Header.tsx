@@ -43,7 +43,7 @@ export function Header({ organization, user, loading }: HeaderProps) {
           <div className="flex items-center space-x-3">
             {loading ? (
               <>
-                <Skeleton className="h-10 w-10 rounded" />
+                <Skeleton className="h-12 w-12 rounded" />
                 <Skeleton className="h-5 w-40" />
               </>
             ) : (
@@ -51,7 +51,7 @@ export function Header({ organization, user, loading }: HeaderProps) {
                 <img
                   src={organization?.logo || bravoLogo}
                   alt={organization?.name || "Bravo AI Systems"}
-                  className="h-10 w-auto max-w-[120px] object-contain"
+                  className="h-12 w-auto max-w-[160px] object-contain"
                 />
                 <div>
                   <h1 className="font-heading text-lg font-semibold text-foreground">
