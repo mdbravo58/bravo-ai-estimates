@@ -2004,6 +2004,50 @@ export type Database = {
         }
         Relationships: []
       }
+      organization_service_types: {
+        Row: {
+          base_price: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          organization_id: string
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          base_price?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          organization_id: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          base_price?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          organization_id?: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_service_types_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           address: string | null
@@ -2018,6 +2062,7 @@ export type Database = {
           ghl_connected_at: string | null
           ghl_location_id: string | null
           id: string
+          industry: string | null
           logo_url: string | null
           name: string
           plan: string | null
@@ -2037,6 +2082,7 @@ export type Database = {
           ghl_connected_at?: string | null
           ghl_location_id?: string | null
           id?: string
+          industry?: string | null
           logo_url?: string | null
           name: string
           plan?: string | null
@@ -2056,6 +2102,7 @@ export type Database = {
           ghl_connected_at?: string | null
           ghl_location_id?: string | null
           id?: string
+          industry?: string | null
           logo_url?: string | null
           name?: string
           plan?: string | null
@@ -3258,6 +3305,10 @@ export type Database = {
       }
       log_profile_access: {
         Args: { access_type: string; profile_user_id: string }
+        Returns: undefined
+      }
+      populate_default_service_types: {
+        Args: { p_industry: string; p_organization_id: string }
         Returns: undefined
       }
       store_connection_tokens: {

@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { jsPDF } from "jspdf";
 import { STATE_TAX_RATES, getStateOptions } from "@/data/stateTaxRates";
+import { useServiceTypes } from "@/hooks/useServiceTypes";
 
 interface EstimateItem {
   id: string;
@@ -30,6 +31,7 @@ interface EstimateBuilderProps {
 
 export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
   const { toast } = useToast();
+  const { serviceTypes, loading: loadingServiceTypes } = useServiceTypes();
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [selectedState, setSelectedState] = useState<string>("");
@@ -424,30 +426,20 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
                   <Label htmlFor="service-type">Service Type</Label>
                   <Select value={projectInfo.serviceType} onValueChange={(value) => setProjectInfo({ ...projectInfo, serviceType: value })}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select service" />
+                      <SelectValue placeholder={loadingServiceTypes ? "Loading..." : "Select service"} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="plumbing">Plumbing</SelectItem>
-                      <SelectItem value="hvac">HVAC</SelectItem>
-                      <SelectItem value="electrical">Electrical</SelectItem>
-                      <SelectItem value="handyman">Handyman</SelectItem>
-                      <SelectItem value="home-cleaning">Home Cleaning</SelectItem>
-                      <SelectItem value="general-contractor">General Contractor</SelectItem>
-                      <SelectItem value="roofing">Roofing</SelectItem>
-                      <SelectItem value="painting">Painting</SelectItem>
-                      <SelectItem value="landscaping">Landscaping</SelectItem>
-                      <SelectItem value="pest-control">Pest Control</SelectItem>
-                      <SelectItem value="pool-service">Pool Service</SelectItem>
-                      <SelectItem value="garage-doors">Garage Doors</SelectItem>
-                      <SelectItem value="flooring">Flooring</SelectItem>
-                      <SelectItem value="car-detailing">Car Detailing</SelectItem>
-                      <SelectItem value="janitorial">Janitorial</SelectItem>
-                      <SelectItem value="window-cleaning">Window Cleaning</SelectItem>
-                      <SelectItem value="carpet-cleaning">Carpet Cleaning</SelectItem>
-                      <SelectItem value="pressure-washing">Pressure Washing</SelectItem>
-                      <SelectItem value="locksmith">Locksmith</SelectItem>
-                      <SelectItem value="moving-services">Moving Services</SelectItem>
-                      <SelectItem value="appliance-repair">Appliance Repair</SelectItem>
+                      {serviceTypes.length > 0 ? (
+                        serviceTypes.map((service) => (
+                          <SelectItem key={service.id} value={service.name}>
+                            {service.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="general" disabled={false}>
+                          General Service
+                        </SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>

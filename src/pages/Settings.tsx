@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useOrganization } from "@/hooks/useOrganization";
 import { supabase } from "@/integrations/supabase/client";
+import { ServiceTypesManager } from "@/components/settings/ServiceTypesManager";
 import { 
   Settings as SettingsIcon, 
   User, 
@@ -23,7 +24,8 @@ import {
   Upload,
   X,
   Loader2,
-  ImageIcon
+  ImageIcon,
+  Settings2
 } from "lucide-react";
 
 const SettingsPage = () => {
@@ -232,6 +234,10 @@ const SettingsPage = () => {
                       Security
                     </Button>
                     <Button variant="ghost" className="w-full justify-start">
+                      <Settings2 className="h-4 w-4 mr-2" />
+                      Services
+                    </Button>
+                    <Button variant="ghost" className="w-full justify-start">
                       <Palette className="h-4 w-4 mr-2" />
                       Appearance
                     </Button>
@@ -370,6 +376,9 @@ const SettingsPage = () => {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Service Types Manager */}
+              <ServiceTypesManager />
 
               {/* User Management */}
               <Card>

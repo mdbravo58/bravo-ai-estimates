@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useServiceTypes } from "@/hooks/useServiceTypes";
 
 interface Customer {
   id: string;
@@ -43,6 +44,7 @@ export function CreateAppointmentDialog({
   const [loading, setLoading] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [technicians, setTechnicians] = useState<Technician[]>([]);
+  const { serviceTypes, loading: loadingServiceTypes } = useServiceTypes();
   
   const [customerId, setCustomerId] = useState("");
   const [title, setTitle] = useState("");
@@ -148,18 +150,6 @@ export function CreateAppointmentDialog({
     setNotes("");
   };
 
-  const serviceTypes = [
-    "Plumbing",
-    "HVAC",
-    "Electrical",
-    "General Maintenance",
-    "Installation",
-    "Repair",
-    "Inspection",
-    "Emergency Service",
-    "Other"
-  ];
-
   const durations = [
     { value: "30", label: "30 minutes" },
     { value: "60", label: "1 hour" },
@@ -217,14 +207,18 @@ export function CreateAppointmentDialog({
             <Label htmlFor="serviceType">Service Type</Label>
             <Select value={serviceType} onValueChange={setServiceType}>
               <SelectTrigger>
-                <SelectValue placeholder="Select service type" />
+                <SelectValue placeholder={loadingServiceTypes ? "Loading..." : "Select service type"} />
               </SelectTrigger>
               <SelectContent>
-                {serviceTypes.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
+                {serviceTypes.length > 0 ? (
+                  serviceTypes.map((service) => (
+                    <SelectItem key={service.id} value={service.name}>
+                      {service.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="General Service">General Service</SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>
