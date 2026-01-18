@@ -35,6 +35,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
   const [selectedState, setSelectedState] = useState<string>("");
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
+  const [pdfDoc, setPdfDoc] = useState<jsPDF | null>(null);
   const [taxRate, setTaxRate] = useState<number>(8);
 
   const stateOptions = getStateOptions();
@@ -319,10 +320,10 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
       yPos += 5;
       doc.text("Thank you for your business!", pageWidth / 2, yPos, { align: "center" });
 
-      // Show PDF in preview modal
-      const pdfBlob = doc.output('blob');
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      setPdfPreviewUrl(pdfUrl);
+      // Show PDF in preview modal using data URI (more reliable than blob URL)
+      const pdfDataUri = doc.output('datauristring');
+      setPdfPreviewUrl(pdfDataUri);
+      setPdfDoc(doc);
       setShowPdfPreview(true);
 
       toast({
@@ -342,14 +343,8 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
   };
 
   const handleDownloadPdf = () => {
-    if (pdfPreviewUrl) {
-      const link = document.createElement('a');
-      link.href = pdfPreviewUrl;
-      link.download = `estimate-${customerInfo.name || 'draft'}-${new Date().toISOString().split('T')[0]}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
+    if (pdfDoc) {
+      pdfDoc.save(`estimate-${customerInfo.name || 'draft'}-${new Date().toISOString().split('T')[0]}.pdf`);
       toast({
         title: "PDF Downloaded",
         description: "Your estimate has been downloaded.",
@@ -359,10 +354,8 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
 
   const handleClosePdfPreview = () => {
     setShowPdfPreview(false);
-    if (pdfPreviewUrl) {
-      URL.revokeObjectURL(pdfPreviewUrl);
-      setPdfPreviewUrl(null);
-    }
+    setPdfPreviewUrl(null);
+    setPdfDoc(null);
   };
 
   return (
