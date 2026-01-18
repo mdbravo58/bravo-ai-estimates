@@ -1,5 +1,6 @@
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
+import { useOrganization } from "@/hooks/useOrganization";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,6 +8,8 @@ interface LayoutProps {
 }
 
 export function Layout({ children, variant = "dashboard" }: LayoutProps) {
+  const { organization, userData, loading } = useOrganization();
+
   if (variant === "portal") {
     return children;
   }
@@ -16,13 +19,15 @@ export function Layout({ children, variant = "dashboard" }: LayoutProps) {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
-          organization={{
-            name: "Premier Plumbing Solutions",
-          }}
-          user={{
-            name: "John Smith",
-            email: "john@premierplumbing.com",
-          }}
+          organization={organization ? {
+            name: organization.name,
+            logo: organization.logo_url || undefined,
+          } : undefined}
+          user={userData ? {
+            name: userData.name,
+            email: userData.email,
+          } : undefined}
+          loading={loading}
         />
         <main className="flex-1 overflow-auto p-6">
           {children}

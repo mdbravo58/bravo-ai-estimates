@@ -8,7 +8,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
 
 interface HeaderProps {
@@ -21,10 +23,12 @@ interface HeaderProps {
     email: string;
     avatar?: string;
   };
+  loading?: boolean;
 }
 
-export function Header({ organization, user }: HeaderProps) {
+export function Header({ organization, user, loading }: HeaderProps) {
   const { signOut, user: authUser } = useAuth();
+  const navigate = useNavigate();
   
   const displayUser = user || {
     name: authUser?.email?.split('@')[0] || 'User',
@@ -37,16 +41,25 @@ export function Header({ organization, user }: HeaderProps) {
         {/* Logo and Organization */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
-            <img
-              src={bravoLogo}
-              alt="Bravo AI Systems"
-              className="h-10 w-auto"
-            />
-            <div>
-              <h1 className="font-heading text-lg font-semibold text-foreground">
-                {organization?.name || "Bravo AI Systems"}
-              </h1>
-            </div>
+            {loading ? (
+              <>
+                <Skeleton className="h-10 w-10 rounded" />
+                <Skeleton className="h-5 w-40" />
+              </>
+            ) : (
+              <>
+                <img
+                  src={organization?.logo || bravoLogo}
+                  alt={organization?.name || "Bravo AI Systems"}
+                  className="h-10 w-auto max-w-[120px] object-contain"
+                />
+                <div>
+                  <h1 className="font-heading text-lg font-semibold text-foreground">
+                    {organization?.name || "Bravo AI Systems"}
+                  </h1>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -77,7 +90,7 @@ export function Header({ organization, user }: HeaderProps) {
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/settings')}>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
