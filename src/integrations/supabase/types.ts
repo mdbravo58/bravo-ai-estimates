@@ -1321,44 +1321,73 @@ export type Database = {
           amount: number
           approved: boolean | null
           created_at: string
+          customer_id: string | null
+          due_date: string | null
           id: string
           invoice_date: string
           invoice_number: string | null
           job_id: string
           method: Database["public"]["Enums"]["invoice_method"]
+          notes: string | null
+          organization_id: string | null
           qb_invoice_id: string | null
+          sent_at: string | null
           updated_at: string
         }
         Insert: {
           amount: number
           approved?: boolean | null
           created_at?: string
+          customer_id?: string | null
+          due_date?: string | null
           id?: string
           invoice_date: string
           invoice_number?: string | null
           job_id: string
           method: Database["public"]["Enums"]["invoice_method"]
+          notes?: string | null
+          organization_id?: string | null
           qb_invoice_id?: string | null
+          sent_at?: string | null
           updated_at?: string
         }
         Update: {
           amount?: number
           approved?: boolean | null
           created_at?: string
+          customer_id?: string | null
+          due_date?: string | null
           id?: string
           invoice_date?: string
           invoice_number?: string | null
           job_id?: string
           method?: Database["public"]["Enums"]["invoice_method"]
+          notes?: string | null
+          organization_id?: string | null
           qb_invoice_id?: string | null
+          sent_at?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "invoices_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "invoices_job_id_fkey"
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
