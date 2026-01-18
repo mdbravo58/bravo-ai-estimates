@@ -1,77 +1,120 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useToast } from "@/hooks/use-toast";
+import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Search, Package, DollarSign, Lightbulb, X } from "lucide-react";
+import { useOrganization } from "@/hooks/useOrganization";
+import { toast } from "sonner";
+import {
+  Plus,
+  Search,
+  Package,
+  DollarSign,
+  TrendingUp,
+  Loader2,
+  Edit,
+  AlertCircle,
+} from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AddItemDialog } from "@/components/pricebooks/AddItemDialog";
+import { EditItemDialog, Item } from "@/components/pricebooks/EditItemDialog";
+import { DeleteItemDialog } from "@/components/pricebooks/DeleteItemDialog";
 
-interface Item {
-  id: string;
-  name: string;
-  description: string;
-  sku: string;
-  unit_cost: number;
-  unit_price: number;
-  unit_of_measure: string;
-  active: boolean;
-}
-
-const PriceBooksPage = () => {
+export default function PriceBooksPage() {
+  const { organization } = useOrganization();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [showTip, setShowTip] = useState(true);
-  const { toast } = useToast();
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchItems();
-  }, []);
+  // Dialog states
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   const fetchItems = async () => {
+    if (!organization?.id) return;
+
     try {
       const { data, error } = await supabase
-        .from('items')
-        .select('*')
-        .order('name', { ascending: true });
+        .from("items")
+        .select("*")
+        .eq("organization_id", organization.id)
+        .order("name");
 
       if (error) throw error;
       setItems(data || []);
     } catch (error: any) {
-      console.error('Error fetching items:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load price book.",
-      });
+      toast.error("Failed to load items");
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredItems = items.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    if (organization?.id) {
+      fetchItems();
+    }
+  }, [organization?.id]);
+
+  const handleToggleActive = async (item: Item) => {
+    setTogglingId(item.id);
+    try {
+      const { error } = await supabase
+        .from("items")
+        .update({ active: !item.active })
+        .eq("id", item.id);
+
+      if (error) throw error;
+
+      toast.success(`Item ${item.active ? "deactivated" : "activated"}`);
+      fetchItems();
+    } catch (error: any) {
+      toast.error("Failed to update item");
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  const handleEditClick = (item: Item) => {
+    setSelectedItem(item);
+    setEditDialogOpen(true);
+  };
+
+  const handleDeleteClick = (item: Item) => {
+    setSelectedItem(item);
+    setDeleteDialogOpen(true);
+  };
+
+  const filteredItems = items.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalItems = items.length;
-  const activeItems = items.filter(item => item.active).length;
-  const avgMargin = items.length > 0 
-    ? items.reduce((sum, item) => sum + ((item.unit_price - item.unit_cost) / item.unit_price * 100), 0) / items.length
-    : 0;
+  const activeItems = items.filter((item) => item.active).length;
+  const avgMargin =
+    items.length > 0
+      ? items.reduce((acc, item) => {
+          const cost = item.unit_cost || 0;
+          const price = item.unit_price || 0;
+          return acc + (price > 0 ? ((price - cost) / price) * 100 : 0);
+        }, 0) / items.length
+      : 0;
+  const totalValue = items.reduce((acc, item) => acc + (item.unit_price || 0), 0);
 
   if (loading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-2 text-muted-foreground">Loading price book...</p>
-          </div>
+        <div className="flex items-center justify-center h-[60vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </Layout>
     );
@@ -79,158 +122,218 @@ const PriceBooksPage = () => {
 
   return (
     <Layout>
-      <main role="main">
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold">Price Books</h1>
-              <p className="text-muted-foreground">Manage your inventory and pricing</p>
-            </div>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Item
-            </Button>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Price Books</h1>
+            <p className="text-muted-foreground">
+              Manage your inventory items and pricing
+            </p>
           </div>
+          <Button onClick={() => setAddDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Item
+          </Button>
+        </div>
 
-          {/* Pro Tip */}
-          {showTip && (
-            <Alert className="bg-primary/5 border-primary/20">
-              <Lightbulb className="h-4 w-4 text-primary" />
-              <AlertDescription className="flex items-center justify-between">
-                <span>
-                  <strong>Pro Tip:</strong> Add your most common services here once, use them forever. 
-                  Price Books make estimates <strong>10x faster</strong> — just click to add instead of typing every time!
-                </span>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setShowTip(false)}
-                  className="ml-4 shrink-0"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </AlertDescription>
-            </Alert>
-          )}
+        {showTip && (
+          <Alert className="bg-primary/5 border-primary/20">
+            <AlertCircle className="h-4 w-4 text-primary" />
+            <AlertDescription className="flex items-center justify-between">
+              <span>
+                <strong>Pro Tip:</strong> Use consistent pricing in your price book to ensure accurate estimates. Click on any item to edit its details.
+              </span>
+              <Button variant="ghost" size="sm" onClick={() => setShowTip(false)}>
+                Dismiss
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
 
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search items by name, SKU, or description..."
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-4">
           <Card>
-            <CardContent className="pt-6">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search items, SKUs, or descriptions..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Items</CardTitle>
+              <Package className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalItems}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Items</CardTitle>
+              <Package className="h-4 w-4 text-accent" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{activeItems}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Avg Margin</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className={`text-2xl font-bold ${avgMargin < 20 ? "text-yellow-600" : "text-accent"}`}>
+                {avgMargin.toFixed(1)}%
               </div>
             </CardContent>
           </Card>
-
-          {/* Stats */}
-          <div className="grid gap-4 md:grid-cols-4">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-2xl font-bold">{totalItems}</div>
-                <p className="text-xs text-muted-foreground">Total Items</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-2xl font-bold">{activeItems}</div>
-                <p className="text-xs text-muted-foreground">Active Items</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-2xl font-bold">{avgMargin.toFixed(1)}%</div>
-                <p className="text-xs text-muted-foreground">Avg Margin</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-2xl font-bold">
-                  ${items.reduce((sum, item) => sum + item.unit_price, 0).toFixed(0)}
-                </div>
-                <p className="text-xs text-muted-foreground">Total Value</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Items List */}
           <Card>
-            <CardHeader>
-              <CardTitle>Price Book Items</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Value</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              {filteredItems.length === 0 ? (
-                <div className="text-center py-8">
-                  <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No items found.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                        <div className="space-y-2 flex-1">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-semibold">{item.name}</h3>
-                            <Badge variant={item.active ? "default" : "secondary"}>
-                              {item.active ? "Active" : "Inactive"}
-                            </Badge>
-                          </div>
-                          
-                          <p className="text-sm text-muted-foreground">
-                            {item.description}
-                          </p>
-                          
-                          <div className="flex items-center gap-4 text-sm">
-                            <span className="font-medium">SKU: {item.sku}</span>
-                            <span>Unit: {item.unit_of_measure}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                          <div className="text-right">
-                            <div className="flex items-center gap-2">
-                              <DollarSign className="h-4 w-4 text-muted-foreground" />
-                              <span className="font-semibold text-lg">
-                                ${item.unit_price.toFixed(2)}
-                              </span>
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              Cost: ${item.unit_cost.toFixed(2)}
-                            </div>
-                            <div className="text-sm font-medium text-green-600">
-                              {((item.unit_price - item.unit_cost) / item.unit_price * 100).toFixed(1)}% margin
-                            </div>
-                          </div>
-                          
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
-                              Edit
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              History
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="text-2xl font-bold">
+                ${totalValue.toLocaleString()}
+              </div>
             </CardContent>
           </Card>
         </div>
-      </main>
+
+        {filteredItems.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Package className="h-12 w-12 text-muted-foreground mb-4" />
+              {searchTerm ? (
+                <>
+                  <h3 className="text-lg font-semibold mb-2">No items found</h3>
+                  <p className="text-muted-foreground text-center mb-4">
+                    No items match your search "{searchTerm}". Try a different search term.
+                  </p>
+                  <Button variant="outline" onClick={() => setSearchTerm("")}>
+                    Clear Search
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-lg font-semibold mb-2">No items yet</h3>
+                  <p className="text-muted-foreground text-center mb-4">
+                    Get started by adding your first item to the price book.
+                  </p>
+                  <Button onClick={() => setAddDialogOpen(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Your First Item
+                  </Button>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {filteredItems.map((item) => {
+              const margin =
+                item.unit_price && item.unit_price > 0
+                  ? ((item.unit_price - (item.unit_cost || 0)) / item.unit_price) * 100
+                  : 0;
+
+              return (
+                <Card
+                  key={item.id}
+                  className={`transition-all hover:shadow-md ${!item.active ? "opacity-60" : ""}`}
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            {item.name}
+                            <Badge variant={item.active ? "default" : "secondary"}>
+                              {item.active ? "Active" : "Inactive"}
+                            </Badge>
+                          </CardTitle>
+                          {item.description && (
+                            <CardDescription className="mt-1">
+                              {item.description}
+                            </CardDescription>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 mr-4">
+                          <span className="text-sm text-muted-foreground">Active</span>
+                          <Switch
+                            checked={item.active}
+                            onCheckedChange={() => handleToggleActive(item)}
+                            disabled={togglingId === item.id}
+                          />
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditClick(item)}
+                        >
+                          <Edit className="h-4 w-4 mr-1" />
+                          Edit
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">SKU</span>
+                        <p className="font-medium">{item.sku || "—"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Unit</span>
+                        <p className="font-medium capitalize">{item.unit_of_measure || "Each"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Cost</span>
+                        <p className="font-medium">${(item.unit_cost || 0).toFixed(2)}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Price</span>
+                        <p className="font-medium">${(item.unit_price || 0).toFixed(2)}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Margin</span>
+                        <p className={`font-medium ${margin < 0 ? "text-destructive" : margin < 20 ? "text-yellow-600" : "text-accent"}`}>
+                          {margin.toFixed(1)}%
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <AddItemDialog
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
+        onItemAdded={fetchItems}
+      />
+
+      <EditItemDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        item={selectedItem}
+        onItemUpdated={fetchItems}
+        onDeleteClick={handleDeleteClick}
+      />
+
+      <DeleteItemDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        item={selectedItem}
+        onItemDeleted={fetchItems}
+      />
     </Layout>
   );
-};
-
-export default PriceBooksPage;
+}
