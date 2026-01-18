@@ -1,0 +1,123 @@
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './useAuth';
+
+interface Organization {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  business_phone: string | null;
+  business_email: string | null;
+  address: string | null;
+  plan: string | null;
+}
+
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  organization_id: string;
+}
+
+interface UseOrganizationReturn {
+  organization: Organization | null;
+  userData: UserData | null;
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+  updateOrganization: (updates: Partial<Organization>) => Promise<boolean>;
+}
+
+export function useOrganization(): UseOrganizationReturn {
+  const { user } = useAuth();
+  const [organization, setOrganization] = useState<Organization | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchOrganization = useCallback(async () => {
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // First, get the user's organization_id from the users table
+      const { data: userRecord, error: userError } = await supabase
+        .from('users')
+        .select('id, name, email, role, organization_id')
+        .eq('auth_user_id', user.id)
+        .single();
+
+      if (userError) {
+        // User might not have a record yet
+        console.log('No user record found:', userError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (userRecord) {
+        setUserData(userRecord as UserData);
+
+        // Now fetch the organization details
+        const { data: orgData, error: orgError } = await supabase
+          .from('organizations')
+          .select('id, name, logo_url, business_phone, business_email, address, plan')
+          .eq('id', userRecord.organization_id)
+          .single();
+
+        if (orgError) {
+          console.error('Error fetching organization:', orgError.message);
+          setError('Failed to load organization');
+        } else {
+          setOrganization(orgData as Organization);
+        }
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id]);
+
+  const updateOrganization = useCallback(async (updates: Partial<Organization>): Promise<boolean> => {
+    if (!organization?.id) return false;
+
+    try {
+      const { error: updateError } = await supabase
+        .from('organizations')
+        .update(updates)
+        .eq('id', organization.id);
+
+      if (updateError) {
+        console.error('Error updating organization:', updateError.message);
+        return false;
+      }
+
+      // Refetch to get updated data
+      await fetchOrganization();
+      return true;
+    } catch (err) {
+      console.error('Unexpected error updating organization:', err);
+      return false;
+    }
+  }, [organization?.id, fetchOrganization]);
+
+  useEffect(() => {
+    fetchOrganization();
+  }, [fetchOrganization]);
+
+  return {
+    organization,
+    userData,
+    loading,
+    error,
+    refetch: fetchOrganization,
+    updateOrganization,
+  };
+}
