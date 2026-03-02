@@ -49,6 +49,7 @@ const navigationGroups: NavGroup[] = [
       { name: "Estimates", icon: FileText, href: "/estimates" },
       { name: "Jobs", icon: Briefcase, href: "/jobs" },
       { name: "Customers", icon: Users, href: "/customers" },
+      { name: "Leads", icon: Activity, href: "/leads" },
     ],
   },
   {

@@ -338,7 +338,7 @@ const Index = () => {
                   <Users className="h-4 w-4" />
                   Add Customer
                 </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/pricebooks")}>
+                <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/price-books")}>
                   <FileText className="h-4 w-4" />
                   Price Books
                 </Button>
