@@ -25,13 +25,15 @@ import QuickBooks from "@/pages/QuickBooks";
 import CoverPage from "@/pages/Cover";
 import Scheduling from "@/pages/Scheduling";
 import Payroll from "@/pages/Payroll";
-
 import Team from "@/pages/Team";
 import Pricing from "@/pages/Pricing";
 import Subscribe from "@/pages/Subscribe";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import GPSTracking from "@/pages/GPSTracking";
+import RequestQuote from "@/pages/RequestQuote";
+import Leads from "@/pages/Leads";
+import ResetPassword from "@/pages/ResetPassword";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
@@ -224,6 +226,16 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <Payroll />
+          </ProtectedRoute>
+        } 
+      />
+      <Route path="/request-quote" element={<RequestQuote />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route 
+        path="/leads" 
+        element={
+          <ProtectedRoute>
+            <Leads />
           </ProtectedRoute>
         } 
       />

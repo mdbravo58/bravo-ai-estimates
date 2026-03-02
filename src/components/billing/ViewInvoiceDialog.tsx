@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { format } from "date-fns";
-import { Download, CheckCircle, XCircle, Clock, AlertTriangle } from "lucide-react";
+import { Download, CheckCircle, XCircle, Clock, AlertTriangle, CreditCard, Loader2 } from "lucide-react";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 import {
   Dialog,
@@ -53,7 +55,38 @@ export function ViewInvoiceDialog({
   invoice,
   onMarkPaid,
 }: ViewInvoiceDialogProps) {
+  const [sendingPaymentLink, setSendingPaymentLink] = useState(false);
+  
   if (!invoice) return null;
+
+  const handleSendPaymentLink = async () => {
+    if (!invoice) return;
+    setSendingPaymentLink(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("stripe-checkout", {
+        body: {
+          plan: "invoice",
+          invoiceId: invoice.id,
+          amount: invoice.amount,
+          customerEmail: invoice.customers?.email,
+          successUrl: `${window.location.origin}/billing?paid=${invoice.id}`,
+          cancelUrl: `${window.location.origin}/billing`,
+        },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        // Copy the payment link
+        await navigator.clipboard.writeText(data.url);
+        toast.success("Payment link copied to clipboard! Share it with the customer.");
+      } else {
+        toast.error("Failed to generate payment link");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create payment link");
+    } finally {
+      setSendingPaymentLink(false);
+    }
+  };
 
   const isOverdue =
     !invoice.approved &&
@@ -290,15 +323,21 @@ export function ViewInvoiceDialog({
             Download PDF
           </Button>
           {!invoice.approved && (
-            <Button
-              onClick={() => {
-                onMarkPaid(invoice.id);
-                onOpenChange(false);
-              }}
-            >
-              <CheckCircle className="mr-2 h-4 w-4" />
-              Mark as Paid
-            </Button>
+            <>
+              <Button variant="outline" onClick={handleSendPaymentLink} disabled={sendingPaymentLink}>
+                {sendingPaymentLink ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CreditCard className="mr-2 h-4 w-4" />}
+                Payment Link
+              </Button>
+              <Button
+                onClick={() => {
+                  onMarkPaid(invoice.id);
+                  onOpenChange(false);
+                }}
+              >
+                <CheckCircle className="mr-2 h-4 w-4" />
+                Mark as Paid
+              </Button>
+            </>
           )}
         </DialogFooter>
       </DialogContent>

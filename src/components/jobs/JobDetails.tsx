@@ -12,7 +12,9 @@ import {
   DollarSign, 
   TrendingUp, 
   FileText,
-  Settings
+  Settings,
+  ArrowRight,
+  CheckCircle
 } from "lucide-react";
 import { toast } from "sonner";
 import { TimeEntryDialog } from "@/components/mobile/TimeEntryDialog";
@@ -166,6 +168,17 @@ export const JobDetails = ({ jobId }: JobDetailsProps) => {
     fetchJobDetails();
   };
 
+  const transitionStatus = async (newStatus: string) => {
+    try {
+      const { error } = await supabase.from("jobs").update({ status: newStatus as any }).eq("id", jobId);
+      if (error) throw error;
+      toast.success(`Job status updated to ${newStatus.replace("_", " ")}`);
+      fetchJobDetails();
+    } catch (err: any) {
+      toast.error("Failed to update status");
+    }
+  };
+
   if (loading) {
     return (
       <Card>
@@ -308,6 +321,45 @@ export const JobDetails = ({ jobId }: JobDetailsProps) => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Status Transitions */}
+      <Card>
+        <CardHeader><CardTitle>Status</CardTitle></CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {job.status === "estimate" && (
+              <Button size="sm" onClick={() => transitionStatus("scheduled")}>
+                <ArrowRight className="h-4 w-4 mr-1" /> Schedule
+              </Button>
+            )}
+            {job.status === "scheduled" && (
+              <Button size="sm" onClick={() => transitionStatus("in_progress")}>
+                <ArrowRight className="h-4 w-4 mr-1" /> Dispatch
+              </Button>
+            )}
+            {job.status === "in_progress" && (
+              <Button size="sm" onClick={() => transitionStatus("complete")}>
+                <CheckCircle className="h-4 w-4 mr-1" /> Complete
+              </Button>
+            )}
+            {job.status === "complete" && (
+              <Button size="sm" onClick={() => transitionStatus("invoiced")}>
+                <DollarSign className="h-4 w-4 mr-1" /> Mark Invoiced
+              </Button>
+            )}
+            {job.status === "in_progress" && (
+              <Button size="sm" variant="outline" onClick={() => transitionStatus("hold")}>
+                Hold
+              </Button>
+            )}
+            {job.status === "hold" && (
+              <Button size="sm" onClick={() => transitionStatus("in_progress")}>
+                <ArrowRight className="h-4 w-4 mr-1" /> Resume
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Quick Actions */}
       <Card>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useOrganization } from "@/hooks/useOrganization";
 import { Plus, Search, Mail, Phone, MapPin } from "lucide-react";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 interface Customer {
   id: string;
@@ -17,15 +23,22 @@ interface Customer {
   created_at: string;
 }
 
+const emptyForm = { name: "", email: "", phone: "", address: "" };
+
 const CustomersPage = () => {
+  const navigate = useNavigate();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [addOpen, setAddOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const { toast } = useToast();
+  const { organization } = useOrganization();
 
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
+  useEffect(() => { fetchCustomers(); }, []);
 
   const fetchCustomers = async () => {
     try {
@@ -33,24 +46,69 @@ const CustomersPage = () => {
         .from('customers')
         .select('*')
         .order('created_at', { ascending: false });
-
       if (error) throw error;
       setCustomers(data || []);
     } catch (error: any) {
       console.error('Error fetching customers:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load customers.",
-      });
+      toast({ variant: "destructive", title: "Error", description: "Failed to load customers." });
     } finally {
       setLoading(false);
     }
   };
 
+  const handleAdd = async () => {
+    if (!form.name.trim() || !organization?.id) return;
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('customers').insert({
+        name: form.name, email: form.email || null, phone: form.phone || null,
+        address: form.address || null, organization_id: organization.id,
+      });
+      if (error) throw error;
+      toast({ title: "Customer added" });
+      setForm(emptyForm);
+      setAddOpen(false);
+      fetchCustomers();
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Error", description: e.message });
+    } finally { setSaving(false); }
+  };
+
+  const handleEdit = async () => {
+    if (!editId || !form.name.trim()) return;
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('customers').update({
+        name: form.name, email: form.email || null,
+        phone: form.phone || null, address: form.address || null,
+      }).eq('id', editId);
+      if (error) throw error;
+      toast({ title: "Customer updated" });
+      setEditOpen(false);
+      fetchCustomers();
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Error", description: e.message });
+    } finally { setSaving(false); }
+  };
+
+  const openEdit = (c: Customer) => {
+    setEditId(c.id);
+    setForm({ name: c.name, email: c.email || "", phone: c.phone || "", address: c.address || "" });
+    setEditOpen(true);
+  };
+
   const filteredCustomers = customers.filter(customer =>
-    customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase())
+    customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const CustomerFormFields = () => (
+    <div className="space-y-4">
+      <div><Label>Name *</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Customer name" /></div>
+      <div><Label>Email</Label><Input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="email@example.com" /></div>
+      <div><Label>Phone</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(555) 123-4567" /></div>
+      <div><Label>Address</Label><Input value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} placeholder="123 Main St" /></div>
+    </div>
   );
 
   if (loading) {
@@ -70,113 +128,55 @@ const CustomersPage = () => {
     <Layout>
       <main role="main">
         <div className="space-y-6">
-          {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold">Customers</h1>
               <p className="text-muted-foreground">Manage your customer database</p>
             </div>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Customer
+            <Button onClick={() => { setForm(emptyForm); setAddOpen(true); }}>
+              <Plus className="h-4 w-4 mr-2" />Add Customer
             </Button>
           </div>
 
-          {/* Search */}
           <Card>
             <CardContent className="pt-6">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search customers..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+                <Input placeholder="Search customers..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
               </div>
             </CardContent>
           </Card>
 
-          {/* Stats */}
           <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-2xl font-bold">{customers.length}</div>
-                <p className="text-xs text-muted-foreground">Total Customers</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-2xl font-bold">
-                  {customers.filter(c => c.email).length}
-                </div>
-                <p className="text-xs text-muted-foreground">With Email</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-2xl font-bold">
-                  {customers.filter(c => c.phone).length}
-                </div>
-                <p className="text-xs text-muted-foreground">With Phone</p>
-              </CardContent>
-            </Card>
+            <Card><CardContent className="pt-6"><div className="text-2xl font-bold">{customers.length}</div><p className="text-xs text-muted-foreground">Total Customers</p></CardContent></Card>
+            <Card><CardContent className="pt-6"><div className="text-2xl font-bold">{customers.filter(c => c.email).length}</div><p className="text-xs text-muted-foreground">With Email</p></CardContent></Card>
+            <Card><CardContent className="pt-6"><div className="text-2xl font-bold">{customers.filter(c => c.phone).length}</div><p className="text-xs text-muted-foreground">With Phone</p></CardContent></Card>
           </div>
 
-          {/* Customer List */}
           <Card>
-            <CardHeader>
-              <CardTitle>Customer Directory</CardTitle>
-            </CardHeader>
+            <CardHeader><CardTitle>Customer Directory</CardTitle></CardHeader>
             <CardContent>
               {filteredCustomers.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No customers found.</p>
-                </div>
+                <div className="text-center py-8"><p className="text-muted-foreground">No customers found.</p></div>
               ) : (
                 <div className="space-y-4">
                   {filteredCustomers.map((customer) => (
-                    <div
-                      key={customer.id}
-                      className="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
-                    >
+                    <div key={customer.id} className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <h3 className="font-semibold">{customer.name}</h3>
                             <Badge variant="outline">Active</Badge>
                           </div>
-                          
                           <div className="flex flex-col sm:flex-row gap-2 text-sm text-muted-foreground">
-                            {customer.email && (
-                              <div className="flex items-center gap-1">
-                                <Mail className="h-3 w-3" />
-                                {customer.email}
-                              </div>
-                            )}
-                            {customer.phone && (
-                              <div className="flex items-center gap-1">
-                                <Phone className="h-3 w-3" />
-                                {customer.phone}
-                              </div>
-                            )}
+                            {customer.email && (<div className="flex items-center gap-1"><Mail className="h-3 w-3" />{customer.email}</div>)}
+                            {customer.phone && (<div className="flex items-center gap-1"><Phone className="h-3 w-3" />{customer.phone}</div>)}
                           </div>
-                          
-                          {customer.address && (
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <MapPin className="h-3 w-3" />
-                              {customer.address}
-                            </div>
-                          )}
+                          {customer.address && (<div className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3 w-3" />{customer.address}</div>)}
                         </div>
-                        
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            View Jobs
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            Edit
-                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => navigate(`/jobs?customer=${customer.id}`)}>View Jobs</Button>
+                          <Button variant="outline" size="sm" onClick={() => openEdit(customer)}>Edit</Button>
                         </div>
                       </div>
                     </div>
@@ -187,6 +187,30 @@ const CustomersPage = () => {
           </Card>
         </div>
       </main>
+
+      {/* Add Customer Dialog */}
+      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Add Customer</DialogTitle><DialogDescription>Create a new customer record.</DialogDescription></DialogHeader>
+          <CustomerFormFields />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
+            <Button onClick={handleAdd} disabled={saving || !form.name.trim()}>{saving ? "Saving..." : "Add Customer"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Customer Dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Edit Customer</DialogTitle><DialogDescription>Update customer information.</DialogDescription></DialogHeader>
+          <CustomerFormFields />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
+            <Button onClick={handleEdit} disabled={saving || !form.name.trim()}>{saving ? "Saving..." : "Save Changes"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
