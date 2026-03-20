@@ -430,7 +430,7 @@ const GHLIntegration = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                Sync contacts from your GoHighLevel account to your customer database. 
+                Sync contacts from your Bravo AI Systems account to your customer database. 
                 This will import all contact details including names, emails, phones, and addresses.
               </p>
               
