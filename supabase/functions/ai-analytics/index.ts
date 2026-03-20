@@ -130,6 +130,8 @@ serve(async (req) => {
 
     RESPONSE FORMAT:
     Return a JSON object with:
+    IMPORTANT: Keep responses concise. Limit to 3 KPIs, 3 insights, 3 recommendations, and 2 alerts maximum.
+
     {
       "summary": "Executive summary",
       "kpis": [
@@ -198,7 +200,7 @@ serve(async (req) => {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        max_tokens: 1500,
+        max_tokens: 4000,
         temperature: 0.3,
         response_format: { type: "json_object" }
       }),
