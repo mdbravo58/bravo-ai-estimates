@@ -305,7 +305,7 @@ const GHLIntegration = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-orange-500" />
-            GoHighLevel Integration
+            Bravo AI Systems Integration
             <Badge 
               variant="outline" 
               className={`ml-2 ${
