@@ -378,7 +378,9 @@ const SettingsPage = () => {
               </Card>
 
               {/* Service Types Manager */}
-              <ServiceTypesManager />
+              <div id="services">
+                <ServiceTypesManager />
+              </div>
 
               {/* User Management */}
               <Card>
