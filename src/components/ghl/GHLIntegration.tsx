@@ -332,11 +332,11 @@ const GHLIntegration = () => {
           </div>
 
           <div className="bg-green-50 border border-green-200 p-4 rounded-lg mb-4">
-            <h4 className="font-medium text-green-800 mb-2">✅ GHL API Connected</h4>
+            <h4 className="font-medium text-green-800 mb-2">✅ BAS API Connected</h4>
             <div className="text-sm text-green-700 space-y-2">
               <p><strong>Webhook URL:</strong> https://kgwruguzjidernenftyb.supabase.co/functions/v1/ghl-webhook</p>
               <p><strong>Organization ID:</strong> {organizationId || 'Loading...'}</p>
-              <p>Configure this webhook in your GHL account to sync contacts automatically.</p>
+              <p>Configure this webhook in your Bravo AI Systems account to sync contacts automatically.</p>
             </div>
           </div>
           
