@@ -130,6 +130,8 @@ serve(async (req) => {
 
     RESPONSE FORMAT:
     Return a JSON object with:
+    IMPORTANT: Keep responses concise. Limit to 3 KPIs, 3 insights, 3 recommendations, and 2 alerts maximum.
+
     {
       "summary": "Executive summary",
       "kpis": [
