@@ -255,7 +255,7 @@ const SettingsPage = () => {
             {/* Settings Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Organization Settings */}
-              <Card>
+              <Card id="organization">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Building className="h-5 w-5" />
