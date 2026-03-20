@@ -250,7 +250,7 @@ const GHLIntegration = () => {
       console.error('Create opportunity error:', error);
       toast({
         title: "Failed to Create Opportunity",
-        description: error.message || "Could not create opportunity in GHL",
+        description: error.message || "Could not create opportunity in BAS",
         variant: "destructive",
       });
     }
