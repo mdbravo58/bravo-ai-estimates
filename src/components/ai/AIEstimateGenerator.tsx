@@ -567,7 +567,7 @@ export const AIEstimateGenerator: React.FC = () => {
                   ) : (
                     <Send className="h-4 w-4 mr-2" />
                   )}
-                  {estimateSent ? 'Sent to Customer' : 'Send to Customer via GHL'}
+                  {estimateSent ? 'Sent to Customer' : 'Send to Customer via BAS'}
                 </Button>
               )}
               <Button variant="outline" disabled>

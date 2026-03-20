@@ -543,7 +543,7 @@ const SettingsPage = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">GoHighLevel</p>
+                      <p className="font-medium">Bravo AI Systems</p>
                       <p className="text-sm text-muted-foreground">
                         Marketing automation & CRM integration
                       </p>

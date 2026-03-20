@@ -589,7 +589,7 @@ const GHLIntegration = () => {
                   <div>
                     <p className="font-medium">Auto-Create Opportunities</p>
                     <p className="text-sm text-muted-foreground">
-                      New estimates automatically create GHL opportunities
+                      New estimates automatically create BAS opportunities
                     </p>
                   </div>
                   <Badge variant="secondary">Enabled</Badge>
