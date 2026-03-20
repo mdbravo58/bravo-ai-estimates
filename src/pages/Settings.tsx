@@ -244,7 +244,7 @@ const SettingsPage = () => {
                     <Button variant="ghost" className="w-full justify-start" asChild>
                       <a href="/ghl">
                         <Globe className="h-4 w-4 mr-2" />
-                        GoHighLevel Integration
+                        Bravo AI Systems Integration
                       </a>
                     </Button>
                   </nav>
