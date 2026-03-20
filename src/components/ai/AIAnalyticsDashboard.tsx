@@ -82,18 +82,26 @@ export const AIAnalyticsDashboard: React.FC = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        const setupErr = detectAISetupError(error, data);
+        if (setupErr) throw new Error(setupErr);
+        throw error;
+      }
 
+      markAISetupOk();
+      setSetupError(null);
       setAnalyticsData(data);
       toast({
         title: 'Success',
         description: 'AI analytics generated successfully!',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating analytics:', error);
+      const setupErr = detectAISetupError(error, null);
+      if (setupErr) setSetupError(setupErr);
       toast({
-        title: 'Error',
-        description: 'Failed to generate analytics. Please try again.',
+        title: setupErr ? 'AI Not Configured' : 'Error',
+        description: setupErr || 'Failed to generate analytics. Please try again.',
         variant: 'destructive'
       });
     } finally {
