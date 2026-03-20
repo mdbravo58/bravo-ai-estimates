@@ -383,7 +383,7 @@ const SettingsPage = () => {
               </div>
 
               {/* User Management */}
-              <Card>
+              <Card id="profile">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <User className="h-5 w-5" />
