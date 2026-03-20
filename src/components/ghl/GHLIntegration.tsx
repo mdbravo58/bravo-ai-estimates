@@ -67,7 +67,7 @@ const GHLIntegration = () => {
       
       toast({
         title: "Calendar ID Saved",
-        description: "Your GHL Calendar ID has been saved for scheduling sync.",
+        description: "Your BAS Calendar ID has been saved for scheduling sync.",
       });
     } catch (error: any) {
       toast({
