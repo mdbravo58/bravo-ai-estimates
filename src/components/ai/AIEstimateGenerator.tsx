@@ -99,18 +99,24 @@ export const AIEstimateGenerator: React.FC = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        const setupErr = detectAISetupError(error, data);
+        if (setupErr) throw new Error(setupErr);
+        throw error;
+      }
 
+      markAISetupOk();
       setGeneratedEstimate(data);
       toast({
         title: 'Success',
         description: 'AI estimate generated successfully!',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating estimate:', error);
+      const setupErr = detectAISetupError(error, null);
       toast({
-        title: 'Error',
-        description: 'Failed to generate estimate. Please try again.',
+        title: setupErr ? 'AI Not Configured' : 'Error',
+        description: setupErr || 'Failed to generate estimate. Please try again.',
         variant: 'destructive'
       });
     } finally {

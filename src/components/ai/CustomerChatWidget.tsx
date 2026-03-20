@@ -103,8 +103,13 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        const setupErr = detectAISetupError(error, data);
+        if (setupErr) throw new Error(setupErr);
+        throw error;
+      }
 
+      markAISetupOk();
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -113,13 +118,24 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending message:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to send message. Please try again.',
-        variant: 'destructive'
-      });
+      const setupErr = detectAISetupError(error, null);
+      if (setupErr) {
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: `⚠️ **AI is not configured yet.**\n\n${setupErr}\n\nPlease ask your admin to add the LOVABLE_API_KEY in Supabase Dashboard → Edge Functions → Secrets.`,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Failed to send message. Please try again.',
+          variant: 'destructive'
+        });
+      }
     } finally {
       setIsLoading(false);
     }

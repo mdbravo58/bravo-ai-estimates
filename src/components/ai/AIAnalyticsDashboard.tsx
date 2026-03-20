@@ -141,6 +141,14 @@ export const AIAnalyticsDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {setupError && (
+        <div className="p-4 rounded-lg border border-destructive bg-destructive/10 text-sm space-y-2">
+          <p className="font-medium text-destructive">{setupError}</p>
+          <p className="text-muted-foreground">
+            Add <code className="bg-muted px-1 rounded text-xs">LOVABLE_API_KEY</code> in Supabase Dashboard → Edge Functions → Secrets, then click Generate Analytics again.
+          </p>
+        </div>
+      )}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
