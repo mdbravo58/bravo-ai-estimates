@@ -222,34 +222,25 @@ const SettingsPage = () => {
                 </CardHeader>
                 <CardContent>
                   <nav className="space-y-2">
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Building className="h-4 w-4 mr-2" />
-                      Organization
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <User className="h-4 w-4 mr-2" />
-                      Profile
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Bell className="h-4 w-4 mr-2" />
-                      Notifications
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Billing
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Shield className="h-4 w-4 mr-2" />
-                      Security
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Settings2 className="h-4 w-4 mr-2" />
-                      Services
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Palette className="h-4 w-4 mr-2" />
-                      Appearance
-                    </Button>
+                    {[
+                      { id: "organization", icon: Building, label: "Organization" },
+                      { id: "profile", icon: User, label: "Profile" },
+                      { id: "notifications", icon: Bell, label: "Notifications" },
+                      { id: "billing", icon: CreditCard, label: "Billing" },
+                      { id: "security", icon: Shield, label: "Security" },
+                      { id: "services", icon: Settings2, label: "Services" },
+                      { id: "appearance", icon: Palette, label: "Appearance" },
+                    ].map(({ id, icon: Icon, label }) => (
+                      <Button
+                        key={id}
+                        variant={activeSection === id ? "secondary" : "ghost"}
+                        className="w-full justify-start"
+                        onClick={() => scrollToSection(id)}
+                      >
+                        <Icon className="h-4 w-4 mr-2" />
+                        {label}
+                      </Button>
+                    ))}
                     <Button variant="ghost" className="w-full justify-start" asChild>
                       <a href="/ghl">
                         <Globe className="h-4 w-4 mr-2" />
