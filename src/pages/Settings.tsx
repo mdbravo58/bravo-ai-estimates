@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useOrganization } from "@/hooks/useOrganization";
 import { supabase } from "@/integrations/supabase/client";
 import { ServiceTypesManager } from "@/components/settings/ServiceTypesManager";
+import { AISetupBanner } from "@/components/ai/AISetupBanner";
 import { 
   Settings as SettingsIcon, 
   User, 
