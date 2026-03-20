@@ -347,7 +347,7 @@ const GHLIntegration = () => {
           
           <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div className="space-y-2">
-              <Label htmlFor="locationId">GHL Location ID</Label>
+              <Label htmlFor="locationId">BAS Location ID</Label>
               <Input
                 id="locationId"
                 value={locationId}
