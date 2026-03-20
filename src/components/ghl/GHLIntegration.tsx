@@ -580,7 +580,7 @@ const GHLIntegration = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                Automatically create opportunities in GoHighLevel when estimates are generated. 
+                Automatically create opportunities in Bravo AI Systems when estimates are generated. 
                 Track deal progress and sync status updates between systems.
               </p>
               
