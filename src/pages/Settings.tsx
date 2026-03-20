@@ -34,6 +34,14 @@ const SettingsPage = () => {
   const { organization, userData, loading, refetch } = useOrganization();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Active section state
+  const [activeSection, setActiveSection] = useState("organization");
+
+  const scrollToSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  
   // Form state
   const [companyName, setCompanyName] = useState("");
   const [companyPhone, setCompanyPhone] = useState("");
