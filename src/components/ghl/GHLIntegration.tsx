@@ -398,7 +398,7 @@ const GHLIntegration = () => {
                   id="calendarId"
                   value={calendarId}
                   onChange={(e) => setCalendarId(e.target.value)}
-                  placeholder="Enter your GHL Calendar ID"
+                  placeholder="Enter your BAS Calendar ID"
                 />
                 <Button onClick={saveCalendarId} variant="outline" size="sm">
                   Save
