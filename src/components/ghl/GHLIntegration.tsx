@@ -243,7 +243,7 @@ const GHLIntegration = () => {
 
       toast({
         title: "Opportunity Created",
-        description: "Successfully created opportunity in GoHighLevel",
+        description: "Successfully created opportunity in Bravo AI Systems",
       });
 
     } catch (error) {
