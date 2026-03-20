@@ -209,7 +209,7 @@ const GHLIntegration = () => {
       console.error('Sync error:', error);
       const generic = step === 'setup'
         ? 'Setup failed. Please refresh and try again.'
-        : 'Sync failed. Double-check your GHL Location ID and that the GHL API key is set.';
+        : 'Sync failed. Double-check your BAS Location ID and that the API key is set.';
       toast({
         title: step === 'setup' ? 'Setup Failed' : 'Sync Failed',
         description: error?.message || generic,
