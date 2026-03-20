@@ -4,6 +4,7 @@ import { CustomerChatWidget } from "@/components/ai/CustomerChatWidget";
 import { AIEstimateGenerator } from "@/components/ai/AIEstimateGenerator";
 import { VoiceAssistant } from "@/components/ai/VoiceAssistant";
 import { AIAnalyticsDashboard } from "@/components/ai/AIAnalyticsDashboard";
+import { AISetupBanner } from "@/components/ai/AISetupBanner";
 import { 
   HelpCircle, 
   FileText, 
@@ -26,6 +27,8 @@ const AIPage = () => {
             </p>
           </div>
         </div>
+
+        <AISetupBanner />
 
         <Tabs defaultValue="guide" className="space-y-4">
           <TabsList className="grid w-full grid-cols-4">

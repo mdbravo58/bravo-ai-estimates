@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { detectAISetupError, markAISetupOk } from './aiSetupUtils';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -63,6 +64,7 @@ interface AnalyticsData {
 export const AIAnalyticsDashboard: React.FC = () => {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [setupError, setSetupError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState('last_30_days');
   const [analysisType, setAnalysisType] = useState('business_insights');
   const { toast } = useToast();
@@ -80,18 +82,26 @@ export const AIAnalyticsDashboard: React.FC = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        const setupErr = detectAISetupError(error, data);
+        if (setupErr) throw new Error(setupErr);
+        throw error;
+      }
 
+      markAISetupOk();
+      setSetupError(null);
       setAnalyticsData(data);
       toast({
         title: 'Success',
         description: 'AI analytics generated successfully!',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating analytics:', error);
+      const setupErr = detectAISetupError(error, null);
+      if (setupErr) setSetupError(setupErr);
       toast({
-        title: 'Error',
-        description: 'Failed to generate analytics. Please try again.',
+        title: setupErr ? 'AI Not Configured' : 'Error',
+        description: setupErr || 'Failed to generate analytics. Please try again.',
         variant: 'destructive'
       });
     } finally {
@@ -131,6 +141,14 @@ export const AIAnalyticsDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {setupError && (
+        <div className="p-4 rounded-lg border border-destructive bg-destructive/10 text-sm space-y-2">
+          <p className="font-medium text-destructive">{setupError}</p>
+          <p className="text-muted-foreground">
+            Add <code className="bg-muted px-1 rounded text-xs">LOVABLE_API_KEY</code> in Supabase Dashboard → Edge Functions → Secrets, then click Generate Analytics again.
+          </p>
+        </div>
+      )}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useOrganization } from "@/hooks/useOrganization";
 import { supabase } from "@/integrations/supabase/client";
 import { ServiceTypesManager } from "@/components/settings/ServiceTypesManager";
+import { AISetupBanner } from "@/components/ai/AISetupBanner";
 import { 
   Settings as SettingsIcon, 
   User, 
@@ -500,6 +501,22 @@ const SettingsPage = () => {
                     <Button variant="outline">Change Plan</Button>
                     <Button variant="outline">Billing History</Button>
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* AI Features Status */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Globe className="h-5 w-5" />
+                    AI Features
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <AISetupBanner compact />
+                  <p className="text-sm text-muted-foreground mt-2">
+                    AI-powered estimates, chat assistant, voice assistant, and analytics.
+                  </p>
                 </CardContent>
               </Card>
 
