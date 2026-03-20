@@ -4,6 +4,7 @@ import { CustomerChatWidget } from "@/components/ai/CustomerChatWidget";
 import { AIEstimateGenerator } from "@/components/ai/AIEstimateGenerator";
 import { VoiceAssistant } from "@/components/ai/VoiceAssistant";
 import { AIAnalyticsDashboard } from "@/components/ai/AIAnalyticsDashboard";
+import { AISetupBanner } from "@/components/ai/AISetupBanner";
 import { 
   HelpCircle, 
   FileText, 
