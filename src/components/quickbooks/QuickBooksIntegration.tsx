@@ -326,7 +326,7 @@ const QuickBooksIntegration = () => {
                 
                 <p className="text-sm text-muted-foreground">
                   Invoices created in Bravo Service Suite are automatically synced to QuickBooks 
-                  when auto-sync is enabled. GHL handles the invoicing, QuickBooks handles the accounting.
+                  when auto-sync is enabled. Bravo AI Systems handles the invoicing, QuickBooks handles the accounting.
                 </p>
                 
                 <Button 

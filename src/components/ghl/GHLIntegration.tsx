@@ -67,7 +67,7 @@ const GHLIntegration = () => {
       
       toast({
         title: "Calendar ID Saved",
-        description: "Your GHL Calendar ID has been saved for scheduling sync.",
+        description: "Your BAS Calendar ID has been saved for scheduling sync.",
       });
     } catch (error: any) {
       toast({
@@ -82,7 +82,7 @@ const GHLIntegration = () => {
     if (!locationId) {
       toast({
         title: "Error",
-        description: "Please enter your GHL Location ID",
+        description: "Please enter your BAS Location ID",
         variant: "destructive",
       });
       return;
@@ -91,7 +91,7 @@ const GHLIntegration = () => {
     if (!tempApiKey) {
       toast({
         title: "Access Token required",
-        description: "Paste your GHL sub-account Access Token (JWT) before testing.",
+        description: "Paste your BAS sub-account Access Token (JWT) before testing.",
         variant: "destructive",
       });
       return;
@@ -157,7 +157,7 @@ const GHLIntegration = () => {
     if (!locationId) {
       toast({
         title: "Error",
-        description: "Please enter your GHL Location ID",
+        description: "Please enter your BAS Location ID",
         variant: "destructive",
       });
       return;
@@ -209,7 +209,7 @@ const GHLIntegration = () => {
       console.error('Sync error:', error);
       const generic = step === 'setup'
         ? 'Setup failed. Please refresh and try again.'
-        : 'Sync failed. Double-check your GHL Location ID and that the GHL API key is set.';
+        : 'Sync failed. Double-check your BAS Location ID and that the API key is set.';
       toast({
         title: step === 'setup' ? 'Setup Failed' : 'Sync Failed',
         description: error?.message || generic,
@@ -243,14 +243,14 @@ const GHLIntegration = () => {
 
       toast({
         title: "Opportunity Created",
-        description: "Successfully created opportunity in GoHighLevel",
+        description: "Successfully created opportunity in Bravo AI Systems",
       });
 
     } catch (error) {
       console.error('Create opportunity error:', error);
       toast({
         title: "Failed to Create Opportunity",
-        description: error.message || "Could not create opportunity in GHL",
+        description: error.message || "Could not create opportunity in BAS",
         variant: "destructive",
       });
     }
@@ -289,7 +289,7 @@ const GHLIntegration = () => {
       console.error('Trigger workflow error:', error);
       toast({
         title: "Failed to Trigger Workflow",
-        description: error.message || "Could not trigger workflow in GHL",
+        description: error.message || "Could not trigger workflow in BAS",
         variant: "destructive",
       });
     }
@@ -305,7 +305,7 @@ const GHLIntegration = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-orange-500" />
-            GoHighLevel Integration
+            Bravo AI Systems Integration
             <Badge 
               variant="outline" 
               className={`ml-2 ${
@@ -322,50 +322,50 @@ const GHLIntegration = () => {
         </CardHeader>
         <CardContent>
           <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
-            <h4 className="font-medium text-blue-800 mb-2">📍 How to Find Your GHL Location ID</h4>
+            <h4 className="font-medium text-blue-800 mb-2">📍 How to Find Your BAS Location ID</h4>
             <div className="text-sm text-blue-700 space-y-2">
-              <p><strong>1.</strong> Log into your GoHighLevel account</p>
+              <p><strong>1.</strong> Log into your Bravo AI Systems account</p>
               <p><strong>2.</strong> Go to Settings → Company → My Info</p>
-              <p><strong>3.</strong> Look for "Location ID" or check the URL: gohighlevel.com/v2/location/<span className="font-mono bg-blue-100 px-1 rounded">YOUR_LOCATION_ID</span></p>
+              <p><strong>3.</strong> Look for "Location ID" in your account settings</p>
               <p><strong>4.</strong> Copy the Location ID and paste it below</p>
             </div>
           </div>
 
           <div className="bg-green-50 border border-green-200 p-4 rounded-lg mb-4">
-            <h4 className="font-medium text-green-800 mb-2">✅ GHL API Connected</h4>
+            <h4 className="font-medium text-green-800 mb-2">✅ BAS API Connected</h4>
             <div className="text-sm text-green-700 space-y-2">
               <p><strong>Webhook URL:</strong> https://kgwruguzjidernenftyb.supabase.co/functions/v1/ghl-webhook</p>
               <p><strong>Organization ID:</strong> {organizationId || 'Loading...'}</p>
-              <p>Configure this webhook in your GHL account to sync contacts automatically.</p>
+              <p>Configure this webhook in your Bravo AI Systems account to sync contacts automatically.</p>
             </div>
           </div>
           
           <p className="text-muted-foreground mb-4">
-            Connect your service business with GoHighLevel's powerful marketing automation, 
+            Connect your service business with Bravo AI Systems' powerful marketing automation, 
             lead management, and communication tools.
           </p>
           
           <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div className="space-y-2">
-              <Label htmlFor="locationId">GHL Location ID</Label>
+              <Label htmlFor="locationId">BAS Location ID</Label>
               <Input
                 id="locationId"
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
-                placeholder="Enter your GHL Location ID"
+                placeholder="Enter your BAS Location ID"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tempApiKey">GHL API Key (Access Token)</Label>
+              <Label htmlFor="tempApiKey">BAS API Key (Access Token)</Label>
               <Input
                 id="tempApiKey"
                 type="password"
                 value={tempApiKey}
                 onChange={(e) => setTempApiKey(e.target.value)}
-                placeholder="Paste your GHL Access Token (JWT)"
+                placeholder="Paste your BAS Access Token (JWT)"
               />
-              <p className="text-xs text-muted-foreground">Use the sub-account Access Token from GHL → Settings → Integrations → Access Tokens.</p>
+              <p className="text-xs text-muted-foreground">Use the sub-account Access Token from BAS → Settings → Integrations → Access Tokens.</p>
             </div>
           </div>
           
@@ -398,14 +398,14 @@ const GHLIntegration = () => {
                   id="calendarId"
                   value={calendarId}
                   onChange={(e) => setCalendarId(e.target.value)}
-                  placeholder="Enter your GHL Calendar ID"
+                  placeholder="Enter your BAS Calendar ID"
                 />
                 <Button onClick={saveCalendarId} variant="outline" size="sm">
                   Save
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Find in GHL → Calendars → Select Calendar → Settings → Calendar ID
+                Find in BAS → Calendars → Select Calendar → Settings → Calendar ID
               </p>
             </div>
           </div>
@@ -430,7 +430,7 @@ const GHLIntegration = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                Sync contacts from your GoHighLevel account to your customer database. 
+                Sync contacts from your Bravo AI Systems account to your customer database. 
                 This will import all contact details including names, emails, phones, and addresses.
               </p>
               
@@ -449,7 +449,7 @@ const GHLIntegration = () => {
                   ) : (
                     <>
                       <Zap className="mr-2 h-4 w-4" />
-                      Test GHL Connection
+                      Test BAS Connection
                     </>
                   )}
                 </Button>
@@ -471,7 +471,7 @@ const GHLIntegration = () => {
                   ) : (
                     <>
                       <Users className="mr-2 h-4 w-4" />
-                      Sync Contacts from GHL
+                      Sync Contacts from BAS
                     </>
                   )}
                 </Button>
@@ -508,7 +508,7 @@ const GHLIntegration = () => {
                       <>
                         <p>Status: HTTP {connectionTest.status}</p>
                         <p>Error: {connectionTest.error}</p>
-                        <p>Key used: {connectionTest.usingTempKey ? 'Access Token from field' : 'Server secret (GHL_API_KEY)'}</p>
+                        <p>Key used: {connectionTest.usingTempKey ? 'Access Token from field' : 'Server secret (BAS API Key)'}</p>
                         <p className="font-medium">{connectionTest.troubleshooting}</p>
                         {connectionTest.details && (
                           <div className="mt-2">
@@ -580,7 +580,7 @@ const GHLIntegration = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                Automatically create opportunities in GoHighLevel when estimates are generated. 
+                Automatically create opportunities in Bravo AI Systems when estimates are generated. 
                 Track deal progress and sync status updates between systems.
               </p>
               
@@ -589,7 +589,7 @@ const GHLIntegration = () => {
                   <div>
                     <p className="font-medium">Auto-Create Opportunities</p>
                     <p className="text-sm text-muted-foreground">
-                      New estimates automatically create GHL opportunities
+                      New estimates automatically create BAS opportunities
                     </p>
                   </div>
                   <Badge variant="secondary">Enabled</Badge>

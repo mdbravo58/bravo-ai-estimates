@@ -73,7 +73,7 @@ const navigationGroups: NavGroup[] = [
   {
     label: "Integrations",
     items: [
-      { name: "GoHighLevel", icon: Zap, href: "/ghl" },
+      { name: "Bravo AI Systems", icon: Zap, href: "/ghl" },
       { name: "QuickBooks", icon: Receipt, href: "/quickbooks" },
     ],
   },

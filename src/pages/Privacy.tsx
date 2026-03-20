@@ -70,7 +70,7 @@ export default function Privacy() {
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-1">
                 <li><strong>Service Providers:</strong> Supabase (hosting), Stripe (payments), Google (AI models), Resend (email)</li>
-                <li><strong>Integrations:</strong> GoHighLevel, QuickBooks (only data you authorize)</li>
+                <li><strong>Integrations:</strong> Bravo AI Systems, QuickBooks (only data you authorize)</li>
                 <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
               </ul>
             </section>

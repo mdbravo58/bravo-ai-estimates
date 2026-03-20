@@ -261,12 +261,12 @@ export const AIEstimateGenerator: React.FC = () => {
       if (data.requiresManualSend) {
         toast({
           title: 'Manual Send Required',
-          description: 'GHL not configured. Copy the portal link to send manually.',
+          description: 'BAS not configured. Copy the portal link to send manually.',
         });
       } else {
         toast({
           title: 'Estimate Sent!',
-          description: 'The estimate has been sent to the customer via GoHighLevel.',
+          description: 'The estimate has been sent to the customer via Bravo AI Systems.',
         });
       }
     } catch (error) {
@@ -567,7 +567,7 @@ export const AIEstimateGenerator: React.FC = () => {
                   ) : (
                     <Send className="h-4 w-4 mr-2" />
                   )}
-                  {estimateSent ? 'Sent to Customer' : 'Send to Customer via GHL'}
+                  {estimateSent ? 'Sent to Customer' : 'Send to Customer via BAS'}
                 </Button>
               )}
               <Button variant="outline" disabled>
