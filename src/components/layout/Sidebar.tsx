@@ -260,13 +260,6 @@ export function Sidebar({ className }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="border-t p-3">
-        <div className={cn("text-xs text-muted-foreground", collapsed && "hidden")}>
-          <p className="font-medium">Professional Plan</p>
-          <p>2 users • 150 estimates/month</p>
-        </div>
-      </div>
     </div>
   );
 }
