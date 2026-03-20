@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useLocation } from 'react-router-dom';
+import { detectAISetupError, markAISetupOk } from './aiSetupUtils';
 import { 
   HelpCircle, 
   X, 
