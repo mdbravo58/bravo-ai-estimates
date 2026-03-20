@@ -352,7 +352,7 @@ const GHLIntegration = () => {
                 id="locationId"
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
-                placeholder="Enter your GHL Location ID"
+                placeholder="Enter your BAS Location ID"
                 required
               />
             </div>
