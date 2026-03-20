@@ -341,7 +341,7 @@ const GHLIntegration = () => {
           </div>
           
           <p className="text-muted-foreground mb-4">
-            Connect your service business with GoHighLevel's powerful marketing automation, 
+            Connect your service business with Bravo AI Systems' powerful marketing automation, 
             lead management, and communication tools.
           </p>
           
