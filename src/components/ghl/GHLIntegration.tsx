@@ -471,7 +471,7 @@ const GHLIntegration = () => {
                   ) : (
                     <>
                       <Users className="mr-2 h-4 w-4" />
-                      Sync Contacts from GHL
+                      Sync Contacts from BAS
                     </>
                   )}
                 </Button>
