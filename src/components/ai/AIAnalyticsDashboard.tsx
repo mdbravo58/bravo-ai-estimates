@@ -64,6 +64,7 @@ interface AnalyticsData {
 export const AIAnalyticsDashboard: React.FC = () => {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [setupError, setSetupError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState('last_30_days');
   const [analysisType, setAnalysisType] = useState('business_insights');
   const { toast } = useToast();
