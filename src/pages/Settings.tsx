@@ -468,7 +468,7 @@ const SettingsPage = () => {
               </Card>
 
               {/* Billing Plan */}
-              <Card>
+              <Card id="billing">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5" />
