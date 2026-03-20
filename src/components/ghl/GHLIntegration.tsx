@@ -289,7 +289,7 @@ const GHLIntegration = () => {
       console.error('Trigger workflow error:', error);
       toast({
         title: "Failed to Trigger Workflow",
-        description: error.message || "Could not trigger workflow in GHL",
+        description: error.message || "Could not trigger workflow in BAS",
         variant: "destructive",
       });
     }
