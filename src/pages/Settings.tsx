@@ -417,7 +417,7 @@ const SettingsPage = () => {
               </Card>
 
               {/* Notification Preferences */}
-              <Card>
+              <Card id="notifications">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Bell className="h-5 w-5" />
