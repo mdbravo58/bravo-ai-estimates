@@ -1,4 +1,4 @@
-export function detectAISetupError(error: any, data: any): string | null {
+export function detectAISetupError(error: any, data: any): { type: 'setup' | 'credits' | 'not_deployed'; message: string } | null {
   const msg = [
     error?.message,
     error?.context?.body?.message,
@@ -6,17 +6,16 @@ export function detectAISetupError(error: any, data: any): string | null {
     typeof error === 'string' ? error : '',
   ]
     .filter(Boolean)
-    .join(' ')
-    .toLowerCase();
+    .join(' ');
 
   if (/api key not configured|api_key.*not|missing.*api.*key|lovable_api_key/i.test(msg)) {
-    return 'The LOVABLE_API_KEY is not configured in your Supabase Edge Function secrets.';
+    return { type: 'setup', message: 'The LOVABLE_API_KEY is not configured in your Supabase Edge Function secrets.' };
   }
   if (/credits exhausted|quota exceeded|rate limit/i.test(msg)) {
-    return 'AI credits have been exhausted or rate-limited. Please check your plan.';
+    return { type: 'credits', message: 'AI credits have been exhausted or rate-limited. Please check your billing plan or wait and try again.' };
   }
   if (/function not found|no such function|404/i.test(msg)) {
-    return 'The AI edge function is not deployed. Please deploy it from the Supabase Dashboard.';
+    return { type: 'not_deployed', message: 'The AI edge function is not deployed. Please deploy it from the Supabase Dashboard.' };
   }
   return null;
 }
@@ -27,10 +26,8 @@ export function markAISetupOk() {
   } catch {}
 }
 
-export function isAISetupCached(): boolean {
+export function clearAISetupCache() {
   try {
-    return sessionStorage.getItem('ai_setup_ok') === 'true';
-  } catch {
-    return false;
-  }
+    sessionStorage.removeItem('ai_setup_ok');
+  } catch {}
 }
