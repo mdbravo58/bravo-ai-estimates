@@ -509,7 +509,31 @@ const SettingsPage = () => {
 
 
               {/* Integrations */}
-              <Card>
+              <Card id="security">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    Security
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">Security settings coming soon.</p>
+                </CardContent>
+              </Card>
+
+              <Card id="appearance">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Palette className="h-5 w-5" />
+                    Appearance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">Appearance settings coming soon.</p>
+                </CardContent>
+              </Card>
+
+              <Card id="integrations">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Globe className="h-5 w-5" />
