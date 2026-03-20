@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useLocation } from 'react-router-dom';
-import { detectAISetupError, markAISetupOk } from './aiSetupUtils';
+import { detectAISetupError, markAISetupOk, clearAISetupCache } from './aiSetupUtils';
 import { 
   HelpCircle, 
   X, 
@@ -105,7 +105,7 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
 
       if (error) {
         const setupErr = detectAISetupError(error, data);
-        if (setupErr) throw new Error(setupErr);
+        if (setupErr) throw new Error(setupErr.message);
         throw error;
       }
 
@@ -122,10 +122,14 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
       console.error('Error sending message:', error);
       const setupErr = detectAISetupError(error, null);
       if (setupErr) {
+        clearAISetupCache();
+        const content = setupErr.type === 'credits'
+          ? `⚠️ **AI credits exhausted.**\n\n${setupErr.message}`
+          : `⚠️ **AI is not configured yet.**\n\n${setupErr.message}\n\nPlease contact your administrator to resolve this.`;
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: `⚠️ **AI is not configured yet.**\n\n${setupErr}\n\nPlease ask your admin to add the LOVABLE_API_KEY in Supabase Dashboard → Edge Functions → Secrets.`,
+          content,
           timestamp: new Date()
         };
         setMessages(prev => [...prev, errorMessage]);

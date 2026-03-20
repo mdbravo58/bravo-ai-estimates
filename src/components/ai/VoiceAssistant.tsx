@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { detectAISetupError, markAISetupOk } from './aiSetupUtils';
+import { detectAISetupError, markAISetupOk, clearAISetupCache } from './aiSetupUtils';
 import { 
   Mic, 
   MicOff, 
@@ -109,7 +109,7 @@ export const VoiceAssistant: React.FC = () => {
 
       if (error) {
         const setupErr = detectAISetupError(error, data);
-        if (setupErr) throw new Error(setupErr);
+        if (setupErr) throw new Error(setupErr.message);
         throw error;
       }
 
@@ -128,9 +128,11 @@ export const VoiceAssistant: React.FC = () => {
     } catch (error: any) {
       console.error('Error processing audio:', error);
       const setupErr = detectAISetupError(error, null);
+      if (setupErr) clearAISetupCache();
+      const title = setupErr?.type === 'credits' ? 'AI Credits Exhausted' : setupErr ? 'AI Not Configured' : 'Error';
       toast({
-        title: setupErr ? 'AI Not Configured' : 'Error',
-        description: setupErr || 'Failed to process voice message. Please try again.',
+        title,
+        description: setupErr?.message || 'Failed to process voice message. Please try again.',
         variant: 'destructive'
       });
     } finally {

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { detectAISetupError, markAISetupOk } from './aiSetupUtils';
+import { detectAISetupError, markAISetupOk, clearAISetupCache } from './aiSetupUtils';
 import { 
   Sparkles, 
   Loader2, 
@@ -101,7 +101,7 @@ export const AIEstimateGenerator: React.FC = () => {
 
       if (error) {
         const setupErr = detectAISetupError(error, data);
-        if (setupErr) throw new Error(setupErr);
+        if (setupErr) throw new Error(setupErr.message);
         throw error;
       }
 
@@ -114,9 +114,11 @@ export const AIEstimateGenerator: React.FC = () => {
     } catch (error: any) {
       console.error('Error generating estimate:', error);
       const setupErr = detectAISetupError(error, null);
+      if (setupErr) clearAISetupCache();
+      const title = setupErr?.type === 'credits' ? 'AI Credits Exhausted' : setupErr ? 'AI Not Configured' : 'Error';
       toast({
-        title: setupErr ? 'AI Not Configured' : 'Error',
-        description: setupErr || 'Failed to generate estimate. Please try again.',
+        title,
+        description: setupErr?.message || 'Failed to generate estimate. Please try again.',
         variant: 'destructive'
       });
     } finally {

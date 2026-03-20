@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { detectAISetupError, markAISetupOk } from './aiSetupUtils';
+import { detectAISetupError, markAISetupOk, clearAISetupCache } from './aiSetupUtils';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -84,7 +84,7 @@ export const AIAnalyticsDashboard: React.FC = () => {
 
       if (error) {
         const setupErr = detectAISetupError(error, data);
-        if (setupErr) throw new Error(setupErr);
+        if (setupErr) throw new Error(setupErr.message);
         throw error;
       }
 
@@ -98,10 +98,14 @@ export const AIAnalyticsDashboard: React.FC = () => {
     } catch (error: any) {
       console.error('Error generating analytics:', error);
       const setupErr = detectAISetupError(error, null);
-      if (setupErr) setSetupError(setupErr);
+      if (setupErr) {
+        clearAISetupCache();
+        setSetupError(setupErr.message);
+      }
+      const title = setupErr?.type === 'credits' ? 'AI Credits Exhausted' : setupErr ? 'AI Not Configured' : 'Error';
       toast({
-        title: setupErr ? 'AI Not Configured' : 'Error',
-        description: setupErr || 'Failed to generate analytics. Please try again.',
+        title,
+        description: setupErr?.message || 'Failed to generate analytics. Please try again.',
         variant: 'destructive'
       });
     } finally {
