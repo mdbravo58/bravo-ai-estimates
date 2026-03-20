@@ -157,7 +157,7 @@ const GHLIntegration = () => {
     if (!locationId) {
       toast({
         title: "Error",
-        description: "Please enter your GHL Location ID",
+        description: "Please enter your BAS Location ID",
         variant: "destructive",
       });
       return;
