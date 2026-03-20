@@ -91,7 +91,7 @@ const GHLIntegration = () => {
     if (!tempApiKey) {
       toast({
         title: "Access Token required",
-        description: "Paste your GHL sub-account Access Token (JWT) before testing.",
+        description: "Paste your BAS sub-account Access Token (JWT) before testing.",
         variant: "destructive",
       });
       return;
