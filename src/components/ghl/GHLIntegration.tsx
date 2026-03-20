@@ -405,7 +405,7 @@ const GHLIntegration = () => {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Find in GHL → Calendars → Select Calendar → Settings → Calendar ID
+                Find in BAS → Calendars → Select Calendar → Settings → Calendar ID
               </p>
             </div>
           </div>
