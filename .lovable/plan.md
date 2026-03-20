@@ -1,38 +1,34 @@
+## Rebrand "GHL / GoHighLevel" → "Bravo AI Systems" across UI
 
+This changes all user-facing text that says "GHL", "GoHighLevel", or "GoHigh Level" to "Bravo AI Systems" or BAS for short . Internal code (database column names, edge function names, env vars) stays unchanged since renaming those would break the integration.
 
-## Make Settings Menu Buttons Scroll to Sections
+### Files to change
 
-**Problem**: 7 of 8 sidebar menu buttons do nothing. All the content sections they represent already exist on the page.
+1. `**src/components/layout/Sidebar.tsx**` (~line 76)
+  - `"GoHighLevel"` → `"Bravo AI Systems"`
+2. `**src/pages/GHL.tsx**` (lines 9-11)
+  - Title: `"GoHighLevel Integration"` → `"Bravo AI Systems Integration"`
+  - Description: replace "GoHighLevel's marketing automation and CRM" → "Bravo AI Systems' marketing automation and CRM"
+3. `**src/components/ghl/GHLIntegration.tsx**`
+  - All user-facing strings: card titles, descriptions, toast messages, labels referencing "GHL" or "GoHighLevel" → "Bravo AI Systems"
+4. `**src/pages/Settings.tsx**` (lines 245-248, 546-552)
+  - Sidebar menu label: `"GoHighLevel Integration"` → `"Bravo AI Systems Integration"`
+  - Integrations card: `"GoHighLevel"` → `"Bravo AI Systems"`
+5. `**src/components/onboarding/OnboardingFlow.tsx**` (lines 43, 394)
+  - Step description and integration card: `"GoHighLevel"` → `"Bravo AI Systems"`
+6. `**src/components/ai/AIEstimateGenerator.tsx**` (lines 264, 269, 570)
+  - Toast messages and button text: `"GHL"` / `"GoHighLevel"` → `"Bravo AI Systems"`
+7. `**src/components/quickbooks/QuickBooksIntegration.tsx**` (line 329)
+  - `"GHL handles the invoicing"` → `"Bravo AI Systems handles the invoicing"`
+8. `**src/pages/Privacy.tsx**` (line 73)
+  - `"GoHighLevel"` → `"Bravo AI Systems"`
+9. `**src/components/scheduling/CreateAppointmentDialog.tsx**`
+  - Any user-facing "GHL" references in labels/messages
 
-**Solution**: Add `id` attributes to each content card and wire each menu button to smooth-scroll to it. Also highlight the active section.
+### What stays unchanged
 
-### File: `src/pages/Settings.tsx`
-
-1. **Add `id` to each content `<Card>`**:
-   - `id="organization"` → Organization Settings card
-   - `id="services"` → ServiceTypesManager card (wrap if needed)
-   - `id="profile"` → User Management card
-   - `id="notifications"` → Notification Preferences card
-   - `id="billing"` → Billing & Plan card
-   - `id="security"` → (no card exists yet — skip or add a placeholder)
-   - `id="appearance"` → (no card exists yet — skip or add a placeholder)
-   - `id="integrations"` → Integrations card
-
-2. **Add state for active section** and a `scrollToSection` helper:
-   ```
-   const [activeSection, setActiveSection] = useState("organization");
-   const scrollToSection = (id: string) => {
-     setActiveSection(id);
-     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-   };
-   ```
-
-3. **Wire each menu button** with `onClick={() => scrollToSection("...")}` and apply an active style (e.g., `variant="secondary"`) when that section is selected.
-
-4. **For Security and Appearance** which have no content cards yet — either remove those menu items or add minimal placeholder cards with "Coming soon" messaging.
-
-### Summary of changes
-- **1 file modified**: `src/pages/Settings.tsx`
-- No new components or dependencies
-- GoHighLevel link stays as-is (already works)
-
+- Edge function names (`ghl-*`) — renaming would break deployments
+- Database columns (`ghl_contact_id`, `ghl_location_id`, etc.) — renaming would require migrations
+- Environment variables (`GHL_API_KEY`, `GHL_WEBHOOK_TOKEN`)
+- Internal variable names and type definitions
+- Route path `/ghl` (functional, not user-visible in a meaningful way — but can rename if desired)
