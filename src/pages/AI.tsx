@@ -28,7 +28,7 @@ const AIPage = () => {
           </div>
         </div>
 
-        <AISetupBanner />
+        
 
         <Tabs defaultValue="guide" className="space-y-4">
           <TabsList className="grid w-full grid-cols-4">
