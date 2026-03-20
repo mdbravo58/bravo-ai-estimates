@@ -40,7 +40,7 @@ const steps: OnboardingStep[] = [
   {
     id: "integrations",
     title: "Connect Your Tools",
-    description: "Integrate with GoHighLevel, QuickBooks, and more",
+    description: "Integrate with Bravo AI Systems, QuickBooks, and more",
     component: IntegrationsStep,
     skippable: true
   },
