@@ -34,6 +34,14 @@ const SettingsPage = () => {
   const { organization, userData, loading, refetch } = useOrganization();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Active section state
+  const [activeSection, setActiveSection] = useState("organization");
+
+  const scrollToSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  
   // Form state
   const [companyName, setCompanyName] = useState("");
   const [companyPhone, setCompanyPhone] = useState("");
@@ -214,34 +222,25 @@ const SettingsPage = () => {
                 </CardHeader>
                 <CardContent>
                   <nav className="space-y-2">
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Building className="h-4 w-4 mr-2" />
-                      Organization
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <User className="h-4 w-4 mr-2" />
-                      Profile
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Bell className="h-4 w-4 mr-2" />
-                      Notifications
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Billing
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Shield className="h-4 w-4 mr-2" />
-                      Security
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Settings2 className="h-4 w-4 mr-2" />
-                      Services
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Palette className="h-4 w-4 mr-2" />
-                      Appearance
-                    </Button>
+                    {[
+                      { id: "organization", icon: Building, label: "Organization" },
+                      { id: "profile", icon: User, label: "Profile" },
+                      { id: "notifications", icon: Bell, label: "Notifications" },
+                      { id: "billing", icon: CreditCard, label: "Billing" },
+                      { id: "security", icon: Shield, label: "Security" },
+                      { id: "services", icon: Settings2, label: "Services" },
+                      { id: "appearance", icon: Palette, label: "Appearance" },
+                    ].map(({ id, icon: Icon, label }) => (
+                      <Button
+                        key={id}
+                        variant={activeSection === id ? "secondary" : "ghost"}
+                        className="w-full justify-start"
+                        onClick={() => scrollToSection(id)}
+                      >
+                        <Icon className="h-4 w-4 mr-2" />
+                        {label}
+                      </Button>
+                    ))}
                     <Button variant="ghost" className="w-full justify-start" asChild>
                       <a href="/ghl">
                         <Globe className="h-4 w-4 mr-2" />
@@ -256,7 +255,7 @@ const SettingsPage = () => {
             {/* Settings Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Organization Settings */}
-              <Card>
+              <Card id="organization">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Building className="h-5 w-5" />
@@ -379,10 +378,12 @@ const SettingsPage = () => {
               </Card>
 
               {/* Service Types Manager */}
-              <ServiceTypesManager />
+              <div id="services">
+                <ServiceTypesManager />
+              </div>
 
               {/* User Management */}
-              <Card>
+              <Card id="profile">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <User className="h-5 w-5" />
@@ -416,7 +417,7 @@ const SettingsPage = () => {
               </Card>
 
               {/* Notification Preferences */}
-              <Card>
+              <Card id="notifications">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Bell className="h-5 w-5" />
@@ -467,7 +468,7 @@ const SettingsPage = () => {
               </Card>
 
               {/* Billing Plan */}
-              <Card>
+              <Card id="billing">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5" />
@@ -508,7 +509,31 @@ const SettingsPage = () => {
 
 
               {/* Integrations */}
-              <Card>
+              <Card id="security">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    Security
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">Security settings coming soon.</p>
+                </CardContent>
+              </Card>
+
+              <Card id="appearance">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Palette className="h-5 w-5" />
+                    Appearance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">Appearance settings coming soon.</p>
+                </CardContent>
+              </Card>
+
+              <Card id="integrations">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Globe className="h-5 w-5" />
