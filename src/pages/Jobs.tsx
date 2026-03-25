@@ -159,7 +159,7 @@ const JobsPage = () => {
         {/* Main Content */}
         <div className="grid grid-cols-1 gap-6">
           {/* Jobs List */}
-          <div className="lg:col-span-2">
+          <div>
             <Card>
               <CardHeader>
                 <CardTitle>Jobs</CardTitle>
