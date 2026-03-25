@@ -113,15 +113,15 @@ const EstimatesPage = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-heading font-bold">Estimates</h1>
-            <p className="text-muted-foreground mt-1">Create and manage customer estimates</p>
+            <h1 className="text-2xl md:text-3xl font-heading font-bold">Estimates</h1>
+            <p className="text-muted-foreground mt-1 text-sm md:text-base">Create and manage customer estimates</p>
           </div>
-          <Button variant="hero" size="lg" asChild>
+          <Button variant="hero" asChild>
             <Link to="/estimates/new">
               <Plus className="h-4 w-4 mr-2" />
-              Create New Estimate
+              New Estimate
             </Link>
           </Button>
         </div>
