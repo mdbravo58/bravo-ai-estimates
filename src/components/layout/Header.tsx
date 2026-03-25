@@ -24,6 +24,7 @@ interface HeaderProps {
     avatar?: string;
   };
   loading?: boolean;
+  mobileNav?: React.ReactNode;
 }
 
 export function Header({ organization, user, loading }: HeaderProps) {
