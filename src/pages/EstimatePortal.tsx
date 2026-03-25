@@ -150,7 +150,19 @@ export default function EstimatePortal() {
 
     setApproving(true);
     try {
-      const { error } = await supabase
+      const portalClient = createClient(
+        import.meta.env.VITE_SUPABASE_URL || 'https://kgwruguzjidernenftyb.supabase.co',
+        import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtnd3J1Z3V6amlkZXJuZW5mdHliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczNzY5NDMsImV4cCI6MjA3Mjk1Mjk0M30.cKKQQ5cCpDg-GdvKzMdP719aqLeZXT8F3HawynB8xjs',
+        {
+          global: {
+            headers: {
+              'x-portal-token': token || '',
+            },
+          },
+        }
+      );
+
+      const { error } = await portalClient
         .from('estimates')
         .update({
           status: 'approved',
