@@ -27,7 +27,7 @@ interface HeaderProps {
   mobileNav?: React.ReactNode;
 }
 
-export function Header({ organization, user, loading }: HeaderProps) {
+export function Header({ organization, user, loading, mobileNav }: HeaderProps) {
   const { signOut, user: authUser } = useAuth();
   const navigate = useNavigate();
   
