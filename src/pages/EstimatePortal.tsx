@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
+import { createClient } from '@supabase/supabase-js';
 import { 
   CheckCircle2, 
   Clock, 
@@ -75,8 +76,21 @@ export default function EstimatePortal() {
 
   const fetchEstimate = async () => {
     try {
+      // Create a portal-specific client that passes the token via header for RLS
+      const portalClient = createClient(
+        import.meta.env.VITE_SUPABASE_URL || 'https://kgwruguzjidernenftyb.supabase.co',
+        import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtnd3J1Z3V6amlkZXJuZW5mdHliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczNzY5NDMsImV4cCI6MjA3Mjk1Mjk0M30.cKKQQ5cCpDg-GdvKzMdP719aqLeZXT8F3HawynB8xjs',
+        {
+          global: {
+            headers: {
+              'x-portal-token': token || '',
+            },
+          },
+        }
+      );
+
       // Fetch estimate by portal token
-      const { data: estimateData, error: estimateError } = await supabase
+      const { data: estimateData, error: estimateError } = await portalClient
         .from('estimates')
         .select('*')
         .eq('portal_token', token)
@@ -88,9 +102,9 @@ export default function EstimatePortal() {
 
       setEstimate(estimateData as Estimate);
 
-      // Mark as viewed if first time
+      // Mark as viewed if first time (use authenticated client for update)
       if (!estimateData.viewed_at) {
-        await supabase
+        await portalClient
           .from('estimates')
           .update({ 
             viewed_at: new Date().toISOString(),
@@ -100,7 +114,7 @@ export default function EstimatePortal() {
       }
 
       // Fetch line items
-      const { data: items } = await supabase
+      const { data: items } = await portalClient
         .from('estimate_line_items')
         .select('*')
         .eq('estimate_id', estimateData.id)
@@ -136,7 +150,19 @@ export default function EstimatePortal() {
 
     setApproving(true);
     try {
-      const { error } = await supabase
+      const portalClient = createClient(
+        import.meta.env.VITE_SUPABASE_URL || 'https://kgwruguzjidernenftyb.supabase.co',
+        import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtnd3J1Z3V6amlkZXJuZW5mdHliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczNzY5NDMsImV4cCI6MjA3Mjk1Mjk0M30.cKKQQ5cCpDg-GdvKzMdP719aqLeZXT8F3HawynB8xjs',
+        {
+          global: {
+            headers: {
+              'x-portal-token': token || '',
+            },
+          },
+        }
+      );
+
+      const { error } = await portalClient
         .from('estimates')
         .update({
           status: 'approved',
