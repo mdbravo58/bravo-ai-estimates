@@ -232,26 +232,26 @@ const EstimatesPage = () => {
                     className="border rounded-lg p-4 hover:shadow-card transition-shadow cursor-pointer"
                     onClick={() => navigate(`/estimates/${estimate.id}`)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold">{estimate.customer_name || 'No Customer'}</h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <h3 className="font-semibold truncate">{estimate.customer_name || 'No Customer'}</h3>
                           <Badge className={getStatusColor(estimate.status)}>
                             {estimate.status || 'draft'}
                           </Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground truncate">
                           {estimate.description || estimate.service_type || 'No description'}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {estimate.estimate_number} • {formatDate(estimate.created_at)}
                         </p>
                       </div>
-                      <div className="text-right">
+                      <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
                         <p className="text-xl font-bold">
                           {estimate.total ? `$${estimate.total.toLocaleString()}` : '$0'}
                         </p>
-                        <div className="flex gap-2 mt-2">
+                        <div className="flex gap-2">
                           <Button 
                             variant="outline" 
                             size="sm"
