@@ -117,10 +117,10 @@ const JobsPage = () => {
     <Layout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-heading font-bold">Job Costing</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl md:text-3xl font-heading font-bold">Job Costing</h1>
+            <p className="text-muted-foreground text-sm md:text-base">
               Track costs, revenue, and margins in real-time
             </p>
           </div>
@@ -131,7 +131,7 @@ const JobsPage = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {statsCards.map((stat) => (
             <Card key={stat.title}>
               <CardContent className="p-6">
@@ -157,9 +157,9 @@ const JobsPage = () => {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {/* Jobs List */}
-          <div className="lg:col-span-2">
+          <div>
             <Card>
               <CardHeader>
                 <CardTitle>Jobs</CardTitle>

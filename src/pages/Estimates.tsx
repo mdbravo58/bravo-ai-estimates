@@ -113,15 +113,15 @@ const EstimatesPage = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-heading font-bold">Estimates</h1>
-            <p className="text-muted-foreground mt-1">Create and manage customer estimates</p>
+            <h1 className="text-2xl md:text-3xl font-heading font-bold">Estimates</h1>
+            <p className="text-muted-foreground mt-1 text-sm md:text-base">Create and manage customer estimates</p>
           </div>
-          <Button variant="hero" size="lg" asChild>
+          <Button variant="hero" asChild>
             <Link to="/estimates/new">
               <Plus className="h-4 w-4 mr-2" />
-              Create New Estimate
+              New Estimate
             </Link>
           </Button>
         </div>
@@ -170,9 +170,9 @@ const EstimatesPage = () => {
         {/* Estimates List */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <CardTitle>All Estimates</CardTitle>
-              <div className="relative w-64">
+              <div className="relative w-full sm:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search estimates..."
@@ -232,26 +232,26 @@ const EstimatesPage = () => {
                     className="border rounded-lg p-4 hover:shadow-card transition-shadow cursor-pointer"
                     onClick={() => navigate(`/estimates/${estimate.id}`)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold">{estimate.customer_name || 'No Customer'}</h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <h3 className="font-semibold truncate">{estimate.customer_name || 'No Customer'}</h3>
                           <Badge className={getStatusColor(estimate.status)}>
                             {estimate.status || 'draft'}
                           </Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground truncate">
                           {estimate.description || estimate.service_type || 'No description'}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {estimate.estimate_number} • {formatDate(estimate.created_at)}
                         </p>
                       </div>
-                      <div className="text-right">
+                      <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
                         <p className="text-xl font-bold">
                           {estimate.total ? `$${estimate.total.toLocaleString()}` : '$0'}
                         </p>
-                        <div className="flex gap-2 mt-2">
+                        <div className="flex gap-2">
                           <Button 
                             variant="outline" 
                             size="sm"

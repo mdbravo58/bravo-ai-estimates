@@ -169,25 +169,25 @@ const Index = () => {
     <Layout>
       <div className="space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-heading font-bold text-foreground">
+            <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
               Dashboard
             </h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-muted-foreground mt-1 text-sm md:text-base">
               Welcome back! Here's what's happening with your estimates.
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button variant="hero" size="lg" onClick={() => navigate("/estimates/new")}>
+          <div className="flex flex-wrap gap-2 md:gap-3">
+            <Button variant="hero" size="default" onClick={() => navigate("/estimates/new")}>
               <Plus className="h-4 w-4 mr-2" />
               New Estimate
             </Button>
-            <Button variant="outline" size="lg" onClick={() => navigate("/jobs")}>
+            <Button variant="outline" size="default" onClick={() => navigate("/jobs")}>
               <Briefcase className="h-4 w-4 mr-2" />
               Job Costing
             </Button>
-            <Button variant="outline" size="lg" onClick={() => navigate("/mobile")}>
+            <Button variant="outline" size="default" onClick={() => navigate("/mobile")}>
               <Smartphone className="h-4 w-4 mr-2" />
               Mobile
             </Button>

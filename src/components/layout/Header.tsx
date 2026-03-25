@@ -24,9 +24,10 @@ interface HeaderProps {
     avatar?: string;
   };
   loading?: boolean;
+  mobileNav?: React.ReactNode;
 }
 
-export function Header({ organization, user, loading }: HeaderProps) {
+export function Header({ organization, user, loading, mobileNav }: HeaderProps) {
   const { signOut, user: authUser } = useAuth();
   const navigate = useNavigate();
   
@@ -37,9 +38,10 @@ export function Header({ organization, user, loading }: HeaderProps) {
 
   return (
     <header className="border-b bg-card shadow-card">
-      <div className="flex h-16 items-center justify-between px-6">
-        {/* Logo and Organization */}
-        <div className="flex items-center space-x-4">
+      <div className="flex h-14 md:h-16 items-center justify-between px-3 md:px-6">
+        {/* Mobile nav + Logo */}
+        <div className="flex items-center space-x-2 md:space-x-4">
+          {mobileNav}
           <div className="flex items-center space-x-3">
             {loading ? (
               <>
