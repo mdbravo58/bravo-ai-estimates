@@ -32,8 +32,8 @@ export default function Pricing() {
       price: "$497",
       description: "Most popular for growing HVAC companies",
       features: [
-        "1,000 AI chat conversations/month",
-        "200 AI voice calls/month",
+        "1,000 smart chat conversations/month",
+        "200 voice calls/month",
         "200 automated reports/month",
         "Advanced job costing & budgets",
         "Team management (unlimited users)",
