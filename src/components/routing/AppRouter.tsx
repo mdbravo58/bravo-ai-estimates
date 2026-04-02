@@ -34,7 +34,7 @@ import GPSTracking from "@/pages/GPSTracking";
 import RequestQuote from "@/pages/RequestQuote";
 import Leads from "@/pages/Leads";
 import ResetPassword from "@/pages/ResetPassword";
-import Dispatch from "@/pages/Dispatch";
+
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const AppRouter = () => {
