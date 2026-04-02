@@ -109,7 +109,7 @@ export const AIEstimateGenerator: React.FC = () => {
       setGeneratedEstimate(data);
       toast({
         title: 'Success',
-        description: 'AI estimate generated successfully!',
+        description: 'Estimate generated successfully!',
       });
     } catch (error: any) {
       console.error('Error generating estimate:', error);
