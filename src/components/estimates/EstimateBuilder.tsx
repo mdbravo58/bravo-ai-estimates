@@ -682,6 +682,37 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
             </CardContent>
           </Card>
 
+          {/* Smart Actions — outcome-based buttons backed by AI logic */}
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle>Smart Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button variant="outline" className="w-full justify-start" onClick={generateAISuggestions} disabled={isGeneratingAI}>
+                <Sparkles className="h-4 w-4 mr-2" />
+                Explain Estimate
+              </Button>
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+                // TODO: Wire to AI scope-writing handler
+                console.log("Write Scope clicked — stub handler");
+              }}>
+                <FileText className="h-4 w-4 mr-2" />
+                Write Scope
+              </Button>
+              <Button variant="outline" className="w-full justify-start" onClick={generateAISuggestions} disabled={isGeneratingAI}>
+                <Calculator className="h-4 w-4 mr-2" />
+                Suggest Price
+              </Button>
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+                // TODO: Wire to AI customer summary handler
+                console.log("Customer Summary clicked — stub handler");
+              }}>
+                <FileText className="h-4 w-4 mr-2" />
+                Customer Summary
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Quick Actions */}
           <Card className="shadow-card">
             <CardHeader>
