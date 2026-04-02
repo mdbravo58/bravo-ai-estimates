@@ -407,7 +407,7 @@ export const AIEstimateGenerator: React.FC = () => {
               ) : (
                 <Sparkles className="h-4 w-4 mr-2" />
               )}
-              Generate AI Estimate
+              Suggest Price
             </Button>
             <Button variant="outline" onClick={resetForm}>
               Reset
