@@ -34,8 +34,8 @@ export default function Subscribe() {
       name: "Professional",
       price: 497,
       features: [
-        "1,000 AI chat conversations/month",
-        "200 AI voice calls/month",
+        "1,000 smart chat conversations/month",
+        "200 voice calls/month",
         "200 automated reports/month",
         "Advanced job costing",
         "Unlimited team members",
