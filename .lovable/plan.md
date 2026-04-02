@@ -1,34 +1,27 @@
-## Rebrand "GHL / GoHighLevel" → "Bravo AI Systems" across UI
 
-This changes all user-facing text that says "GHL", "GoHighLevel", or "GoHigh Level" to "Bravo AI Systems" or BAS for short . Internal code (database column names, edge function names, env vars) stays unchanged since renaming those would break the integration.
 
-### Files to change
+## Add Dispatch Board Page
 
-1. `**src/components/layout/Sidebar.tsx**` (~line 76)
-  - `"GoHighLevel"` → `"Bravo AI Systems"`
-2. `**src/pages/GHL.tsx**` (lines 9-11)
-  - Title: `"GoHighLevel Integration"` → `"Bravo AI Systems Integration"`
-  - Description: replace "GoHighLevel's marketing automation and CRM" → "Bravo AI Systems' marketing automation and CRM"
-3. `**src/components/ghl/GHLIntegration.tsx**`
-  - All user-facing strings: card titles, descriptions, toast messages, labels referencing "GHL" or "GoHighLevel" → "Bravo AI Systems"
-4. `**src/pages/Settings.tsx**` (lines 245-248, 546-552)
-  - Sidebar menu label: `"GoHighLevel Integration"` → `"Bravo AI Systems Integration"`
-  - Integrations card: `"GoHighLevel"` → `"Bravo AI Systems"`
-5. `**src/components/onboarding/OnboardingFlow.tsx**` (lines 43, 394)
-  - Step description and integration card: `"GoHighLevel"` → `"Bravo AI Systems"`
-6. `**src/components/ai/AIEstimateGenerator.tsx**` (lines 264, 269, 570)
-  - Toast messages and button text: `"GHL"` / `"GoHighLevel"` → `"Bravo AI Systems"`
-7. `**src/components/quickbooks/QuickBooksIntegration.tsx**` (line 329)
-  - `"GHL handles the invoicing"` → `"Bravo AI Systems handles the invoicing"`
-8. `**src/pages/Privacy.tsx**` (line 73)
-  - `"GoHighLevel"` → `"Bravo AI Systems"`
-9. `**src/components/scheduling/CreateAppointmentDialog.tsx**`
-  - Any user-facing "GHL" references in labels/messages
+The user provided a complete `DispatchBoard` component. This needs to be wired into the app as a new page with routing and sidebar navigation.
 
-### What stays unchanged
+### Changes
 
-- Edge function names (`ghl-*`) — renaming would break deployments
-- Database columns (`ghl_contact_id`, `ghl_location_id`, etc.) — renaming would require migrations
-- Environment variables (`GHL_API_KEY`, `GHL_WEBHOOK_TOKEN`)
-- Internal variable names and type definitions
-- Route path `/ghl` (functional, not user-visible in a meaningful way — but can rename if desired)
+1. **`src/components/dispatch/DispatchBoard.tsx`** — Create this file with the user's provided component code. The JSX in the pasted code has been stripped of tags (likely a rendering issue), so the component will need its JSX properly reconstructed with the correct HTML/React elements (divs, spans, etc.) wrapping the layout. The component features:
+   - Kanban-style board with 4 columns: Unassigned, Scheduled, In Progress, Completed
+   - Drag-and-drop to assign technicians or move jobs between statuses
+   - Date picker, search, refresh
+   - Technician load sidebar showing job counts per tech
+   - Call customer, Start, and Complete action buttons on each card
+
+2. **`src/pages/Dispatch.tsx`** — Create a thin page wrapper that renders `<DispatchBoard />` inside the app `Layout`.
+
+3. **`src/components/routing/AppRouter.tsx`** — Add a protected route at `/dispatch`.
+
+4. **`src/components/layout/Sidebar.tsx`** — Add "Dispatch" to the Operations nav group (after Scheduling), using the `Truck` or `LayoutGrid` icon from lucide-react.
+
+5. **`src/components/layout/MobileSidebar.tsx`** — Add matching "Dispatch" entry to the mobile nav.
+
+### Notes
+- The component queries `appointments` and `users` tables which already exist with proper RLS policies — no database changes needed.
+- The drag-and-drop uses native HTML5 drag events (no new dependencies).
+
