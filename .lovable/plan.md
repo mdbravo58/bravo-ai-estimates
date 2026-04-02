@@ -1,27 +1,24 @@
 
 
-## Add Dispatch Board Page
+## Replace Scheduling Page with Dispatch Board
 
-The user provided a complete `DispatchBoard` component. This needs to be wired into the app as a new page with routing and sidebar navigation.
+**What**: Replace the current `src/pages/Scheduling.tsx` content with a simple wrapper that renders the `DispatchBoard` component, matching the code the user provided.
 
 ### Changes
 
-1. **`src/components/dispatch/DispatchBoard.tsx`** — Create this file with the user's provided component code. The JSX in the pasted code has been stripped of tags (likely a rendering issue), so the component will need its JSX properly reconstructed with the correct HTML/React elements (divs, spans, etc.) wrapping the layout. The component features:
-   - Kanban-style board with 4 columns: Unassigned, Scheduled, In Progress, Completed
-   - Drag-and-drop to assign technicians or move jobs between statuses
-   - Date picker, search, refresh
-   - Technician load sidebar showing job counts per tech
-   - Call customer, Start, and Complete action buttons on each card
+**`src/pages/Scheduling.tsx`** — Replace the entire file with:
+```tsx
+import { Layout } from "@/components/layout/Layout";
+import { DispatchBoard } from "@/components/dispatch/DispatchBoard";
 
-2. **`src/pages/Dispatch.tsx`** — Create a thin page wrapper that renders `<DispatchBoard />` inside the app `Layout`.
+export default function SchedulingPage() {
+  return (
+    <Layout>
+      <DispatchBoard />
+    </Layout>
+  );
+}
+```
 
-3. **`src/components/routing/AppRouter.tsx`** — Add a protected route at `/dispatch`.
-
-4. **`src/components/layout/Sidebar.tsx`** — Add "Dispatch" to the Operations nav group (after Scheduling), using the `Truck` or `LayoutGrid` icon from lucide-react.
-
-5. **`src/components/layout/MobileSidebar.tsx`** — Add matching "Dispatch" entry to the mobile nav.
-
-### Notes
-- The component queries `appointments` and `users` tables which already exist with proper RLS policies — no database changes needed.
-- The drag-and-drop uses native HTML5 drag events (no new dependencies).
+This removes the separate calendar/appointment UI and unifies Scheduling with the Dispatch Board view. One file changed, no new dependencies.
 
