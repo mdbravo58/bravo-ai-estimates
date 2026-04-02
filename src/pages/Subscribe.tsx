@@ -46,7 +46,7 @@ export default function Subscribe() {
       name: "Enterprise",
       price: 997,
       features: [
-        "Unlimited AI conversations",
+        "Unlimited smart conversations",
         "Unlimited voice calls",
         "Dedicated account manager",
         "Custom AI training",
