@@ -257,7 +257,7 @@ export const VoiceAssistant: React.FC = () => {
           </div>
 
           <div className="text-sm text-muted-foreground text-center">
-            <p>AI Voice Assistant can help with:</p>
+            <p>Voice Assistant can help with:</p>
             <ul className="mt-2 space-y-1">
               <li>• Schedule service appointments</li>
               <li>• Provide service estimates</li>
