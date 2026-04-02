@@ -230,6 +230,14 @@ export const AppRouter = () => {
           </ProtectedRoute>
         } 
       />
+      <Route 
+        path="/dispatch" 
+        element={
+          <ProtectedRoute>
+            <Dispatch />
+          </ProtectedRoute>
+        } 
+      />
       <Route path="/request-quote" element={<RequestQuote />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route 
