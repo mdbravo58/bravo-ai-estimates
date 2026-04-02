@@ -27,6 +27,7 @@ import {
   MapPin,
   Receipt,
   DollarSign,
+  Truck,
   LucideIcon,
 } from "lucide-react";
 
