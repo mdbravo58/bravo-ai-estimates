@@ -22,7 +22,7 @@ export default function Subscribe() {
       name: "Starter",
       price: 297,
       features: [
-        "500 AI chat conversations/month",
+        "500 smart chat conversations/month",
         "100 automated reports/month",
         "Job management & scheduling",
         "Customer portal",
