@@ -20,7 +20,7 @@ export default function Pricing() {
         "Email support",
       ],
       notIncluded: [
-        "AI voice assistant",
+        "Voice assistant",
         "Advanced analytics",
         "Priority support",
       ],
