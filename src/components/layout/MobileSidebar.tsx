@@ -22,6 +22,7 @@ import {
   Receipt,
   DollarSign,
   Menu,
+  Truck,
   LucideIcon,
 } from "lucide-react";
 
