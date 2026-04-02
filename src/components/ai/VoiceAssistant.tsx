@@ -285,7 +285,7 @@ export const VoiceAssistant: React.FC = () => {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-2">AI Response:</h4>
+              <h4 className="font-semibold mb-2">Response:</h4>
               <p className="bg-blue-50 p-3 rounded-lg text-sm">
                 {lastResponse.aiResponse}
               </p>
