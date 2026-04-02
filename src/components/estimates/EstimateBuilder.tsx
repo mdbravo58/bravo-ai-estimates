@@ -640,6 +640,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
               </div>
               
               <div className="mt-6 space-y-3">
+                {/* User-facing label intentionally avoids "AI" to reduce learning curve */}
                 <Button 
                   variant="premium" 
                   className="w-full" 
@@ -655,7 +656,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
                   ) : (
                     <>
                       <Sparkles className="h-4 w-4" />
-                      Generate AI Suggestions
+                      Suggest Line Items
                     </>
                   )}
                 </Button>
