@@ -22,7 +22,7 @@ import {
   Receipt,
   DollarSign,
   Menu,
-  Truck,
+  
   LucideIcon,
 } from "lucide-react";
 
@@ -52,7 +52,6 @@ const navigationGroups: NavGroup[] = [
     label: "Operations",
     items: [
       { name: "Scheduling", icon: Calendar, href: "/scheduling" },
-      { name: "Dispatch", icon: Truck, href: "/dispatch" },
       { name: "GPS Tracking", icon: MapPin, href: "/gps-tracking" },
       { name: "Team", icon: UserCog, href: "/team" },
     ],
