@@ -123,7 +123,7 @@ export const VoiceAssistant: React.FC = () => {
 
       toast({
         title: 'Voice Processed',
-        description: 'AI assistant has responded to your message.',
+        description: 'Your message has been processed.',
       });
     } catch (error: any) {
       console.error('Error processing audio:', error);
