@@ -123,7 +123,7 @@ export const VoiceAssistant: React.FC = () => {
 
       toast({
         title: 'Voice Processed',
-        description: 'AI assistant has responded to your message.',
+        description: 'Your message has been processed.',
       });
     } catch (error: any) {
       console.error('Error processing audio:', error);
@@ -184,9 +184,10 @@ export const VoiceAssistant: React.FC = () => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
+          {/* User-facing label intentionally avoids "AI" to reduce learning curve */}
           <CardTitle className="flex items-center gap-2">
             <Phone className="h-5 w-5 text-primary" />
-            AI Voice Assistant
+            Voice Assistant
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -256,7 +257,7 @@ export const VoiceAssistant: React.FC = () => {
           </div>
 
           <div className="text-sm text-muted-foreground text-center">
-            <p>AI Voice Assistant can help with:</p>
+            <p>Voice Assistant can help with:</p>
             <ul className="mt-2 space-y-1">
               <li>• Schedule service appointments</li>
               <li>• Provide service estimates</li>
@@ -284,7 +285,7 @@ export const VoiceAssistant: React.FC = () => {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-2">AI Response:</h4>
+              <h4 className="font-semibold mb-2">Response:</h4>
               <p className="bg-blue-50 p-3 rounded-lg text-sm">
                 {lastResponse.aiResponse}
               </p>
@@ -295,7 +296,7 @@ export const VoiceAssistant: React.FC = () => {
                 Create Appointment
               </Button>
               <Button variant="outline" size="sm">
-                Generate Estimate
+                Suggest Price
               </Button>
               <Button variant="outline" size="sm">
                 Emergency Dispatch

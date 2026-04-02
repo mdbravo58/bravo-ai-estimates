@@ -19,7 +19,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AppRouter />
-            {/* Global AI Assistant - Available on every page */}
+            {/* Global help widget - Available on every page */}
             <CustomerChatWidget />
           </BrowserRouter>
         </TooltipProvider>

@@ -110,7 +110,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
     if (!projectInfo.description.trim()) {
       toast({
         title: "Description Required",
-        description: "Please enter a project description to generate AI suggestions.",
+        description: "Please enter a project description to generate suggestions.",
         variant: "destructive",
       });
       return;
@@ -148,8 +148,8 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
         setItems(prev => [...prev, ...newItems]);
 
         toast({
-          title: "AI Suggestions Generated",
-          description: `Added ${newItems.length} line items from AI analysis.`,
+          title: "Suggestions Generated",
+          description: `Added ${newItems.length} line items based on your description.`,
         });
       } else {
         throw new Error('Invalid response format from AI');
@@ -158,7 +158,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
       console.error('AI generation error:', error);
       toast({
         title: "Generation Failed",
-        description: error.message || "Failed to generate AI suggestions. Please try again.",
+        description: error.message || "Failed to generate suggestions. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -640,6 +640,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
               </div>
               
               <div className="mt-6 space-y-3">
+                {/* User-facing label intentionally avoids "AI" to reduce learning curve */}
                 <Button 
                   variant="premium" 
                   className="w-full" 
@@ -655,7 +656,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
                   ) : (
                     <>
                       <Sparkles className="h-4 w-4" />
-                      Generate AI Suggestions
+                      Suggest Line Items
                     </>
                   )}
                 </Button>
@@ -678,6 +679,37 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
                   )}
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Smart Actions — outcome-based buttons backed by AI logic */}
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle>Smart Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button variant="outline" className="w-full justify-start" onClick={generateAISuggestions} disabled={isGeneratingAI}>
+                <Sparkles className="h-4 w-4 mr-2" />
+                Explain Estimate
+              </Button>
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+                // TODO: Wire to AI scope-writing handler
+                console.log("Write Scope clicked — stub handler");
+              }}>
+                <FileText className="h-4 w-4 mr-2" />
+                Write Scope
+              </Button>
+              <Button variant="outline" className="w-full justify-start" onClick={generateAISuggestions} disabled={isGeneratingAI}>
+                <Calculator className="h-4 w-4 mr-2" />
+                Suggest Price
+              </Button>
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+                // TODO: Wire to AI customer summary handler
+                console.log("Customer Summary clicked — stub handler");
+              }}>
+                <FileText className="h-4 w-4 mr-2" />
+                Customer Summary
+              </Button>
             </CardContent>
           </Card>
 

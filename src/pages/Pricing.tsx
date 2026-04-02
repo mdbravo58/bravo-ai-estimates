@@ -12,7 +12,7 @@ export default function Pricing() {
       price: "$297",
       description: "Perfect for small HVAC businesses getting started",
       features: [
-        "500 AI chat conversations/month",
+        "500 smart chat conversations/month",
         "100 automated reports/month",
         "Job management & scheduling",
         "Customer portal",
@@ -20,7 +20,7 @@ export default function Pricing() {
         "Email support",
       ],
       notIncluded: [
-        "AI voice assistant",
+        "Voice assistant",
         "Advanced analytics",
         "Priority support",
       ],
@@ -32,8 +32,8 @@ export default function Pricing() {
       price: "$497",
       description: "Most popular for growing HVAC companies",
       features: [
-        "1,000 AI chat conversations/month",
-        "200 AI voice calls/month",
+        "1,000 smart chat conversations/month",
+        "200 voice calls/month",
         "200 automated reports/month",
         "Advanced job costing & budgets",
         "Team management (unlimited users)",
@@ -51,11 +51,11 @@ export default function Pricing() {
       price: "$997",
       description: "For established HVAC businesses scaling fast",
       features: [
-        "Unlimited AI conversations",
+        "Unlimited smart conversations",
         "Unlimited voice calls",
         "Unlimited reports",
         "Dedicated account manager",
-        "Custom AI training on your data",
+        "Custom training on your data",
         "White-label options",
         "API access",
         "24/7 priority support",

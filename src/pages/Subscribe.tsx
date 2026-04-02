@@ -22,7 +22,7 @@ export default function Subscribe() {
       name: "Starter",
       price: 297,
       features: [
-        "500 AI chat conversations/month",
+        "500 smart chat conversations/month",
         "100 automated reports/month",
         "Job management & scheduling",
         "Customer portal",
@@ -34,8 +34,8 @@ export default function Subscribe() {
       name: "Professional",
       price: 497,
       features: [
-        "1,000 AI chat conversations/month",
-        "200 AI voice calls/month",
+        "1,000 smart chat conversations/month",
+        "200 voice calls/month",
         "200 automated reports/month",
         "Advanced job costing",
         "Unlimited team members",
@@ -46,10 +46,10 @@ export default function Subscribe() {
       name: "Enterprise",
       price: 997,
       features: [
-        "Unlimited AI conversations",
+        "Unlimited smart conversations",
         "Unlimited voice calls",
         "Dedicated account manager",
-        "Custom AI training",
+        "Custom training",
         "API access",
         "24/7 support",
       ],

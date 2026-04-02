@@ -109,7 +109,7 @@ export const AIEstimateGenerator: React.FC = () => {
       setGeneratedEstimate(data);
       toast({
         title: 'Success',
-        description: 'AI estimate generated successfully!',
+        description: 'Estimate generated successfully!',
       });
     } catch (error: any) {
       console.error('Error generating estimate:', error);
@@ -309,9 +309,10 @@ export const AIEstimateGenerator: React.FC = () => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
+          {/* User-facing label intentionally avoids "AI" to reduce learning curve */}
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            AI Estimate Generator
+            Estimate Builder
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -406,7 +407,7 @@ export const AIEstimateGenerator: React.FC = () => {
               ) : (
                 <Sparkles className="h-4 w-4 mr-2" />
               )}
-              Generate AI Estimate
+              Suggest Price
             </Button>
             <Button variant="outline" onClick={resetForm}>
               Reset

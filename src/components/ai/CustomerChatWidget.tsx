@@ -175,9 +175,10 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
     <div className="fixed bottom-6 right-6 z-50">
       <Card className="w-96 h-[520px] shadow-2xl border">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-blue-600 text-white rounded-t-lg">
+          {/* User-facing label intentionally avoids "AI" to reduce learning curve */}
           <CardTitle className="text-lg flex items-center gap-2">
             <Lightbulb className="h-5 w-5" />
-            Software Help Guide
+            Message Assistant
           </CardTitle>
           <Button
             variant="ghost"

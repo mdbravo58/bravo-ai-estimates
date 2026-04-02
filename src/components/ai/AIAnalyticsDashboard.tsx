@@ -294,7 +294,7 @@ export const AIAnalyticsDashboard: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lightbulb className="h-5 w-5" />
-                  AI Insights & Findings
+                  Business Insights & Findings
                 </CardTitle>
               </CardHeader>
               <CardContent>

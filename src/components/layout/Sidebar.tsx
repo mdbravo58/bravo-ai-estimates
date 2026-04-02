@@ -74,15 +74,16 @@ const navigationGroups: NavGroup[] = [
   {
     label: "Integrations",
     items: [
-      { name: "Bravo AI Systems", icon: Zap, href: "/ghl" },
+      { name: "GoHighLevel", icon: Zap, href: "/ghl" },
       { name: "QuickBooks", icon: Receipt, href: "/quickbooks" },
     ],
   },
   {
-    label: "AI Tools",
+    // User-facing label intentionally avoids "AI" to reduce learning curve
+    label: "Smart Tools",
     items: [
-      { name: "AI Assistant", icon: Brain, href: "/ai" },
-      { name: "AI Usage", icon: Activity, href: "/ai-usage" },
+      { name: "Smart Assistant", icon: Brain, href: "/ai" },
+      { name: "Usage", icon: Activity, href: "/ai-usage" },
     ],
   },
 ];
