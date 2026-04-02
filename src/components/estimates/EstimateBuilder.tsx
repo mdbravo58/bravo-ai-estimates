@@ -148,8 +148,8 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
         setItems(prev => [...prev, ...newItems]);
 
         toast({
-          title: "AI Suggestions Generated",
-          description: `Added ${newItems.length} line items from AI analysis.`,
+          title: "Suggestions Generated",
+          description: `Added ${newItems.length} line items based on your description.`,
         });
       } else {
         throw new Error('Invalid response format from AI');
