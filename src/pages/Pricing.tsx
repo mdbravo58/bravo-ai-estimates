@@ -12,7 +12,7 @@ export default function Pricing() {
       price: "$297",
       description: "Perfect for small HVAC businesses getting started",
       features: [
-        "500 AI chat conversations/month",
+        "500 smart chat conversations/month",
         "100 automated reports/month",
         "Job management & scheduling",
         "Customer portal",
