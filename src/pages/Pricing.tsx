@@ -55,7 +55,7 @@ export default function Pricing() {
         "Unlimited voice calls",
         "Unlimited reports",
         "Dedicated account manager",
-        "Custom AI training on your data",
+        "Custom training on your data",
         "White-label options",
         "API access",
         "24/7 priority support",

@@ -49,7 +49,7 @@ export default function Subscribe() {
         "Unlimited smart conversations",
         "Unlimited voice calls",
         "Dedicated account manager",
-        "Custom AI training",
+        "Custom training",
         "API access",
         "24/7 support",
       ],
