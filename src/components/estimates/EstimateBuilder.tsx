@@ -110,7 +110,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
     if (!projectInfo.description.trim()) {
       toast({
         title: "Description Required",
-        description: "Please enter a project description to generate AI suggestions.",
+        description: "Please enter a project description to generate suggestions.",
         variant: "destructive",
       });
       return;

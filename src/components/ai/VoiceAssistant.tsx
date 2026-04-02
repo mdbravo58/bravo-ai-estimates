@@ -296,7 +296,7 @@ export const VoiceAssistant: React.FC = () => {
                 Create Appointment
               </Button>
               <Button variant="outline" size="sm">
-                Generate Estimate
+                Suggest Price
               </Button>
               <Button variant="outline" size="sm">
                 Emergency Dispatch

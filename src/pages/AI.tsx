@@ -10,25 +10,24 @@ import {
   FileText, 
   Mic, 
   BarChart3,
-  Brain,
+  Lightbulb,
   BookOpen
 } from "lucide-react";
 
+// User-facing label intentionally avoids "AI" to reduce learning curve
 const AIPage = () => {
   return (
     <Layout>
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <Brain className="h-8 w-8 text-primary" />
+          <Lightbulb className="h-8 w-8 text-primary" />
           <div>
-            <h1 className="text-3xl font-bold">AI Assistant Suite</h1>
+            <h1 className="text-3xl font-bold">Smart Assistant</h1>
             <p className="text-muted-foreground">
-              Powerful AI tools to automate and enhance your business operations
+              Ask for help with estimates, customer messages, and job summaries
             </p>
           </div>
         </div>
-
-        
 
         <Tabs defaultValue="guide" className="space-y-4">
           <TabsList className="grid w-full grid-cols-4">
@@ -38,7 +37,7 @@ const AIPage = () => {
             </TabsTrigger>
             <TabsTrigger value="estimates" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              Estimate AI
+              Estimate Help
             </TabsTrigger>
             <TabsTrigger value="voice" className="flex items-center gap-2">
               <Mic className="h-4 w-4" />
@@ -46,7 +45,7 @@ const AIPage = () => {
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
-              AI Analytics
+              Business Insights
             </TabsTrigger>
           </TabsList>
 
@@ -55,13 +54,13 @@ const AIPage = () => {
               <div>
                 <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                   <HelpCircle className="h-6 w-6 text-primary" />
-                  AI Software Guide
+                  Software Guide
                 </h2>
                 <div className="space-y-4">
                   <div className="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-lg">
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
                       <BookOpen className="h-4 w-4" />
-                      In-App Software Help
+                      In-App Help
                     </h3>
                     <ul className="text-sm space-y-1 text-muted-foreground">
                       <li>• Navigate the dashboard and features</li>
@@ -92,12 +91,13 @@ const AIPage = () => {
             <div>
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 <FileText className="h-6 w-6 text-primary" />
-                AI Estimate Generator
+                Estimate Help
               </h2>
               <p className="text-muted-foreground mb-6">
-                Generate professional estimates automatically from customer descriptions using AI.
-                The AI analyzes the request and provides detailed pricing based on your standard rates.
+                Generate professional estimates automatically from customer descriptions.
+                Describe the job and get detailed pricing based on your standard rates.
               </p>
+              {/* User-facing label intentionally avoids "AI" to reduce learning curve */}
               <AIEstimateGenerator />
             </div>
           </TabsContent>
@@ -106,10 +106,10 @@ const AIPage = () => {
             <div>
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 <Mic className="h-6 w-6 text-primary" />
-                AI Voice Assistant
+                Voice Assistant
               </h2>
               <p className="text-muted-foreground mb-6">
-                Handle customer calls with AI voice processing. Transcribe speech, process requests,
+                Handle customer calls with voice processing. Transcribe speech, process requests,
                 and respond with natural voice synthesis.
               </p>
               <VoiceAssistant />
@@ -120,15 +120,16 @@ const AIPage = () => {
             <div>
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 <BarChart3 className="h-6 w-6 text-primary" />
-                AI Business Analytics
+                Business Insights
               </h2>
               <p className="text-muted-foreground mb-6">
-                Get AI-powered insights into your business performance. Analyze trends, identify opportunities,
+                Get insights into your business performance. Analyze trends, identify opportunities,
                 and receive actionable recommendations for growth.
               </p>
+              {/* User-facing label intentionally avoids "AI" to reduce learning curve */}
               <AIAnalyticsDashboard />
             </div>
-        </TabsContent>
+          </TabsContent>
         </Tabs>
       </div>
     </Layout>
