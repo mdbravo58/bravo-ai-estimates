@@ -51,7 +51,7 @@ export default function Pricing() {
       price: "$997",
       description: "For established HVAC businesses scaling fast",
       features: [
-        "Unlimited AI conversations",
+        "Unlimited smart conversations",
         "Unlimited voice calls",
         "Unlimited reports",
         "Dedicated account manager",
