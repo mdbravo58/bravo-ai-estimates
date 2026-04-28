@@ -14,6 +14,7 @@ import {
   Star
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { PublicResourcesMenu } from "@/components/marketing/PublicResourcesMenu";
 
 const LandingPage = () => {
   const features = [
@@ -94,6 +95,7 @@ const LandingPage = () => {
             <span className="font-heading font-bold text-xl">Bravo Service Suite</span>
           </div>
           <div className="flex items-center gap-4">
+            <PublicResourcesMenu />
             <Link to="/pricing">
               <Button variant="ghost">Pricing</Button>
             </Link>
