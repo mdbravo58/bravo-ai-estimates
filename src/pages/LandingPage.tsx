@@ -95,6 +95,7 @@ const LandingPage = () => {
             <span className="font-heading font-bold text-xl">Bravo Service Suite</span>
           </div>
           <div className="flex items-center gap-4">
+            <PublicResourcesMenu />
             <Link to="/pricing">
               <Button variant="ghost">Pricing</Button>
             </Link>
