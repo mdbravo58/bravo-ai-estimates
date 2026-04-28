@@ -14,6 +14,7 @@ import {
   Star
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { PublicResourcesMenu } from "@/components/marketing/PublicResourcesMenu";
 
 const LandingPage = () => {
   const features = [
