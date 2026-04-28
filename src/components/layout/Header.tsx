@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
+import { ResourcesMenu } from "./ResourcesMenu";
 
 interface HeaderProps {
   organization?: {
@@ -65,8 +66,9 @@ export function Header({ organization, user, loading, mobileNav }: HeaderProps) 
           </div>
         </div>
 
-        {/* User Menu */}
-        <div className="flex items-center space-x-4">
+        {/* Resources + User Menu */}
+        <div className="flex items-center space-x-2 md:space-x-3">
+          <ResourcesMenu />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
