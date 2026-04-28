@@ -77,12 +77,12 @@ const groups: ResourceGroup[] = [
     ],
   },
   {
-    label: "GoHighLevel",
+    label: "Marketing & CRM",
     items: [
-      { name: "GHL Integration", desc: "Connect & manage", icon: Zap, href: "/ghl" },
-      { name: "Sync Contacts", desc: "Pull GHL contacts → customers", icon: RefreshCw, href: "/ghl?action=sync" },
-      { name: "Send via GHL", desc: "Email/SMS estimates", icon: Send, href: "/ghl?action=send" },
-      { name: "Trigger Workflow", desc: "Run a GHL automation", icon: Workflow, href: "/ghl?action=workflow" },
+      { name: "CRM Integration", desc: "Connect & manage", icon: Zap, href: "/ghl" },
+      { name: "Sync Contacts", desc: "Pull contacts → customers", icon: RefreshCw, href: "/ghl?action=sync" },
+      { name: "Send Estimates", desc: "Email/SMS estimates", icon: Send, href: "/ghl?action=send" },
+      { name: "Trigger Workflow", desc: "Run an automation", icon: Workflow, href: "/ghl?action=workflow" },
     ],
   },
   {
