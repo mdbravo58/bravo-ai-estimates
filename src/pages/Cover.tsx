@@ -120,8 +120,8 @@ const CoverPage = () => {
       <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={primeLogo} alt="Prime Plumbing Company" className="h-12 w-auto max-w-[160px] object-contain" />
-            <span className="text-white font-semibold text-sm hidden sm:inline">Prime Plumbing Company</span>
+            <img src={primeLogo} alt="Bravo AI Systems" className="h-12 w-auto max-w-[160px] object-contain" />
+            <span className="text-white font-semibold text-sm hidden sm:inline">Bravo AI Systems</span>
           </div>
           <div className="flex items-center gap-2">
             <PublicResourcesMenu triggerClassName="text-white hover:bg-white/10 hover:text-white" />
@@ -157,7 +157,7 @@ const CoverPage = () => {
           <div className="flex justify-center mb-8">
             <img 
               src={primeLogo} 
-              alt="Prime Plumbing Company" 
+              alt="Bravo AI Systems" 
               className="h-32 md:h-44 lg:h-56 w-auto object-contain drop-shadow-2xl"
             />
           </div>
@@ -171,7 +171,7 @@ const CoverPage = () => {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Save time, earn more, and build a top reputation—all with Prime Plumbing Company's smart service platform
+              Save time, earn more, and build a top reputation—all with Bravo AI Systems's smart service platform
             </p>
             
             {/* CTA Buttons */}
@@ -280,7 +280,7 @@ const CoverPage = () => {
             Ready to transform your business?
           </h2>
           <p className="text-blue-100 mb-8 text-lg">
-            Join thousands of service professionals using Prime Plumbing Company to grow their business
+            Join thousands of service professionals using Bravo AI Systems to grow their business
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
