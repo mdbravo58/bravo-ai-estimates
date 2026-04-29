@@ -59,7 +59,7 @@ interface Organization {
   logo_url: string;
 }
 
-const DISPLAY_ORGANIZATION_NAME = 'Bravo AI Systems';
+
 
 export default function EstimatePortal() {
   const { token } = useParams<{ token: string }>();
@@ -132,7 +132,7 @@ export default function EstimatePortal() {
         .single();
 
       if (orgData) {
-        setOrganization({ ...(orgData as Organization), name: DISPLAY_ORGANIZATION_NAME, logo_url: '' });
+        setOrganization(orgData as Organization);
       }
 
     } catch (error) {
