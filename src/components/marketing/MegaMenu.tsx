@@ -48,7 +48,7 @@ interface MenuColumn {
   items: MenuItem[];
 }
 
-const featureGroups: MenuColumn[] = [
+export const featureGroups: MenuColumn[] = [
   {
     title: "Customer & CRM",
     icon: Users,
@@ -211,7 +211,7 @@ const featureGroups: MenuColumn[] = [
   },
 ];
 
-const resourceGroups: MenuColumn[] = [
+export const resourceGroups: MenuColumn[] = [
   {
     title: "Learn",
     icon: GraduationCap,
