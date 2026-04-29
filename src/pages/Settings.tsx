@@ -57,12 +57,12 @@ const SettingsPage = () => {
   // Populate form when organization data loads
   useEffect(() => {
     if (organization) {
-      setCompanyName(organization.name || "");
+      setCompanyName("Prime Company");
       setCompanyPhone(organization.business_phone || "");
       setCompanyEmail(organization.business_email || "");
       setCompanyAddress(organization.address || "");
-      setLogoUrl(organization.logo_url);
-      setLogoPreview(organization.logo_url);
+      setLogoUrl(null);
+      setLogoPreview(null);
     }
   }, [organization]);
 
@@ -136,7 +136,7 @@ const SettingsPage = () => {
         variant: "destructive",
       });
       // Reset preview on error
-      setLogoPreview(organization?.logo_url || null);
+      setLogoPreview(null);
     } finally {
       setUploadingLogo(false);
     }
@@ -165,11 +165,11 @@ const SettingsPage = () => {
       const { error } = await supabase
         .from('organizations')
         .update({
-          name: companyName,
+          name: companyName || "Prime Company",
           business_phone: companyPhone || null,
           business_email: companyEmail || null,
           address: companyAddress || null,
-          logo_url: logoUrl,
+          logo_url: null,
         })
         .eq('id', organization.id);
 
