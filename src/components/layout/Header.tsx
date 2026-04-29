@@ -31,7 +31,8 @@ interface HeaderProps {
 export function Header({ organization, user, loading, mobileNav }: HeaderProps) {
   const { signOut, user: authUser } = useAuth();
   const navigate = useNavigate();
-  const displayOrganizationName = "Bravo AI Systems";
+  const displayOrganizationName = organization?.name || "Bravo AI Systems";
+  const displayLogo = organization?.logo;
   
   const displayUser = user || {
     name: authUser?.email?.split('@')[0] || 'User',
@@ -53,9 +54,17 @@ export function Header({ organization, user, loading, mobileNav }: HeaderProps) 
               </>
             ) : (
               <>
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-primary text-primary-foreground">
-                  <Building2 className="h-6 w-6" />
-                </div>
+                {displayLogo ? (
+                  <img
+                    src={displayLogo}
+                    alt={displayOrganizationName}
+                    className="h-12 max-w-[160px] w-auto object-contain"
+                  />
+                ) : (
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-primary text-primary-foreground">
+                    <Building2 className="h-6 w-6" />
+                  </div>
+                )}
                 <div>
                   <h1 className="font-heading text-lg font-semibold text-foreground">
                     {displayOrganizationName}
