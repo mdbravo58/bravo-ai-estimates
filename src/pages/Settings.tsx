@@ -289,10 +289,10 @@ const SettingsPage = () => {
                             variant="outline" 
                             size="sm"
                             onClick={() => fileInputRef.current?.click()}
-                            disabled={uploadingLogo}
+                            disabled
                           >
                             <Upload className="h-4 w-4 mr-2" />
-                            {logoPreview ? 'Change Logo' : 'Upload Logo'}
+                            Logo Disabled
                           </Button>
                           {logoPreview && (
                             <Button 
