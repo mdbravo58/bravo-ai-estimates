@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
 import { ResourcesMenu } from "./ResourcesMenu";
+import { BackButton } from "./BackButton";
 
 interface HeaderProps {
   organization?: {
@@ -40,9 +41,10 @@ export function Header({ organization, user, loading, mobileNav }: HeaderProps) 
   return (
     <header className="border-b bg-card shadow-card">
       <div className="flex h-14 md:h-16 items-center justify-between px-3 md:px-6">
-        {/* Mobile nav + Logo */}
+        {/* Mobile nav + Back + Logo */}
         <div className="flex items-center space-x-2 md:space-x-4">
           {mobileNav}
+          <BackButton fallback="/dashboard" />
           <div className="flex items-center space-x-3">
             {loading ? (
               <>
