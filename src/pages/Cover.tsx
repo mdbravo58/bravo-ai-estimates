@@ -30,6 +30,8 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
+import { PublicResourcesMenu } from "@/components/marketing/PublicResourcesMenu";
+import { Button } from "@/components/ui/button";
 
 const industries = [
   // Row 1
