@@ -20,13 +20,8 @@ interface UserData {
   organization_id: string;
 }
 
-const DISPLAY_ORGANIZATION_NAME = 'Prime Plumbing Company';
-
-const sanitizeOrganization = (org: Organization): Organization => ({
-  ...org,
-  name: DISPLAY_ORGANIZATION_NAME,
-  logo_url: null,
-});
+// Pass-through: show the real organization name and logo from the database.
+const sanitizeOrganization = (org: Organization): Organization => org;
 
 interface UseOrganizationReturn {
   organization: Organization | null;

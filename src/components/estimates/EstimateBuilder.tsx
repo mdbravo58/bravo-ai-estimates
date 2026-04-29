@@ -183,7 +183,7 @@ export function EstimateBuilder({ onSave, onSend }: EstimateBuilderProps) {
 
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.text("Prime Plumbing Company Estimates", pageWidth / 2, yPos, { align: "center" });
+      doc.text("Bravo AI Systems Estimates", pageWidth / 2, yPos, { align: "center" });
       yPos += 8;
 
       const today = new Date().toLocaleDateString('en-US', { 

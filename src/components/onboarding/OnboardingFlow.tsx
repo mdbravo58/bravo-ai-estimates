@@ -18,7 +18,7 @@ interface OnboardingStep {
 const steps: OnboardingStep[] = [
   {
     id: "welcome",
-    title: "Welcome to Prime Plumbing Company",
+    title: "Welcome to Bravo AI Systems",
     description: "Let's get you set up in just a few minutes",
     component: WelcomeStep,
     skippable: false
@@ -187,7 +187,7 @@ function WelcomeStep({ onComplete }: { onComplete: () => void; onSkip: () => voi
       </div>
       <h3 className="text-xl font-semibold">Welcome to the future of service business management!</h3>
       <p className="text-muted-foreground max-w-2xl mx-auto">
-        Prime Plumbing Company helps you manage customers, track jobs, create estimates, 
+        Bravo AI Systems helps you manage customers, track jobs, create estimates, 
         and grow your business with powerful AI-driven tools and integrations.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
@@ -438,7 +438,7 @@ function CompleteStep({ onComplete }: { onComplete: () => void; onSkip: () => vo
       </div>
       <h3 className="text-xl font-semibold">Congratulations!</h3>
       <p className="text-muted-foreground">
-        Your Prime Plumbing Company workspace is ready to use. Start managing your service business more efficiently.
+        Your Bravo AI Systems workspace is ready to use. Start managing your service business more efficiently.
       </p>
       <Button onClick={onComplete} className="mt-6">
         Go to Dashboard

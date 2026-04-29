@@ -168,7 +168,7 @@ export function CustomerPortal() {
               </div>
               <div>
                 <h1 className="font-heading text-xl font-semibold">
-                  Prime Plumbing Company
+                  Bravo AI Systems
                 </h1>
                 <p className="text-sm text-muted-foreground">
                   Estimate #{estimate.id}

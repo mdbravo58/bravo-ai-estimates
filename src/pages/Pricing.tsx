@@ -76,7 +76,7 @@ export default function Pricing() {
             <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
               <Building2 className="h-4 w-4" />
             </div>
-            <h1 className="text-xl font-bold text-foreground">Prime Plumbing Company</h1>
+            <h1 className="text-xl font-bold text-foreground">Bravo AI Systems</h1>
           </div>
           <Button variant="outline" onClick={() => navigate("/auth")}>
             Sign In
@@ -210,7 +210,7 @@ export default function Pricing() {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground text-sm">
-          <p>© 2025 Prime Plumbing Company. All rights reserved.</p>
+          <p>© 2025 Bravo AI Systems. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
             <a href="/terms" className="hover:text-foreground">Terms of Service</a>
             <a href="/privacy" className="hover:text-foreground">Privacy Policy</a>

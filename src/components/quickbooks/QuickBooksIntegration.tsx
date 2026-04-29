@@ -244,7 +244,7 @@ const QuickBooksIntegration = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Sync your data between Prime Plumbing Company and QuickBooks. 
+                  Sync your data between Bravo AI Systems and QuickBooks. 
                   Choose what to sync or sync everything at once.
                 </p>
                 
@@ -325,8 +325,8 @@ const QuickBooksIntegration = () => {
                 </div>
                 
                 <p className="text-sm text-muted-foreground">
-                  Invoices created in Prime Plumbing Company are automatically synced to QuickBooks 
-                  when auto-sync is enabled. Prime Plumbing Company handles the invoicing, QuickBooks handles the accounting.
+                  Invoices created in Bravo AI Systems are automatically synced to QuickBooks 
+                  when auto-sync is enabled. Bravo AI Systems handles the invoicing, QuickBooks handles the accounting.
                 </p>
                 
                 <Button 
