@@ -244,7 +244,7 @@ const SettingsPage = () => {
                     <Button variant="ghost" className="w-full justify-start" asChild>
                       <a href="/ghl">
                         <Globe className="h-4 w-4 mr-2" />
-                        Bravo AI Systems Integration
+                        CRM Integration
                       </a>
                     </Button>
                   </nav>
@@ -266,6 +266,9 @@ const SettingsPage = () => {
                   {/* Logo Upload Section */}
                   <div className="space-y-3">
                     <Label>Company Logo</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Logo display is turned off so old customer logos do not show across the app.
+                    </p>
                     <div className="flex items-start gap-4">
                       <div className="relative w-24 h-24 border-2 border-dashed border-muted-foreground/25 rounded-lg flex items-center justify-center bg-muted/50 overflow-hidden">
                         {uploadingLogo ? (
@@ -543,7 +546,7 @@ const SettingsPage = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Bravo AI Systems</p>
+                      <p className="font-medium">CRM Integration</p>
                       <p className="text-sm text-muted-foreground">
                         Marketing automation & CRM integration
                       </p>
