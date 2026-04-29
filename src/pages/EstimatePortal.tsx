@@ -238,7 +238,7 @@ export default function EstimatePortal() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            {DISPLAY_ORGANIZATION_NAME}
+            {organization?.name || 'Professional Services'}
           </h1>
           <p className="text-muted-foreground">Professional Service Estimate</p>
         </div>
