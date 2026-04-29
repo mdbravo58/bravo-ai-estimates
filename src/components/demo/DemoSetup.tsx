@@ -97,7 +97,7 @@ export function DemoSetup() {
         <CardHeader className="text-center">
           <Badge className="w-fit mx-auto mb-4 bg-gradient-primary">Live Demo</Badge>
           <CardTitle className="text-2xl font-bold">
-            Bravo Service Suite Demo
+            Prime Company Demo
           </CardTitle>
           <p className="text-muted-foreground mt-2">
             Experience the complete service management platform with realistic demo data
@@ -156,7 +156,7 @@ export function DemoSetup() {
               </div>
               <div>
                 <span className="font-medium">Organization:</span>
-                <p className="text-muted-foreground">Bravo Service Demo</p>
+                <p className="text-muted-foreground">Prime Company Demo</p>
               </div>
             </div>
           </div>
