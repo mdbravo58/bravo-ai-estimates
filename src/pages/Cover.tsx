@@ -120,7 +120,7 @@ const CoverPage = () => {
       <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={primeLogo} alt="Prime Plumbing Company" className="h-8 w-auto object-contain" />
+            <img src={primeLogo} alt="Prime Plumbing Company" className="h-12 w-auto max-w-[160px] object-contain" />
             <span className="text-white font-semibold text-sm hidden sm:inline">Prime Plumbing Company</span>
           </div>
           <div className="flex items-center gap-2">
@@ -158,7 +158,7 @@ const CoverPage = () => {
             <img 
               src={primeLogo} 
               alt="Prime Plumbing Company" 
-              className="h-16 md:h-20 object-contain drop-shadow-lg"
+              className="h-32 md:h-44 lg:h-56 w-auto object-contain drop-shadow-2xl"
             />
           </div>
           
