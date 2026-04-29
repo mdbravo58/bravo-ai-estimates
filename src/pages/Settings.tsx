@@ -57,7 +57,7 @@ const SettingsPage = () => {
   // Populate form when organization data loads
   useEffect(() => {
     if (organization) {
-      setCompanyName("Prime Company");
+      setCompanyName("Prime Plumbing Company");
       setCompanyPhone(organization.business_phone || "");
       setCompanyEmail(organization.business_email || "");
       setCompanyAddress(organization.address || "");
@@ -165,7 +165,7 @@ const SettingsPage = () => {
       const { error } = await supabase
         .from('organizations')
         .update({
-          name: companyName || "Prime Company",
+          name: companyName || "Prime Plumbing Company",
           business_phone: companyPhone || null,
           business_email: companyEmail || null,
           address: companyAddress || null,

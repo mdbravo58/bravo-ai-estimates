@@ -92,7 +92,7 @@ const LandingPage = () => {
             <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
               <FileText className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="font-heading font-bold text-xl">Prime Company</span>
+            <span className="font-heading font-bold text-xl">Prime Plumbing Company</span>
           </div>
           <div className="flex items-center gap-4">
             <PublicResourcesMenu />
@@ -224,7 +224,7 @@ const LandingPage = () => {
             Ready to Transform Your Business?
           </h2>
           <p className="text-xl mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
-            Join thousands of professionals who are already using Prime Company to grow their business.
+            Join thousands of professionals who are already using Prime Plumbing Company to grow their business.
           </p>
           <Link to="/auth">
             <Button variant="secondary" size="lg" className="text-lg px-8">
@@ -242,9 +242,9 @@ const LandingPage = () => {
             <div className="h-6 w-6 bg-gradient-primary rounded flex items-center justify-center">
               <FileText className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-heading font-bold">Prime Company</span>
+            <span className="font-heading font-bold">Prime Plumbing Company</span>
           </div>
-          <p>&copy; 2025 Prime Company. All rights reserved.</p>
+          <p>&copy; 2025 Prime Plumbing Company. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4 text-sm">
             <Link to="/terms" className="hover:text-foreground">Terms of Service</Link>
             <Link to="/privacy" className="hover:text-foreground">Privacy Policy</Link>

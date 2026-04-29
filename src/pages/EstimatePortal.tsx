@@ -59,7 +59,7 @@ interface Organization {
   logo_url: string;
 }
 
-const DISPLAY_ORGANIZATION_NAME = 'Prime Company';
+const DISPLAY_ORGANIZATION_NAME = 'Prime Plumbing Company';
 
 export default function EstimatePortal() {
   const { token } = useParams<{ token: string }>();

@@ -20,7 +20,7 @@ interface UserData {
   organization_id: string;
 }
 
-const DISPLAY_ORGANIZATION_NAME = 'Prime Company';
+const DISPLAY_ORGANIZATION_NAME = 'Prime Plumbing Company';
 
 const sanitizeOrganization = (org: Organization): Organization => ({
   ...org,
