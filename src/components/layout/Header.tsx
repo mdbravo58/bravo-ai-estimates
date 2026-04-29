@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Settings, User, LogOut } from "lucide-react";
+import { Building2, Settings, User, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import bravoLogo from "@/assets/bravo-ai-logo.png";
 import { ResourcesMenu } from "./ResourcesMenu";
 import { BackButton } from "./BackButton";
 
@@ -32,6 +31,7 @@ interface HeaderProps {
 export function Header({ organization, user, loading, mobileNav }: HeaderProps) {
   const { signOut, user: authUser } = useAuth();
   const navigate = useNavigate();
+  const displayOrganizationName = "Prime Company";
   
   const displayUser = user || {
     name: authUser?.email?.split('@')[0] || 'User',
@@ -53,14 +53,12 @@ export function Header({ organization, user, loading, mobileNav }: HeaderProps) 
               </>
             ) : (
               <>
-                <img
-                  src={organization?.logo || bravoLogo}
-                  alt={organization?.name || "Bravo AI Systems"}
-                  className="h-12 w-auto max-w-[160px] object-contain"
-                />
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-primary text-primary-foreground">
+                  <Building2 className="h-6 w-6" />
+                </div>
                 <div>
                   <h1 className="font-heading text-lg font-semibold text-foreground">
-                    {organization?.name || "Bravo AI Systems"}
+                    {displayOrganizationName}
                   </h1>
                 </div>
               </>
