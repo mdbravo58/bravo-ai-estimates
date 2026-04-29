@@ -92,11 +92,15 @@ const groups: ResourceGroup[] = [
   },
 ];
 
-export function PublicResourcesMenu() {
+interface PublicResourcesMenuProps {
+  triggerClassName?: string;
+}
+
+export function PublicResourcesMenu({ triggerClassName }: PublicResourcesMenuProps = {}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
+        <Button variant="ghost" size="sm" className={`gap-2 ${triggerClassName ?? ""}`}>
           <LayoutGrid className="h-4 w-4" />
           <span>Resources</span>
         </Button>
