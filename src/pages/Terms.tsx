@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Building2 } from "lucide-react";
 
 export default function Terms() {
   const navigate = useNavigate();
@@ -10,8 +11,10 @@ export default function Terms() {
       <header className="border-b border-border">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
-            <img src="/bravo-logo.png" alt="Bravo" className="h-8" />
-            <h1 className="text-xl font-bold text-foreground">Bravo</h1>
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
+              <Building2 className="h-4 w-4" />
+            </div>
+            <h1 className="text-xl font-bold text-foreground">Prime Company</h1>
           </div>
           <Button variant="outline" onClick={() => navigate("/")}>
             Back to Home
@@ -21,11 +24,11 @@ export default function Terms() {
 
       <div className="container mx-auto px-4 py-12 max-w-3xl">
         <Card className="p-8 md:p-12">
-          <h1 className="text-3xl font-bold text-foreground mb-8">Bravo Platform Terms of Use</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-8">Prime Company Platform Terms of Use</h1>
 
           <div className="space-y-6 text-muted-foreground leading-relaxed">
             <p>
-              The Bravo platform provides software tools, templates, and educational resources designed to assist users in business organization, document preparation, financial tracking, and general planning.
+              The Prime Company platform provides software tools, templates, and educational resources designed to assist users in business organization, document preparation, financial tracking, and general planning.
             </p>
 
             <p>
@@ -33,7 +36,7 @@ export default function Terms() {
             </p>
 
             <p>
-              Bravo is not a law firm, CPA firm, or financial advisory service. We do not provide legal, tax, or financial advice. No professional relationship is created through the use of our platform.
+              Prime Company is not a law firm, CPA firm, or financial advisory service. We do not provide legal, tax, or financial advice. No professional relationship is created through the use of our platform.
             </p>
 
             <p>
@@ -45,11 +48,11 @@ export default function Terms() {
             </p>
 
             <p>
-              All services are provided "as-is" without warranties of any kind. Bravo disclaims all liability for any damages, losses, or outcomes resulting from use of the platform.
+              All services are provided "as-is" without warranties of any kind. Prime Company disclaims all liability for any damages, losses, or outcomes resulting from use of the platform.
             </p>
 
             <p className="font-medium text-foreground">
-              By using Bravo applications, you accept full responsibility for your use and any resulting decisions.
+              By using Prime Company applications, you accept full responsibility for your use and any resulting decisions.
             </p>
           </div>
         </Card>
