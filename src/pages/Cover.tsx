@@ -29,7 +29,7 @@ import {
   Refrigerator
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import primeLogo from "@/assets/prime-plumbing-logo.png";
+import bravoLogo from "@/assets/bravo-ai-logo.png";
 import { PublicResourcesMenu } from "@/components/marketing/PublicResourcesMenu";
 
 const industries = [
@@ -120,7 +120,7 @@ const CoverPage = () => {
       <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={primeLogo} alt="Bravo AI Systems" className="h-12 w-auto max-w-[160px] object-contain" />
+            <img src={bravoLogo} alt="Bravo AI Systems" className="h-12 w-auto max-w-[160px] object-contain" />
             <span className="text-white font-semibold text-sm hidden sm:inline">Bravo AI Systems</span>
           </div>
           <div className="flex items-center gap-2">
@@ -156,7 +156,7 @@ const CoverPage = () => {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <img 
-              src={primeLogo} 
+              src={bravoLogo} 
               alt="Bravo AI Systems" 
               className="h-32 md:h-44 lg:h-56 w-auto object-contain drop-shadow-2xl"
             />
@@ -171,7 +171,7 @@ const CoverPage = () => {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Save time, earn more, and build a top reputation—all with Bravo AI Systems's smart service platform
+              Save time, earn more, and build a top reputation—all with the Bravo AI Systems smart service platform
             </p>
             
             {/* CTA Buttons */}
