@@ -31,7 +31,7 @@ interface HeaderProps {
 export function Header({ organization, user, loading, mobileNav }: HeaderProps) {
   const { signOut, user: authUser } = useAuth();
   const navigate = useNavigate();
-  const displayOrganizationName = "Prime Company";
+  const displayOrganizationName = "Prime Plumbing Company";
   
   const displayUser = user || {
     name: authUser?.email?.split('@')[0] || 'User',

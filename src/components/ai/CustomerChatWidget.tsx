@@ -45,7 +45,7 @@ export const CustomerChatWidget: React.FC<CustomerChatWidgetProps> = ({
     {
       id: '1',
       role: 'assistant',
-      content: 'Hi! I\'m your Prime Company assistant. I\'m here to help you learn how to use the software. Ask me anything about features, navigation, or how to complete tasks!',
+      content: 'Hi! I\'m your Prime Plumbing Company assistant. I\'m here to help you learn how to use the software. Ask me anything about features, navigation, or how to complete tasks!',
       timestamp: new Date()
     }
   ]);
