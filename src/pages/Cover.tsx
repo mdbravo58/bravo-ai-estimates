@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
+import { PublicResourcesMenu } from "@/components/marketing/PublicResourcesMenu";
 
 const industries = [
   // Row 1
@@ -115,6 +116,34 @@ const CoverPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Sticky Top Nav with Resources */}
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img src={bravoLogo} alt="Bravo AI Systems" className="h-8 w-auto object-contain" />
+            <span className="text-white font-semibold text-sm hidden sm:inline">Bravo AI Systems</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <PublicResourcesMenu triggerClassName="text-white hover:bg-white/10 hover:text-white" />
+            <Button
+              onClick={() => navigate("/pricing")}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/10 hover:text-white"
+            >
+              Pricing
+            </Button>
+            <Button
+              onClick={() => navigate("/auth")}
+              size="sm"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+            >
+              Get Started
+            </Button>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white overflow-hidden">
         {/* Background Pattern */}
