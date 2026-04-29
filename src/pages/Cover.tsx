@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
+import serviceSuiteProLogo from "@/assets/bravo-service-suite-pro.png";
 import { PublicResourcesMenu } from "@/components/marketing/PublicResourcesMenu";
 
 const industries = [
@@ -156,9 +157,9 @@ const CoverPage = () => {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <img 
-              src={bravoLogo} 
-              alt="Bravo AI Systems" 
-              className="h-32 md:h-44 lg:h-56 w-auto object-contain drop-shadow-2xl"
+              src={serviceSuiteProLogo} 
+              alt="Service Suite Pro by Bravo AI Systems" 
+              className="h-40 md:h-56 lg:h-72 w-auto object-contain drop-shadow-2xl"
             />
           </div>
           
