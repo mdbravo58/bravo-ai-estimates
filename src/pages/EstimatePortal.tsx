@@ -59,6 +59,8 @@ interface Organization {
   logo_url: string;
 }
 
+const DISPLAY_ORGANIZATION_NAME = 'Prime Company';
+
 export default function EstimatePortal() {
   const { token } = useParams<{ token: string }>();
   const [estimate, setEstimate] = useState<Estimate | null>(null);
@@ -130,7 +132,7 @@ export default function EstimatePortal() {
         .single();
 
       if (orgData) {
-        setOrganization(orgData as Organization);
+        setOrganization({ ...(orgData as Organization), name: DISPLAY_ORGANIZATION_NAME, logo_url: '' });
       }
 
     } catch (error) {
@@ -236,7 +238,7 @@ export default function EstimatePortal() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            {organization?.name || 'Service Estimate'}
+            {DISPLAY_ORGANIZATION_NAME}
           </h1>
           <p className="text-muted-foreground">Professional Service Estimate</p>
         </div>
