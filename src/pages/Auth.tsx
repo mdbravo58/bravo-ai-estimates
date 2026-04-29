@@ -132,7 +132,7 @@ const Auth = () => {
     <div className="min-h-screen bg-gradient-to-br from-primary-light to-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-elegant">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-heading font-bold">Bravo Service Suite</CardTitle>
+          <CardTitle className="text-2xl font-heading font-bold">Prime Company</CardTitle>
           <CardDescription>
             Welcome to your service management platform
           </CardDescription>
