@@ -16,7 +16,7 @@ export default function Pricing() {
         "100 automated reports/month",
         "Job management & scheduling",
         "Customer portal",
-        "Basic integrations (GHL)",
+        "Basic CRM integrations",
         "Email support",
       ],
       notIncluded: [
@@ -38,7 +38,7 @@ export default function Pricing() {
         "Advanced job costing & budgets",
         "Team management (unlimited users)",
         "Real-time cost tracking",
-        "GoHighLevel + QuickBooks sync",
+        "CRM Integration + QuickBooks sync",
         "Priority email support",
       ],
       notIncluded: ["24/7 phone support", "Custom integrations"],
