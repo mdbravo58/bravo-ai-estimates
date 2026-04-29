@@ -29,7 +29,7 @@ import {
   Refrigerator
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import bravoLogo from "@/assets/bravo-ai-logo.png";
+import primeLogo from "@/assets/prime-plumbing-logo.png";
 import { PublicResourcesMenu } from "@/components/marketing/PublicResourcesMenu";
 
 const industries = [
@@ -120,8 +120,8 @@ const CoverPage = () => {
       <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={bravoLogo} alt="Bravo AI Systems" className="h-8 w-auto object-contain" />
-            <span className="text-white font-semibold text-sm hidden sm:inline">Bravo AI Systems</span>
+            <img src={primeLogo} alt="Prime Plumbing Company" className="h-8 w-auto object-contain" />
+            <span className="text-white font-semibold text-sm hidden sm:inline">Prime Plumbing Company</span>
           </div>
           <div className="flex items-center gap-2">
             <PublicResourcesMenu triggerClassName="text-white hover:bg-white/10 hover:text-white" />
@@ -156,8 +156,8 @@ const CoverPage = () => {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <img 
-              src={bravoLogo} 
-              alt="Bravo AI Systems" 
+              src={primeLogo} 
+              alt="Prime Plumbing Company" 
               className="h-16 md:h-20 object-contain drop-shadow-lg"
             />
           </div>
@@ -171,7 +171,7 @@ const CoverPage = () => {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Save time, earn more, and build a top reputation—all with Bravo Service Suite's AI-powered platform
+              Save time, earn more, and build a top reputation—all with Prime Plumbing Company's smart service platform
             </p>
             
             {/* CTA Buttons */}
