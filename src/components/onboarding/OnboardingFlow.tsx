@@ -391,7 +391,7 @@ function IntegrationsStep({ onComplete, onSkip }: { onComplete: () => void; onSk
       <p>Connect your existing tools to centralize your workflow.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-4 border rounded-lg">
-          <h4 className="font-semibold">Bravo AI Systems</h4>
+          <h4 className="font-semibold">CRM Integration</h4>
           <p className="text-sm text-muted-foreground">CRM and marketing automation</p>
           <Button variant="outline" className="mt-2">Connect</Button>
         </div>
