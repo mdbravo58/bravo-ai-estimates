@@ -31,7 +31,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import bravoLogo from "@/assets/bravo-ai-logo.png";
 import serviceSuiteProLogo from "@/assets/bravo-service-suite-pro.png";
-import { PublicResourcesMenu } from "@/components/marketing/PublicResourcesMenu";
+import { MegaMenu, MegaMenuMobile } from "@/components/marketing/MegaMenu";
 
 const industries = [
   // Row 1
@@ -117,15 +117,17 @@ const CoverPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Sticky Top Nav with Resources */}
+      {/* Sticky Top Nav with Mega Menu */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/80 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <img src={bravoLogo} alt="Bravo AI Systems" className="h-12 w-auto max-w-[160px] object-contain" />
-            <span className="text-white font-semibold text-sm hidden sm:inline">Bravo AI Systems</span>
+            <span className="text-white font-semibold text-sm hidden sm:inline truncate">Bravo AI Systems</span>
           </div>
-          <div className="flex items-center gap-2">
-            <PublicResourcesMenu triggerClassName="text-white hover:bg-white/10 hover:text-white" />
+
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-1">
+            <MegaMenu triggerClassName="bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[state=open]:bg-white/10 data-[state=open]:text-white data-[active]:bg-white/10" />
             <Button
               onClick={() => navigate("/pricing")}
               variant="ghost"
@@ -137,10 +139,22 @@ const CoverPage = () => {
             <Button
               onClick={() => navigate("/auth")}
               size="sm"
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white ml-1"
             >
               Get Started
             </Button>
+          </div>
+
+          {/* Mobile nav */}
+          <div className="flex md:hidden items-center gap-1">
+            <Button
+              onClick={() => navigate("/auth")}
+              size="sm"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+            >
+              Start
+            </Button>
+            <MegaMenuMobile triggerClassName="text-white hover:bg-white/10 hover:text-white" />
           </div>
         </div>
       </header>

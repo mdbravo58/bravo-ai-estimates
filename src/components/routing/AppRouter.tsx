@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
-import LandingPage from "@/pages/LandingPage";
 import Dashboard from "@/pages/Dashboard";
+import FeaturePlaceholder from "@/pages/FeaturePlaceholder";
 import EstimateBuilder from "@/pages/EstimateBuilder";
 import CustomerPortal from "@/pages/CustomerPortal";
 import EstimatePortal from "@/pages/EstimatePortal";
@@ -64,18 +64,9 @@ export const AppRouter = () => {
           </ProtectedRoute>
         } 
       />
-      <Route 
-        path="/" 
-        element={
-          user ? (
-            <ProtectedRoute>
-              <CoverPage />
-            </ProtectedRoute>
-          ) : (
-            <LandingPage />
-          )
-        }
-      />
+      <Route path="/" element={<CoverPage />} />
+      <Route path="/features/:slug" element={<FeaturePlaceholder />} />
+      <Route path="/resources/:slug" element={<FeaturePlaceholder />} />
       <Route 
         path="/dashboard" 
         element={
