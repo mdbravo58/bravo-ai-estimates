@@ -10,7 +10,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children, variant = "dashboard" }: LayoutProps) {
-  const { organization, userData, loading } = useOrganization();
+  const { userData, loading } = useOrganization();
   const isMobile = useIsMobile();
 
   if (variant === "portal") {
