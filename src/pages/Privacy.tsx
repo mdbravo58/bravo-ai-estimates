@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Building2 } from "lucide-react";
 
 export default function Privacy() {
   const navigate = useNavigate();
@@ -10,8 +11,10 @@ export default function Privacy() {
       <header className="border-b border-border">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
-            <img src="/bravo-logo.png" alt="Bravo" className="h-8" />
-            <h1 className="text-xl font-bold text-foreground">Bravo Service Suite</h1>
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
+              <Building2 className="h-4 w-4" />
+            </div>
+            <h1 className="text-xl font-bold text-foreground">Prime Company</h1>
           </div>
           <Button variant="outline" onClick={() => navigate("/")}>
             Back to Home
@@ -54,7 +57,7 @@ export default function Privacy() {
             <section>
               <h2 className="text-2xl font-semibold text-foreground mb-3">2. How We Use Your Information</h2>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                <li><strong>Provide Services:</strong> To operate and improve the Bravo Service Suite platform</li>
+                <li><strong>Provide Services:</strong> To operate and improve the Prime Company platform</li>
                 <li><strong>AI Features:</strong> To train and improve AI models for chatbot, voice, and analytics features</li>
                 <li><strong>Billing:</strong> To process payments and manage subscriptions</li>
                 <li><strong>Support:</strong> To respond to your questions and troubleshoot issues</li>
@@ -70,7 +73,7 @@ export default function Privacy() {
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-1">
                 <li><strong>Service Providers:</strong> Supabase (hosting), Stripe (payments), Google (AI models), Resend (email)</li>
-                <li><strong>Integrations:</strong> Bravo AI Systems, QuickBooks (only data you authorize)</li>
+                <li><strong>Integrations:</strong> CRM Integration, QuickBooks (only data you authorize)</li>
                 <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
               </ul>
             </section>
