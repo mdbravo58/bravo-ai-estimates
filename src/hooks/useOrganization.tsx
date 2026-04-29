@@ -20,6 +20,14 @@ interface UserData {
   organization_id: string;
 }
 
+const DISPLAY_ORGANIZATION_NAME = 'Prime Company';
+
+const sanitizeOrganization = (org: Organization): Organization => ({
+  ...org,
+  name: DISPLAY_ORGANIZATION_NAME,
+  logo_url: null,
+});
+
 interface UseOrganizationReturn {
   organization: Organization | null;
   userData: UserData | null;
@@ -115,7 +123,7 @@ export function OrganizationProvider({ children }: OrganizationProviderProps) {
             console.error('Error fetching organization:', orgError.message);
             setError('Failed to load organization');
           } else {
-            setOrganization(orgData as Organization);
+            setOrganization(sanitizeOrganization(orgData as Organization));
           }
         } else {
           setError('No active session');
@@ -138,7 +146,7 @@ export function OrganizationProvider({ children }: OrganizationProviderProps) {
         console.error('Error fetching organization:', orgError.message);
         setError('Failed to load organization');
       } else {
-        setOrganization(orgData as Organization);
+        setOrganization(sanitizeOrganization(orgData as Organization));
       }
     } catch (err) {
       console.error('Unexpected error:', err);

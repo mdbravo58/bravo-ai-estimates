@@ -72,7 +72,7 @@ const AIPage = () => {
                     </ul>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Click the help widget in the bottom right to get instant guidance on using the Bravo Service Suite.
+                    Click the help widget in the bottom right to get instant guidance on using Prime Company.
                     Ask questions about any feature and get step-by-step instructions.
                   </p>
                 </div>

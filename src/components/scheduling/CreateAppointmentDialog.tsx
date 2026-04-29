@@ -93,7 +93,7 @@ export function CreateAppointmentDialog({
 
     const selectedCustomer = customers.find(c => c.id === customerId);
     if (!selectedCustomer?.ghl_contact_id) {
-      toast.error("Selected customer is not synced with Bravo AI Systems. Please sync contacts first.");
+      toast.error("Selected customer is not synced with CRM Integration. Please sync contacts first.");
       return;
     }
 

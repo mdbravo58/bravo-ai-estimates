@@ -73,7 +73,7 @@ export default function Payroll() {
           </h1>
           <p className="text-lg text-muted-foreground">
             Streamline your payroll process with automated time tracking, tax calculations, 
-            and direct deposit integration—all built into Bravo AI.
+            and direct deposit integration—all built into Prime Company.
           </p>
         </div>
 

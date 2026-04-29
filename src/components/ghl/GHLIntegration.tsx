@@ -243,7 +243,7 @@ const GHLIntegration = () => {
 
       toast({
         title: "Opportunity Created",
-        description: "Successfully created opportunity in Bravo AI Systems",
+        description: "Successfully created opportunity in CRM Integration",
       });
 
     } catch (error) {
@@ -305,7 +305,7 @@ const GHLIntegration = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-orange-500" />
-            Bravo AI Systems Integration
+            CRM Integration
             <Badge 
               variant="outline" 
               className={`ml-2 ${
@@ -324,7 +324,7 @@ const GHLIntegration = () => {
           <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
             <h4 className="font-medium text-blue-800 mb-2">📍 How to Find Your BAS Location ID</h4>
             <div className="text-sm text-blue-700 space-y-2">
-              <p><strong>1.</strong> Log into your Bravo AI Systems account</p>
+              <p><strong>1.</strong> Log into your CRM Integration account</p>
               <p><strong>2.</strong> Go to Settings → Company → My Info</p>
               <p><strong>3.</strong> Look for "Location ID" in your account settings</p>
               <p><strong>4.</strong> Copy the Location ID and paste it below</p>
@@ -336,12 +336,12 @@ const GHLIntegration = () => {
             <div className="text-sm text-green-700 space-y-2">
               <p><strong>Webhook URL:</strong> https://kgwruguzjidernenftyb.supabase.co/functions/v1/ghl-webhook</p>
               <p><strong>Organization ID:</strong> {organizationId || 'Loading...'}</p>
-              <p>Configure this webhook in your Bravo AI Systems account to sync contacts automatically.</p>
+              <p>Configure this webhook in your CRM Integration account to sync contacts automatically.</p>
             </div>
           </div>
           
           <p className="text-muted-foreground mb-4">
-            Connect your service business with Bravo AI Systems' powerful marketing automation, 
+            Connect your service business with powerful marketing automation, 
             lead management, and communication tools.
           </p>
           
@@ -430,7 +430,7 @@ const GHLIntegration = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                Sync contacts from your Bravo AI Systems account to your customer database. 
+                Sync contacts from your CRM Integration account to your customer database. 
                 This will import all contact details including names, emails, phones, and addresses.
               </p>
               
@@ -580,7 +580,7 @@ const GHLIntegration = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                Automatically create opportunities in Bravo AI Systems when estimates are generated. 
+                Automatically create opportunities in CRM Integration when estimates are generated. 
                 Track deal progress and sync status updates between systems.
               </p>
               

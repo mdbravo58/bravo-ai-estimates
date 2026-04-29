@@ -6,9 +6,9 @@ const GHLPage = () => {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Bravo AI Systems Integration</h1>
+          <h1 className="text-3xl font-bold">CRM Integration</h1>
           <p className="text-muted-foreground mt-2">
-            Supercharge your service business with Bravo AI Systems' marketing automation and CRM capabilities
+            Supercharge your service business with marketing automation and CRM capabilities
           </p>
         </div>
         

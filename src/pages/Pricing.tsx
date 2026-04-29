@@ -1,4 +1,4 @@
-import { Check, X } from "lucide-react";
+import { Building2, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,7 @@ export default function Pricing() {
         "100 automated reports/month",
         "Job management & scheduling",
         "Customer portal",
-        "Basic integrations (GHL)",
+        "Basic CRM integrations",
         "Email support",
       ],
       notIncluded: [
@@ -38,7 +38,7 @@ export default function Pricing() {
         "Advanced job costing & budgets",
         "Team management (unlimited users)",
         "Real-time cost tracking",
-        "GoHighLevel + QuickBooks sync",
+        "CRM Integration + QuickBooks sync",
         "Priority email support",
       ],
       notIncluded: ["24/7 phone support", "Custom integrations"],
@@ -73,8 +73,10 @@ export default function Pricing() {
       <header className="border-b border-border">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <img src="/bravo-logo.png" alt="Bravo" className="h-8" />
-            <h1 className="text-xl font-bold text-foreground">Bravo Service Suite</h1>
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
+              <Building2 className="h-4 w-4" />
+            </div>
+            <h1 className="text-xl font-bold text-foreground">Prime Company</h1>
           </div>
           <Button variant="outline" onClick={() => navigate("/auth")}>
             Sign In
@@ -208,7 +210,7 @@ export default function Pricing() {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground text-sm">
-          <p>© 2025 Bravo Service Suite. All rights reserved.</p>
+          <p>© 2025 Prime Company. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
             <a href="/terms" className="hover:text-foreground">Terms of Service</a>
             <a href="/privacy" className="hover:text-foreground">Privacy Policy</a>

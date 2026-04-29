@@ -168,7 +168,7 @@ export function CustomerPortal() {
               </div>
               <div>
                 <h1 className="font-heading text-xl font-semibold">
-                  {estimate.organization.name}
+                  Prime Company
                 </h1>
                 <p className="text-sm text-muted-foreground">
                   Estimate #{estimate.id}

@@ -18,7 +18,7 @@ interface OnboardingStep {
 const steps: OnboardingStep[] = [
   {
     id: "welcome",
-    title: "Welcome to Bravo Service Suite",
+    title: "Welcome to Prime Company",
     description: "Let's get you set up in just a few minutes",
     component: WelcomeStep,
     skippable: false
@@ -40,7 +40,7 @@ const steps: OnboardingStep[] = [
   {
     id: "integrations",
     title: "Connect Your Tools",
-    description: "Integrate with Bravo AI Systems, QuickBooks, and more",
+    description: "Integrate with CRM Integration, QuickBooks, and more",
     component: IntegrationsStep,
     skippable: true
   },
@@ -187,7 +187,7 @@ function WelcomeStep({ onComplete }: { onComplete: () => void; onSkip: () => voi
       </div>
       <h3 className="text-xl font-semibold">Welcome to the future of service business management!</h3>
       <p className="text-muted-foreground max-w-2xl mx-auto">
-        Bravo Service Suite helps you manage customers, track jobs, create estimates, 
+        Prime Company helps you manage customers, track jobs, create estimates, 
         and grow your business with powerful AI-driven tools and integrations.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
@@ -391,7 +391,7 @@ function IntegrationsStep({ onComplete, onSkip }: { onComplete: () => void; onSk
       <p>Connect your existing tools to centralize your workflow.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-4 border rounded-lg">
-          <h4 className="font-semibold">Bravo AI Systems</h4>
+          <h4 className="font-semibold">CRM Integration</h4>
           <p className="text-sm text-muted-foreground">CRM and marketing automation</p>
           <Button variant="outline" className="mt-2">Connect</Button>
         </div>
@@ -438,7 +438,7 @@ function CompleteStep({ onComplete }: { onComplete: () => void; onSkip: () => vo
       </div>
       <h3 className="text-xl font-semibold">Congratulations!</h3>
       <p className="text-muted-foreground">
-        Your Bravo Service Suite is ready to use. Start managing your service business more efficiently.
+        Your Prime Company workspace is ready to use. Start managing your service business more efficiently.
       </p>
       <Button onClick={onComplete} className="mt-6">
         Go to Dashboard

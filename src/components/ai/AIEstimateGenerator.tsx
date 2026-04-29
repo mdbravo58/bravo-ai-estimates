@@ -266,7 +266,7 @@ export const AIEstimateGenerator: React.FC = () => {
       } else {
         toast({
           title: 'Estimate Sent!',
-          description: 'The estimate has been sent to the customer via Bravo AI Systems.',
+          description: 'The estimate has been sent to the customer via CRM Integration.',
         });
       }
     } catch (error) {

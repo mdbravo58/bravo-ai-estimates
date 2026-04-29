@@ -57,12 +57,12 @@ const SettingsPage = () => {
   // Populate form when organization data loads
   useEffect(() => {
     if (organization) {
-      setCompanyName(organization.name || "");
+      setCompanyName("Prime Company");
       setCompanyPhone(organization.business_phone || "");
       setCompanyEmail(organization.business_email || "");
       setCompanyAddress(organization.address || "");
-      setLogoUrl(organization.logo_url);
-      setLogoPreview(organization.logo_url);
+      setLogoUrl(null);
+      setLogoPreview(null);
     }
   }, [organization]);
 
@@ -136,7 +136,7 @@ const SettingsPage = () => {
         variant: "destructive",
       });
       // Reset preview on error
-      setLogoPreview(organization?.logo_url || null);
+      setLogoPreview(null);
     } finally {
       setUploadingLogo(false);
     }
@@ -165,11 +165,11 @@ const SettingsPage = () => {
       const { error } = await supabase
         .from('organizations')
         .update({
-          name: companyName,
+          name: companyName || "Prime Company",
           business_phone: companyPhone || null,
           business_email: companyEmail || null,
           address: companyAddress || null,
-          logo_url: logoUrl,
+          logo_url: null,
         })
         .eq('id', organization.id);
 
@@ -244,7 +244,7 @@ const SettingsPage = () => {
                     <Button variant="ghost" className="w-full justify-start" asChild>
                       <a href="/ghl">
                         <Globe className="h-4 w-4 mr-2" />
-                        Bravo AI Systems Integration
+                        CRM Integration
                       </a>
                     </Button>
                   </nav>
@@ -266,6 +266,9 @@ const SettingsPage = () => {
                   {/* Logo Upload Section */}
                   <div className="space-y-3">
                     <Label>Company Logo</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Logo display is turned off so old customer logos do not show across the app.
+                    </p>
                     <div className="flex items-start gap-4">
                       <div className="relative w-24 h-24 border-2 border-dashed border-muted-foreground/25 rounded-lg flex items-center justify-center bg-muted/50 overflow-hidden">
                         {uploadingLogo ? (
@@ -286,10 +289,10 @@ const SettingsPage = () => {
                             variant="outline" 
                             size="sm"
                             onClick={() => fileInputRef.current?.click()}
-                            disabled={uploadingLogo}
+                            disabled
                           >
                             <Upload className="h-4 w-4 mr-2" />
-                            {logoPreview ? 'Change Logo' : 'Upload Logo'}
+                            Logo Disabled
                           </Button>
                           {logoPreview && (
                             <Button 
@@ -543,7 +546,7 @@ const SettingsPage = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Bravo AI Systems</p>
+                      <p className="font-medium">CRM Integration</p>
                       <p className="text-sm text-muted-foreground">
                         Marketing automation & CRM integration
                       </p>
