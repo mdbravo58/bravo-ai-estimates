@@ -2054,6 +2054,8 @@ export type Database = {
           business_email: string | null
           business_phone: string | null
           created_at: string
+          default_state: string | null
+          default_tax_rate: number | null
           description: string | null
           external_ref: string | null
           ghl_api_key_hash: string | null
@@ -2074,6 +2076,8 @@ export type Database = {
           business_email?: string | null
           business_phone?: string | null
           created_at?: string
+          default_state?: string | null
+          default_tax_rate?: number | null
           description?: string | null
           external_ref?: string | null
           ghl_api_key_hash?: string | null
@@ -2094,6 +2098,8 @@ export type Database = {
           business_email?: string | null
           business_phone?: string | null
           created_at?: string
+          default_state?: string | null
+          default_tax_rate?: number | null
           description?: string | null
           external_ref?: string | null
           ghl_api_key_hash?: string | null
